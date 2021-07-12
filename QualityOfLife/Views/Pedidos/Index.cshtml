@@ -1,0 +1,102 @@
+﻿@model IEnumerable<QualityOfLife.Models.Pedido>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+<style>
+    #textoCenter {
+        text-align: center;
+    }
+
+    #btn-novo {
+        float: right;
+        padding: .5em 1em;
+        margin-top: 2px;
+        /*color: #fff;
+        font-size: .7em;
+        background: #00853f;
+        padding: .5em 1em;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        -webkit-transition: all .2s ease;
+        transition: all .2s ease;
+        cursor: pointer;
+        margin-top: 0px;
+        text-decoration: none;*/
+    }
+</style>
+<h3 style="margin-top:10px;">
+    Novo Pedido
+    <a asp-action="Create" class="btn btn-sm btn-danger waves-effect px-1" id="btn-novo">Novo Pedido</a>
+</h3>
+
+
+
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Paciente.Nome)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.DataPedido)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Valor)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Desconto)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Credito)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Total)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="col-md-3" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.Paciente.Nome)
+                            </td>
+                            <td class="col-md-2" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.DataPedido)
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                R$ @Html.DisplayFor(modelItem => item.Valor),00
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                R$ @Html.DisplayFor(modelItem => item.Desconto),00
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                R$ @Html.DisplayFor(modelItem => item.Credito),00
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                R$ @Html.DisplayFor(modelItem => item.Total),00
+                            </td>
+                            <td class="col-sm-2" id="textoCenter">
+                                <a asp-action="GerarPdf2" asp-route-id="@item.Id" title="Gerar Pdf" class="btn btn-sm btn-danger waves-effect px-1">
+                                    <i class="fa fa-archive" aria-hidden="true"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary waves-effect px-1">
+                                    <i class="fa fa-pen" aria-hidden="true"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-sm btn-info waves-effect px-1">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

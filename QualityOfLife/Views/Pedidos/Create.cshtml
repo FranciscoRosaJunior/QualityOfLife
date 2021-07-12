@@ -1,0 +1,142 @@
+﻿@model IEnumerable<QualityOfLife.Models.Agenda>
+
+@{
+    ViewData["Title"] = "VisualizaAtendimentos";
+}
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+<datalist id="pacientes">
+    @foreach (var item in ViewBag.Paciente)
+    {
+        <option value="@item.Cpf"> @item.Nome</option>
+    }
+</datalist>
+<h2>Novo Pedido</h2>
+
+@using (Html.BeginForm("CreatePost", "Pedidos", FormMethod.Post, new { @class = "row", onsubmit = "return sendForm();" }))
+{
+    <form class="row col-12">
+        <input type="hidden" name="pacientePost" class="form-control" value="@ViewBag.Cpf" />
+        <input type="hidden" name="mesPost" class="form-control" value="@ViewBag.Mes" />
+        <div class="form-group col-sm-4">
+            <label>Paciente</label>
+            <input type="text" placeholder="Digite o nome do Paciente" class="form-control" name="paciente" id="paciente" list="pacientes" />
+        </div>
+        <div class="form-group col-sm-4">
+            <label> Mês Referência</label>
+            <input type="month" class="form-control" name="mes" />
+        </div>
+        <div class="form-group col-12" style="margin-top:10px;">
+            <input type="submit" asp-action="Create" id="consulta" class="btn btn-primary btn-sm" value="Consultar">
+            <input type="submit" id="novoPedido" class="btn btn-primary btn-sm" value="Gerar Pedido">
+        </div>
+    </form>
+
+    @if (Model.Count() > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.DataHora)
+                    </th>
+                    <th class="col-sm-3">
+                        Paciente
+                    </th>
+                    <th class="col-sm-3">
+                        Profissional
+                    </th>
+                    <th class="col-sm-1">
+                        @Html.DisplayNameFor(model => model.Local)
+                    </th>
+                    <th class="col-sm-1">
+                        @Html.DisplayNameFor(model => model.TipoAtendimento)
+                    </th>
+                    <th class="col-sm-1">
+                        Frequência
+                    </th>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.Presenca)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FaltaJustificada)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Falta)
+                        </th>*@
+                    <th class="col-sm-1"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DataHora)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Paciente.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Profissional.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Local)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TipoAtendimento)
+                        </td>
+                        @{
+                            if (item.Presenca == true)
+                            {
+                                <td>
+                                    P
+                                </td>
+                            }
+                            else if (item.FaltaJustificada == true)
+                            {
+                                <td>
+                                    FJ
+                                </td>
+                            }
+                            else if (item.Falta == true)
+                            {
+                                <td>
+                                    F
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    NR
+                                </td>
+                            }
+                        }
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.Presenca)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FaltaJustificada)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Falta)
+                            </td>*@
+                        <td>
+                            <a asp-controller="Agendas" asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-primary btn-sm waves-effect px-1">
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                            </a>
+                            <a asp-controller="Agendas" asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-info btn-sm waves-effect px-1">
+                                <i class="fas fa-list" aria-hidden="true"></i>
+                            </a>
+                            @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>*@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+}
+
+
+

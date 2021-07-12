@@ -5,16 +5,19 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-            </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
-            </li>
-        </ul>
-    </form>
+<form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
+    <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="~/images/usuario.png" title="@User.Identity.Name" style="width:50px;border-radius:50px;" class="profile-pic m-r-5" />
+            </a>
+            <div class="dropdown-menu">
+                <a class="nav-link" asp-area="Identity" asp-page="">Editar</a>
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Logout">Sair</a>
+            </div>
+        </li>
+    </ul>
+</form>
 }
 else
 {
