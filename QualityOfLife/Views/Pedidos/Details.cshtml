@@ -1,0 +1,84 @@
+﻿@model QualityOfLife.Models.Pedido
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Pedido</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoAtendimento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TipoAtendimento)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DataPedido)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DataPedido)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Valor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Valor)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Desconto)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Desconto)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Credito)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Credito)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Observações)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Observações)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Criado)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Criado)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CriadoData)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CriadoData)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Modificado)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Modificado)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ModificadoData)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ModificadoData)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

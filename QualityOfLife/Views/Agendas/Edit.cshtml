@@ -1,0 +1,114 @@
+﻿@model QualityOfLife.Models.Agenda
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<datalist id="pacientes">
+    @foreach (var item in ViewBag.Paciente)
+    {
+        <option value="@item.Cpf"> @item.Nome</option>
+    }
+</datalist>
+<datalist id="profissionais">
+    @foreach (var item in ViewBag.Profissional)
+    {
+        <option value="@item.Nome"> @item.Cpf</option>
+    }
+</datalist>
+<div class="col-md-12">
+    <h2>Editar</h2>
+    <hr />
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Criado" class="form-control" />
+            <input type="hidden" asp-for="CriadoData" class="form-control" />
+            <input type="hidden" asp-for="Modificado" class="form-control" value="@ViewBag.CurrentUser" />
+            <input type="hidden" asp-for="ModificadoData" class="form-control" value="@ViewBag.Data" />
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Repetir" class="control-label"></label>
+                <select asp-for="Repetir" name="Repetir" class="form-select">
+                    <option value="0" style="color:black">Nenhuma</option>
+                    <option value="1" style="color:black">Diarimente</option>
+                    <option value="2" style="color:black">Semanalmente</option>
+                    <option value="3" style="color:black">Mensalmente</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Paciente" class="control-label"></label>
+                <input asp-for="Paciente.Nome" class="form-control" list="pacientes" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Profissional" class="control-label"></label>
+                <input asp-for="Profissional.Nome" class="form-control" list="profissionais" />
+            </div>
+            <div class="form-group">
+                <label asp-for="DataHora" class="control-label"></label>
+                <input asp-for="DataHora" class="form-control" />
+                <span asp-validation-for="DataHora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Local" class="control-label"></label>
+                <input asp-for="Local" class="form-control" />
+                <span asp-validation-for="Local" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoAtendimento" class="control-label"></label>
+                <input asp-for="TipoAtendimento" class="form-control" />
+                <span asp-validation-for="TipoAtendimento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Presenca" /> @Html.DisplayNameFor(model => model.Presenca)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="FaltaJustificada" /> @Html.DisplayNameFor(model => model.FaltaJustificada)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Falta" /> @Html.DisplayNameFor(model => model.Falta)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Reagendar" /> @Html.DisplayNameFor(model => model.Reagendar)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                @Html.LabelFor(m => m.Anotações)
+                @Html.TextAreaFor(m => m.Anotações)
+                @Html.ValidationMessageFor(m => m.Anotações, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-12">
+                @*<input type="submit" value="Salvar" class="btn btn-default" />*@
+                <button type="submit" class="btn btn-success">Salvar</button> |
+                <button asp-action="Index" class="btn btn-info">Voltar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=v5z53k0b99mq6jdq7rmord5xg2u6jwborbuov669whaeecsp"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: 'textarea',
+        height: 300,
+        menubar: false,
+        statusbar: false,
+        theme: 'modern'
+    });
+</script>

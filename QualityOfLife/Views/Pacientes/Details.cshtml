@@ -1,0 +1,96 @@
+﻿@model QualityOfLife.Models.Paciente
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Paciente</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Cpf)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Cpf)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DataNascimento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DataNascimento)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusPacientes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StatusPacientes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Criado)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Criado)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CriadoData)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CriadoData)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Modificado)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Modificado)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ModificadoData)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ModificadoData)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+    <a title="Deletar Paciente" class="btn btn-danger" href="javascript:void(0);" onclick="ModalDelete('ModalDelete')" style="width:80px; height:30px;">
+        Deletar
+    </a>
+</div>
+@*ModalDelete*@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalPaginas">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">DELETAR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"><b>Deseja realmente deletar o usuário @Model.Nome?</b></div>
+            <div class="modal-footer">
+                <form asp-action="Delete" style="display:inline">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="submit" value="Sim" class="btn btn-danger" style="width: 80px; height: 30px; display: inline;" />
+                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ModalDelete(url) {
+        $(".modal-body").load(url); // chama diretório/arquivo dentro do corpo do modal
+        $("#modalPaginas").modal('show'); // Abre o modal visualmente
+    }
+</script>

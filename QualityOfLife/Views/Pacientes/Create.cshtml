@@ -1,0 +1,124 @@
+﻿@model QualityOfLife.Models.Paciente
+
+@{
+    ViewData["Title"] = "Create";
+}
+<datalist id="responsaveis">
+    @foreach (var item in ViewBag.Responsavel)
+    {
+        <option value="@item.Nome"> @item.Cpf</option>
+    }
+</datalist>
+<h2>Create</h2>
+
+<h4>Paciente</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Criado" class="form-control" value="@ViewBag.CurrentUser" />
+            <input type="hidden" asp-for="CriadoData" class="form-control" value="@ViewBag.Data" />
+            <input type="hidden" asp-for="Modificado" class="form-control" />
+            <input type="hidden" asp-for="ModificadoData" class="form-control" value="0001-01-01 00:00:00" />
+
+            @*<div class="form-group">
+                <label asp-for="Responsavel" class="control-label"></label>
+                <input asp-for="Responsavel" class="form-control" list="responsaveis" />
+            </div>*@
+            <div class="form-group">
+                <label asp-for="Responsavel" class="control-label"></label>
+                <input asp-for="Responsavel.Nome" class="form-control" list="responsaveis" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cpf" class="control-label"></label>
+                <input asp-for="Cpf" class="form-control" id="RegraValida" maxlength="14" onkeydown="javascript: fMasc( this, mCPF );" />
+                <span asp-validation-for="Cpf" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataNascimento" class="control-label"></label>
+                <input asp-for="DataNascimento" class="form-control" />
+                <span asp-validation-for="DataNascimento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusPacientes" class="control-label"></label>
+                <select class="form-control" asp-for="StatusPacientes" asp-items="@ViewBag.StatusPaciente">
+                    <option value="">--Selecione--</option>
+                </select>
+                <span asp-validation-for="StatusPacientes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    //cpf
+    function valida_cpf() {
+        var cpf = document.getElementById("RegraValida").value;
+        cpf = cpf.replace(/[^0-9]+/g, "");
+        var numeros, digitos, soma, i, resultado, digitos_iguais;
+        digitos_iguais = 1;
+        if (cpf.length < 11)
+            alert("CPF Invalido");
+        for (i = 0; i < cpf.length - 1; i++)
+            if (cpf.charAt(i) != cpf.charAt(i + 1)) {
+                digitos_iguais = 0;
+                break;
+            }
+        if (!digitos_iguais) {
+            numeros = cpf.substring(0, 9);
+            digitos = cpf.substring(9);
+            soma = 0;
+            for (i = 10; i > 1; i--)
+                soma += numeros.charAt(10 - i) * i;
+            resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+            if (resultado != digitos.charAt(0))
+                alert("CPF Invalido");
+            numeros = cpf.substring(0, 10);
+            soma = 0;
+            for (i = 11; i > 1; i--)
+                soma += numeros.charAt(11 - i) * i;
+            resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+            if (resultado != digitos.charAt(1))
+                alert("CPF Invalido");
+            console.log("Valido");
+        }
+        else
+            alert("CPF Invalido");
+
+    }
+    function fMasc(objeto, mascara) {
+        obj = objeto
+        masc = mascara
+        setTimeout("fMascEx()", 1)
+    }
+
+    function fMascEx() {
+        obj.value = masc(obj.value)
+        if (obj.value.length == 14) {
+            valida_cpf();
+        }
+    }
+
+    function mCPF(cpf) {
+        cpf = cpf.replace(/\D/g, "")
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2")
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2")
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+        return cpf
+    }
+
+
+</script>

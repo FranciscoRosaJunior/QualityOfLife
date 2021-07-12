@@ -1,40 +1,93 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icn/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/icn/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icn/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icn/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icn/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icn/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icn/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icn/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icn/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/icn/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icn/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/icn/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/icn/favicon-16x16.png">
+    <link rel="manifest" href="/images/icn/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/icn/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - QualityOfLife</title>
+    <title>@ViewData["Title"]</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-quartz.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap-quartz.min"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">QualityOfLife</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">
+                <img src="~/images/logosemfundo.png" alt="logo" style="width:50px;height:50px;">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item dropdown">
+                        <div class="dropdown">
+                            @*<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cadastros</a>*@
+                            <button type="button" class="btn btn-primary nav-link dropdown-toggle" data-toggle="dropdown">
+                                Cadastros
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="nav-link" asp-area="" asp-controller="Responsaveis" asp-action="Index">Responsáveis</a>
+                                <a class="nav-link" asp-area="" asp-controller="Pacientes" asp-action="Index">Pacientes</a>
+                                <a class="nav-link" asp-area="" asp-controller="Profissionais" asp-action="Index">Profissionais</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <div class="dropdown">
+                            @*<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cadastros</a>*@
+                            <button type="button" class="btn btn-primary nav-link dropdown-toggle" data-toggle="dropdown">
+                                Financeiro
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="nav-link" asp-area="" asp-controller="Pedidos" asp-action="Index">Pedidos</a>
+                                <a class="nav-link" asp-area="" asp-controller="Boletos" asp-action="Index">Boletos</a>
+                                <a class="nav-link" asp-area="" asp-controller="Recibos" asp-action="Index">Recibos</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <div class="dropdown">
+                            @*<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cadastros</a>*@
+                            <button type="button" class="btn btn-primary nav-link dropdown-toggle" data-toggle="dropdown">
+                                Documentos
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="nav-link" asp-area="" asp-controller="Realatorios" asp-action="Index">Relatórios</a>
+                                <a class="nav-link" asp-area="" asp-controller="Anamseses" asp-action="Index">Anamneses</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Agendas" asp-action="Index">Agenda</a></li>
+
                 </ul>
                 <partial name="_LoginPartial" />
+
+                <form class="d-flex">
+                    <input class="form-control me-sm-2" type="text" placeholder="Buscar">
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+                </form>
             </div>
         </div>
     </nav>
@@ -45,12 +98,13 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2021 - QualityOfLife</p>
+            <p>&copy; 2021 - Marcella Rosa Terapeuta Ocupacional Infantil</p>
         </footer>
     </div>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/datatable/datatables.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
@@ -61,11 +115,11 @@
                 crossorigin="anonymous"
                 integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
         </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
                 crossorigin="anonymous"
-                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
+                integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
