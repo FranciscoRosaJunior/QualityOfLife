@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QualityOfLife.Data;
 using QualityOfLife.Models;
+using QualityOfLife.Services;
 
 namespace QualityOfLife.Controllers
 {
     public class AgendasController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly AgendaService _agendaServ;
 
-        public AgendasController(ApplicationDbContext context)
+        public AgendasController(ApplicationDbContext context, AgendaService agendaServ)
         {
             _context = context;
+            _agendaServ = agendaServ;
         }
 
         // GET: Agendas
@@ -62,15 +65,47 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Paciente,Profissional,DataHora,Local,TipoAtendimento,Presenca,FaltaJustificada,Falta,Reagendar,Anotações,Id,Criado,CriadoData,Modificado,ModificadoData,Repetir")] Agenda agenda)
+        public async Task<IActionResult> Create(Agenda agenda)
         {
             if (ModelState.IsValid)
             {
-                agenda.Paciente = await _context.Paciente.Where(x => x.Nome == agenda.Paciente.Nome).FirstOrDefaultAsync();
-                agenda.Profissional = await _context.Profissional.Where(x => x.Nome == agenda.Profissional.Nome).FirstOrDefaultAsync();
-                _context.Add(agenda);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                agenda.Paciente = await _context.Paciente.Where(x => x.Cpf == agenda.Paciente.Cpf).FirstOrDefaultAsync();
+                agenda.Profissional = await _context.Profissional.Where(x => x.Cpf == agenda.Profissional.Cpf).FirstOrDefaultAsync();
+
+                if (agenda.Repetir > 0)
+                {
+                    var datas = _agendaServ.BuscaDatas(agenda.Repetir, agenda.DataHora);
+
+                    foreach (var item in datas)
+                    {
+                        var ag = new Agenda
+                        {
+                            Criado = agenda.Criado,
+                            CriadoData = agenda.CriadoData,
+                            Profissional = agenda.Profissional,
+                            DataHora = item,
+                            Local = agenda.Local,
+                            Paciente = agenda.Paciente,
+                            TipoAtendimento = agenda.TipoAtendimento,
+                            Presenca = agenda.Presenca,
+                            FaltaJustificada = agenda.FaltaJustificada,
+                            Falta = agenda.Falta,
+                            Reagendar = agenda.Reagendar,
+                            Anotações = agenda.Anotações,
+                            Repetir = agenda.Repetir,
+                            Valor = agenda.Valor
+                        };
+                        _context.Add(ag);
+                    }
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    _context.Add(agenda);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(agenda);
         }
@@ -99,7 +134,7 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Paciente,Profissional,DataHora,Local,TipoAtendimento,Presenca,FaltaJustificada,Falta,Reagendar,Anotações,Id,Criado,CriadoData,Modificado,ModificadoData,Repetir")] Agenda agenda)
+        public async Task<IActionResult> Edit(long id, Agenda agenda)
         {
             if (id != agenda.Id)
             {
@@ -110,6 +145,7 @@ namespace QualityOfLife.Controllers
             {
                 try
                 {
+                    agenda.Profissional = await _context.Profissional.FirstOrDefaultAsync(x => x.Cpf == agenda.Profissional.Cpf);
                     agenda.Paciente = await _context.Paciente.FirstOrDefaultAsync(x => x.Cpf == agenda.Paciente.Nome);
                     _context.Update(agenda);
                     await _context.SaveChangesAsync();

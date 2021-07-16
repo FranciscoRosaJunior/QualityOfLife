@@ -52,8 +52,11 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Cpf)
                             </td>
+                            @{
+                                string nascimento = item.DataNascimento.ToString("dd/MM/yyyy");
+                            }
                             <td>
-                                @item.DataNascimento.ToString().Substring(0, 10)
+                                @nascimento
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.StatusPacientes)

@@ -1,143 +1,112 @@
 ﻿@model IEnumerable<QualityOfLife.Models.Responsavel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Responsável";
 }
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Responsáveis</h2>
+        </div>
+        <div class="col-lg-6" style="text-align:right; margin-top:20px;">
+            <a asp-action="Create" target="_blank" title="Cadastrar" class="btn btn-sm btn-info">
+                Cadastrar
+            </a>
+        </div>
+    </div>
+</div>
+<br />
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-striped">
+                <thead class="bg-danger text-white">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nome)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Cpf)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DataNascimento)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Profissao)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Telefone1)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Cpf)
+                            </td>
+                            @{ 
+                                string nascimento = item.DataNascimento.ToString("dd/MM/yyyy");
+                            }
+                            <td>
+                                @nascimento
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Profissao)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Telefone1)
+                            </td>
+                            <td style="text-align:right;">
+                                <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-pen" aria-hidden="true"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-sm btn-info">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Deletar" class="btn btn-sm btn-danger">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("table").DataTable({
+            "language": {
+                "emptyTable": "Sem nenhum dado",
+                "zeroRecords": "Sem nenhum dado",
+                "info": "Exibindo _START_ a _END_ de _TOTAL_ dados",
+                "infoEmpty": "Exibindo 0 a 0 de 0 dados",
+                "thousands": ",",
+                "lengthMenu": "Exibindo _MENU_ dado por páginas",
+                "paginate": {
+                    "first": "Primeira Pagina",
+                    "last": "Ultimo",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                }
 
-<h2>Index</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cpf)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataNascimento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Profissao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telefone1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telefone2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telefone3)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cep)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rua)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Numero)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Complemento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bairro)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cidade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Criado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CriadoData)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Modificado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModificadoData)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cpf)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataNascimento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Profissao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone3)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cep)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rua)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Numero)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Complemento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bairro)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cidade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Criado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CriadoData)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Modificado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModificadoData)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+            },
+            exportOptions: {
+                columns: ':not(.remove)'
+            },
+            "iDisplayLength": 15,
+            "searching": false,
+            "bPaginate": true,
+            "bFilter": true,
+            "bAutoWidth": false
+        });
+    });
+</script>

@@ -1,7 +1,7 @@
 ﻿@model QualityOfLife.Models.Agenda
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Agenda/Cadastrar";
 }
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
@@ -14,15 +14,23 @@
 <datalist id="profissionais">
     @foreach (var item in ViewBag.Profissional)
     {
-        <option value="@item.Nome"> @item.Cpf</option>
+        <option value="@item.Cpf"> @item.Nome</option>
     }
 </datalist>
 
-<div class="col-md-12">
-    <h2>Cadastrar</h2>
-    <hr />
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Cadastrar</h2>
+        </div>
+        <div class="col-lg-6" style="text-align:right; margin-top:10px;">
+            <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
+                Voltar
+            </a>
+        </div>
+    </div>
 </div>
-
+<br />
 <div class="row">
     <div class="col-md-12">
         <form asp-action="Create">
@@ -32,7 +40,7 @@
             <input type="hidden" asp-for="Modificado" class="form-control" />
             <input type="hidden" asp-for="ModificadoData" class="form-control" value="0001-01-01 00:00:00" />
             <input type="hidden" asp-for="Presenca" class="form-control" value="true" /> @*@Html.DisplayNameFor(model => model.Presenca)*@
-            <input type="hidden" asp-for="FaltaJustificada" class="form-control" value="true" /> @*@Html.DisplayNameFor(model => model.FaltaJustificada)*@
+            <input type="hidden" asp-for="FaltaJustificada" class="form-control" value="false" /> @*@Html.DisplayNameFor(model => model.FaltaJustificada)*@
             <input type="hidden" asp-for="Falta" class="form-control" value="false" /> @*@Html.DisplayNameFor(model => model.Falta)*@
             <input type="hidden" asp-for="Reagendar" class="form-control" value="false" /> @*@Html.DisplayNameFor(model => model.Reagendar)*@
 
@@ -47,11 +55,11 @@
             </div>
             <div class="form-group col-md-6">
                 <label asp-for="Paciente" class="control-label"></label>
-                <input asp-for="Paciente.Nome" class="form-control" list="pacientes" />
+                <input asp-for="Paciente.Cpf" class="form-control" list="pacientes" />
             </div>
             <div class="form-group col-md-6">
                 <label asp-for="Profissional" class="control-label"></label>
-                <input asp-for="Profissional.Nome" class="form-control" list="profissionais" />
+                <input asp-for="Profissional.Cpf" class="form-control" list="profissionais" />
             </div>
             <div class="form-group col-md-4">
                 <label asp-for="Local" class="control-label"></label>
@@ -68,11 +76,11 @@
                 <input asp-for="DataHora" class="form-control" />
                 <span asp-validation-for="DataHora" class="text-danger"></span>
             </div>
-            @*<div class="form-group col-md-4">
-                    <label asp-for="Anotações" class="control-label"></label>
-                    <input asp-for="Anotações" class="form-control" />
-                    <span asp-validation-for="Anotações" class="text-danger"></span>
-                </div>*@
+            <div class="form-group col-md-4">
+                <label asp-for="Valor" class="control-label"></label>
+                <input asp-for="Valor" class="form-control" />
+                <span asp-validation-for="Valor" class="text-danger"></span>
+            </div>
             <div class="form-group col-md-12">
                 @Html.LabelFor(m => m.Anotações)
                 @Html.TextAreaFor(m => m.Anotações)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QualityOfLife.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -22,12 +23,18 @@ namespace QualityOfLife.Models
 
         //Dados Contato
         public string Email { get; set; }
+        [DisplayName("Celular")]
         public string Telefone1 { get; set; }
+        [DisplayName("Fixo")]
         public string Telefone2 { get; set; }
+        [DisplayName("Contato outro responsável")]
         public string Telefone3 { get; set; }
 
         //Dados Endereço
+        [DisplayName("Tipo Logradouro")]
+        public string TipoLogradouro { get; set; }
         public string Cep { get; set; }
+        [DisplayName("Logradouro")]
         public string Rua { get; set; }
         [DisplayName("Número")]
         public string Numero { get; set; }
