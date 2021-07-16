@@ -577,6 +577,30 @@ progress {
   margin-bottom: 0;
 }
 
+/* Footer */
+footer {
+    background: #3777BC;
+    box-shadow: 3px 0 5px rgba(0,0,0,0.15);
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+    footer p {
+        color: #fff;
+        margin: 0;
+        font-family: frutiger-bold;
+    }
+
+        footer p span {
+            float: right;
+        }
+
+/* Footer */
+
+
+
 .blockquote-footer {
   margin-top: -2rem;
   margin-bottom: 2rem;

@@ -19,14 +19,15 @@ namespace QualityOfLife.Models
         public bool Reagendar { get; set; }
         public string Anotações { get; set; }
         public int Repetir { get; set; }
-        
+        public string Valor { get; set; }
+
 
 
         public Agenda()
         {
         }
 
-        public Agenda(Paciente paciente, Profissional profissional, DateTime dataHora, string local, TipoAtendimento tipoAtendimento, bool presenca, bool faltaJustificada, bool falta, bool reagendar, string anotações, int repetir)
+        public Agenda(Paciente paciente, Profissional profissional, DateTime dataHora, string local, TipoAtendimento tipoAtendimento, bool presenca, bool faltaJustificada, bool falta, bool reagendar, string anotações, int repetir, string valor)
         {
             Paciente = paciente;
             Profissional = profissional;
@@ -39,6 +40,7 @@ namespace QualityOfLife.Models
             Reagendar = reagendar;
             Anotações = anotações;
             Repetir = repetir;
+            Valor = valor;
         }
     }
 }

@@ -1,18 +1,34 @@
 ﻿@model QualityOfLife.Models.Paciente
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Paciente/Cadastrar";
 }
+
 <datalist id="responsaveis">
     @foreach (var item in ViewBag.Responsavel)
     {
-        <option value="@item.Nome"> @item.Cpf</option>
+        <option value="@item.Cpf"> @item.Nome</option>
     }
 </datalist>
-<h2>Create</h2>
-
-<h4>Paciente</h4>
-<hr />
+<datalist id="status">
+    @foreach (var item in ViewBag.StatusPaciente)
+    {
+        <option value="@item"></option>
+    }
+</datalist>
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Cadastrar</h2>
+        </div>
+        <div class="col-lg-6" style="text-align:right; margin-top:10px;">
+            <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
+                Voltar
+            </a>
+        </div>
+    </div>
+</div>
+<br />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -23,12 +39,12 @@
             <input type="hidden" asp-for="ModificadoData" class="form-control" value="0001-01-01 00:00:00" />
 
             @*<div class="form-group">
-                <label asp-for="Responsavel" class="control-label"></label>
-                <input asp-for="Responsavel" class="form-control" list="responsaveis" />
-            </div>*@
+                    <label asp-for="Responsavel" class="control-label"></label>
+                    <input asp-for="Responsavel" class="form-control" list="responsaveis" />
+                </div>*@
             <div class="form-group">
                 <label asp-for="Responsavel" class="control-label"></label>
-                <input asp-for="Responsavel.Nome" class="form-control" list="responsaveis" />
+                <input asp-for="Responsavel.Cpf" class="form-control" list="responsaveis" />
             </div>
             <div class="form-group">
                 <label asp-for="Nome" class="control-label"></label>
@@ -42,25 +58,20 @@
             </div>
             <div class="form-group">
                 <label asp-for="DataNascimento" class="control-label"></label>
-                <input asp-for="DataNascimento" class="form-control" />
+                <input type="date" asp-for="DataNascimento" class="form-control" />
                 <span asp-validation-for="DataNascimento" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StatusPacientes" class="control-label"></label>
-                <select class="form-control" asp-for="StatusPacientes" asp-items="@ViewBag.StatusPaciente">
-                    <option value="">--Selecione--</option>
-                </select>
+                <input asp-for="StatusPacientes" class="form-control" list="status" />
                 <span asp-validation-for="StatusPacientes" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Salvar" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 <script>

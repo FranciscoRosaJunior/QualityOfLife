@@ -1,14 +1,24 @@
 ﻿@model QualityOfLife.Models.Paciente
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Paciente/Detalhe";
 }
 
-<h2>Details</h2>
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Detalhes</h2>
+        </div>
+        <div class="col-lg-6" style="text-align:right; margin-top:20px;">
+            <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
+                Voltar
+            </a>
+        </div>
+    </div>
+</div>
+<br />
 
 <div>
-    <h4>Paciente</h4>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Nome)
@@ -61,9 +71,10 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-    <a title="Deletar Paciente" class="btn btn-danger" href="javascript:void(0);" onclick="ModalDelete('ModalDelete')" style="width:80px; height:30px;">
+    <a asp-action="Edit" asp-route-id="@Model.Id" target="_blank" class="btn btn-sm btn-primary" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
+        Editar
+    </a>
+    <a href="javascript:void(0);" onclick="ModalDelete('ModalDelete')" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
         Deletar
     </a>
 </div>
@@ -81,7 +92,7 @@
             <div class="modal-footer">
                 <form asp-action="Delete" style="display:inline">
                     <input type="hidden" asp-for="Id" />
-                    <input type="submit" value="Sim" class="btn btn-danger" style="width: 80px; height: 30px; display: inline;" />
+                    <input type="submit" value="Sim" class="btn btn-danger" />
                 </form>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
             </div>

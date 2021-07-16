@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QualityOfLife.Data;
 using QualityOfLife.Models;
+using QualityOfLife.Models.Enums;
 
 namespace QualityOfLife.Controllers
 {
@@ -46,6 +47,12 @@ namespace QualityOfLife.Controllers
         // GET: Responsaveis/Create
         public IActionResult Create()
         {
+            List<string> tipoLogradouro = new List<string>();
+            foreach(var item in Enum.GetValues(typeof(TipoLogradouro)))
+            {
+                tipoLogradouro.Add(item.ToString());
+            }
+            ViewBag.TipoLogradouro = tipoLogradouro;
             ViewBag.CurrentUser = User.Identity.Name;
             ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             return View();
@@ -56,7 +63,7 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nome,Cpf,DataNascimento,Profissao,Email,Telefone1,Telefone2,Telefone3,Cep,Rua,Numero,Complemento,Bairro,Cidade,Estado,Id,Criado,CriadoData,Modificado,ModificadoData")] Responsavel responsavel)
+        public async Task<IActionResult> Create(Responsavel responsavel)
         {
             if (ModelState.IsValid)
             {
@@ -75,6 +82,15 @@ namespace QualityOfLife.Controllers
                 return NotFound();
             }
 
+            List<string> tipoLogradouro = new List<string>();
+            foreach (var item in Enum.GetValues(typeof(TipoLogradouro)))
+            {
+                tipoLogradouro.Add(item.ToString());
+            }
+            ViewBag.TipoLogradouro = tipoLogradouro;
+            ViewBag.CurrentUser = User.Identity.Name;
+            ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
             var responsavel = await _context.Responsavel.FindAsync(id);
             if (responsavel == null)
             {
@@ -88,7 +104,7 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Nome,Cpf,DataNascimento,Profissao,Email,Telefone1,Telefone2,Telefone3,Cep,Rua,Numero,Complemento,Bairro,Cidade,Estado,Id,Criado,CriadoData,Modificado,ModificadoData")] Responsavel responsavel)
+        public async Task<IActionResult> Edit(long id, Responsavel responsavel)
         {
             if (id != responsavel.Id)
             {
@@ -121,31 +137,35 @@ namespace QualityOfLife.Controllers
         // GET: Responsaveis/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var responsavel = await _context.Responsavel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (responsavel == null)
-            {
-                return NotFound();
-            }
-
-            return View(responsavel);
-        }
-
-        // POST: Responsaveis/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
-        {
             var responsavel = await _context.Responsavel.FindAsync(id);
             _context.Responsavel.Remove(responsavel);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //var responsavel = await _context.Responsavel
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            //if (responsavel == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return View(responsavel);
         }
+
+        // POST: Responsaveis/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(long id)
+        //{
+        //    var responsavel = await _context.Responsavel.FindAsync(id);
+        //    _context.Responsavel.Remove(responsavel);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool ResponsavelExists(long id)
         {

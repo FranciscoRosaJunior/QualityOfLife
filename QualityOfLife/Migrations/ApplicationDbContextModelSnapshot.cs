@@ -215,6 +215,8 @@ namespace QualityOfLife.Migrations
 
                     b.Property<int>("TipoAtendimento");
 
+                    b.Property<string>("Valor");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PacienteId");
@@ -399,7 +401,7 @@ namespace QualityOfLife.Migrations
                     b.Property<DateTime>("ModificadoData")
                         .HasColumnType("DATETIME");
 
-                    b.Property<string>("Observações");
+                    b.Property<string>("Observacoes");
 
                     b.Property<long?>("PacienteId");
 
@@ -410,6 +412,8 @@ namespace QualityOfLife.Migrations
                     b.Property<double>("Total");
 
                     b.Property<double>("Valor");
+
+                    b.Property<string>("mesreferencia");
 
                     b.HasKey("Id");
 
@@ -585,6 +589,8 @@ namespace QualityOfLife.Migrations
 
                     b.Property<string>("Telefone3");
 
+                    b.Property<string>("TipoLogradouro");
+
                     b.HasKey("Id");
 
                     b.ToTable("Responsavel");
@@ -677,7 +683,7 @@ namespace QualityOfLife.Migrations
                         .WithMany("Pedidos")
                         .HasForeignKey("PacienteId");
 
-                    b.HasOne("QualityOfLife.Models.Profissional")
+                    b.HasOne("QualityOfLife.Models.Profissional", "Profissional")
                         .WithMany("Pedidos")
                         .HasForeignKey("ProfissionalId");
                 });

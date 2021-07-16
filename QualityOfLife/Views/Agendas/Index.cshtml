@@ -4,146 +4,149 @@
     ViewData["Title"] = "Index";
 }
 <link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
-<div class="Detalhes">
+<div class="container">
+    <div class="Detalhes">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2>Agendas</h2>
+            </div>
+            <div class="col-lg-6" style="text-align:right; margin-top:20px;">
+                <a asp-action="Create" target="_blank" title="Cadastrar" class="btn btn-sm btn-info">
+                    Cadastrar
+                </a>
+            </div>
+        </div>
+    </div>
+    <br />
     <div class="row">
-        <div class="col-lg-6">
-            <h2>Agendas</h2>
-        </div>
-        <div class="col-lg-6" style="text-align:right; margin-top:20px;">
-            <a asp-action="Create" target="_blank" title="Cadastrar" class="btn btn-sm btn-info">
-                Cadastrar
-            </a>
-        </div>
-    </div>
-</div>
-<br />
-<div class="row">
-    <div class="col-md-12">
-        <table class="table table-striped" id="tabela-agenda">
-            <thead class="bg-danger text-white">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Paciente)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Profissional)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DataHora)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Local)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.TipoAtendimento)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Presenca)
-                    </th>
-                    @*<th>
-                            @Html.DisplayNameFor(model => model.FaltaJustificada)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Falta)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Reagendar)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Anotações)
-                        </th>*@
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+        <div class="col-md-12">
+            <table class="table table-striped" id="tabela-agenda">
+                <thead class="bg-danger text-white">
                     <tr>
-                        <td class="col-md-3">
-                            @Html.DisplayFor(modelItem => item.Paciente.Nome)
-                        </td>
-                        <td class="col-md-3">
-                            @Html.DisplayFor(modelItem => item.Profissional.Nome)
-                        </td>
-                        <td class="col-md-2">
-                            @Html.DisplayFor(modelItem => item.DataHora)
-                        </td>
-                        <td class="col-md-1">
-                            @Html.DisplayFor(modelItem => item.Local)
-                        </td>
-                        <td class="col-md-1">
-                            @Html.DisplayFor(modelItem => item.TipoAtendimento)
-                        </td>
-
-                        @if (item.Presenca == true)
-                        {
-                            <td>
-                                Sim
-                            </td>
-                        }
-                        @if (item.Presenca == false)
-                        {
-                            <td>
-                                Não
-                            </td>
-                        }
-                        @*@if (item.FaltaJustificada == true)
-                                {
-                                    <td>
-                                        Sim
-                                    </td>
-                                }
-                                @if (item.FaltaJustificada == false)
-                                {
-                                    <td>
-                                        Não
-                                    </td>
-                                }
-                                @if (item.Falta == true)
-                                {
-                                    <td>
-                                        Sim
-                                    </td>
-                                }
-                                @if (item.Falta == false)
-                                {
-                                    <td>
-                                        Não
-                                    </td>
-                                }
-                                @if (item.Reagendar == true)
-                                {
-                                    <td>
-                                        Sim
-                                    </td>
-                                }
-                                @if (item.Reagendar == false)
-                                {
-                                    <td>
-                                        Não
-                                    </td>
-                                }
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Anotações)
-                            </td>*@
-                        <td class="col-md-2" style="text-align:right;">
-                            <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary">
-                                <i class="fa fa-pen" aria-hidden="true"></i>
-                            </a>
-                            <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-sm btn-info">
-                                <i class="fa fa-list" aria-hidden="true"></i>
-                            </a>
-                            <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Deletar" class="btn btn-sm btn-danger">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </a>
-                        </td>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Paciente.Nome)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Profissional)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DataHora)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Local)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TipoAtendimento)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Presenca)
+                        </th>
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.FaltaJustificada)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Falta)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Reagendar)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Anotações)
+                            </th>*@
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="col-md-3">
+                                @Html.DisplayFor(modelItem => item.Paciente.Nome)
+                            </td>
+                            <td class="col-md-3">
+                                @Html.DisplayFor(modelItem => item.Profissional.Nome)
+                            </td>
+                            <td class="col-md-2">
+                                @Html.DisplayFor(modelItem => item.DataHora)
+                            </td>
+                            <td class="col-md-1">
+                                @Html.DisplayFor(modelItem => item.Local)
+                            </td>
+                            <td class="col-md-1">
+                                @Html.DisplayFor(modelItem => item.TipoAtendimento)
+                            </td>
+
+                            @if (item.Presenca == true)
+                            {
+                                <td>
+                                    Sim
+                                </td>
+                            }
+                            @if (item.Presenca == false)
+                            {
+                                <td>
+                                    Não
+                                </td>
+                            }
+                            @*@if (item.FaltaJustificada == true)
+                                    {
+                                        <td>
+                                            Sim
+                                        </td>
+                                    }
+                                    @if (item.FaltaJustificada == false)
+                                    {
+                                        <td>
+                                            Não
+                                        </td>
+                                    }
+                                    @if (item.Falta == true)
+                                    {
+                                        <td>
+                                            Sim
+                                        </td>
+                                    }
+                                    @if (item.Falta == false)
+                                    {
+                                        <td>
+                                            Não
+                                        </td>
+                                    }
+                                    @if (item.Reagendar == true)
+                                    {
+                                        <td>
+                                            Sim
+                                        </td>
+                                    }
+                                    @if (item.Reagendar == false)
+                                    {
+                                        <td>
+                                            Não
+                                        </td>
+                                    }
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Anotações)
+                                </td>*@
+                            <td class="col-md-2" style="text-align:right;">
+                                <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-pen" aria-hidden="true"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-sm btn-info">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" target="_blank" title="Deletar" class="btn btn-sm btn-danger">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
 
 <script>
     $('#search_input').bind('keyup click change', function () {

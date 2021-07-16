@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using QualityOfLife.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using QualityOfLife.Services;
 
 namespace QualityOfLife
 {
@@ -42,6 +43,8 @@ namespace QualityOfLife
             services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseMySql(Configuration.GetConnectionString("ApplicationDbContext"), builder =>
                     builder.MigrationsAssembly("QualityOfLife")));
+
+            services.AddScoped<AgendaService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

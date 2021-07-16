@@ -9,8 +9,8 @@ using QualityOfLife.Data;
 namespace QualityOfLife.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210706125706_CamposAgenda")]
-    partial class CamposAgenda
+    [Migration("20210714163418_Inicial")]
+    partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -194,15 +194,11 @@ namespace QualityOfLife.Migrations
 
                     b.Property<DateTime>("DataHora");
 
-                    b.Property<bool>("Diariamente");
-
                     b.Property<bool>("Falta");
 
                     b.Property<bool>("FaltaJustificada");
 
                     b.Property<string>("Local");
-
-                    b.Property<bool>("Mensalmente");
 
                     b.Property<string>("Modificado");
 
@@ -217,9 +213,11 @@ namespace QualityOfLife.Migrations
 
                     b.Property<bool>("Reagendar");
 
-                    b.Property<bool>("Semanalmente");
+                    b.Property<int>("Repetir");
 
                     b.Property<int>("TipoAtendimento");
+
+                    b.Property<string>("Valor");
 
                     b.HasKey("Id");
 
@@ -389,14 +387,14 @@ namespace QualityOfLife.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<double>("Credito");
+
                     b.Property<string>("Criado");
 
                     b.Property<DateTime>("CriadoData")
                         .HasColumnType("DATETIME");
 
                     b.Property<DateTime>("DataPedido");
-
-                    b.Property<DateTime>("DataPrevista");
 
                     b.Property<double>("Desconto");
 
@@ -405,9 +403,11 @@ namespace QualityOfLife.Migrations
                     b.Property<DateTime>("ModificadoData")
                         .HasColumnType("DATETIME");
 
-                    b.Property<string>("NomeProfissional");
+                    b.Property<string>("Observacoes");
 
                     b.Property<long?>("PacienteId");
+
+                    b.Property<long?>("ProfissionalId");
 
                     b.Property<int>("TipoAtendimento");
 
@@ -415,9 +415,13 @@ namespace QualityOfLife.Migrations
 
                     b.Property<double>("Valor");
 
+                    b.Property<string>("mesreferencia");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PacienteId");
+
+                    b.HasIndex("ProfissionalId");
 
                     b.ToTable("Pedido");
                 });
@@ -497,15 +501,11 @@ namespace QualityOfLife.Migrations
 
                     b.Property<long?>("PedidoId");
 
-                    b.Property<long?>("PedidoId1");
-
                     b.Property<long?>("ProfissionalId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PedidoId");
-
-                    b.HasIndex("PedidoId1");
 
                     b.HasIndex("ProfissionalId");
 
@@ -590,6 +590,8 @@ namespace QualityOfLife.Migrations
                     b.Property<string>("Telefone2");
 
                     b.Property<string>("Telefone3");
+
+                    b.Property<string>("TipoLogradouro");
 
                     b.HasKey("Id");
 
@@ -682,6 +684,10 @@ namespace QualityOfLife.Migrations
                     b.HasOne("QualityOfLife.Models.Paciente", "Paciente")
                         .WithMany("Pedidos")
                         .HasForeignKey("PacienteId");
+
+                    b.HasOne("QualityOfLife.Models.Profissional", "Profissional")
+                        .WithMany("Pedidos")
+                        .HasForeignKey("ProfissionalId");
                 });
 
             modelBuilder.Entity("QualityOfLife.Models.ProfissionalPaciente", b =>
@@ -697,16 +703,12 @@ namespace QualityOfLife.Migrations
 
             modelBuilder.Entity("QualityOfLife.Models.ProfissionalPedido", b =>
                 {
-                    b.HasOne("QualityOfLife.Models.Pedido")
-                        .WithMany("ProfissionalPedidos")
-                        .HasForeignKey("PedidoId");
-
                     b.HasOne("QualityOfLife.Models.Paciente", "Pedido")
                         .WithMany()
-                        .HasForeignKey("PedidoId1");
+                        .HasForeignKey("PedidoId");
 
                     b.HasOne("QualityOfLife.Models.Profissional", "Profissional")
-                        .WithMany("ProfissionalPedidos")
+                        .WithMany()
                         .HasForeignKey("ProfissionalId");
                 });
 
