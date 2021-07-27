@@ -4,7 +4,9 @@
     ViewData["Title"] = "Pacientes";
 }
 <link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
-
+@section styles {
+    <link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
+}
 <div class="Detalhes">
     <div class="row">
         <div class="col-lg-6">
@@ -20,8 +22,8 @@
 <br />
 <div class="Detalhes">
     <div class="row">
-        <div class="col-lg-12">
-            <table class="table table-striped">
+        <div class="col-md-12">
+            <table class="table table-striped" id="tabela-paciente">
                 <thead class="bg-danger text-white">
                     <tr>
                         <th>
@@ -45,40 +47,86 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Nome)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Cpf)
-                            </td>
-                            @{
+                    
+                    <tr>
+                        <td class="col-md-3">
+                            @Html.DisplayFor(modelItem => item.Nome)
+                        </td>
+                        <td class="col-md-2">
+                            @Html.DisplayFor(modelItem => item.Cpf)
+                        </td>
+                        @{
                                 string nascimento = item.DataNascimento.ToString("dd/MM/yyyy");
-                            }
-                            <td>
-                                @nascimento
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StatusPacientes)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Responsavel.Nome)
-                            </td>
-                            <td style="text-align:right;">
-                                <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary">
-                                    <i class="fa fa-pen" aria-hidden="true"></i>
-                                </a>
-                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-sm btn-info">
-                                    <i class="fa fa-list" aria-hidden="true"></i>
-                                </a>
-                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Deletar" class="btn btn-sm btn-danger">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                </a>
-                            </td>
-                        </tr>
+                        }
+                        <td class="col-md-1">
+                            @nascimento
+                        </td>
+                        <td class="col-md-1">
+                            @Html.DisplayFor(modelItem => item.StatusPacientes)
+                        </td>
+                        <td class="col-md-3">
+                            @Html.DisplayFor(modelItem => item.Responsavel.Nome)
+                        </td>
+                        <td class="col-md-2" style="text-align:right;">
+                            <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary">
+                                <i class="fa fa-pen" aria-hidden="true"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-sm btn-info">
+                                <i class="fa fa-list" aria-hidden="true"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Deletar" class="btn btn-sm btn-danger">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+@section scripts {
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $('#search_input').bind('keyup click change', function () {
+            search = $(this).val().toLowerCase();
+            var re = new RegExp(search, 'g');
+
+            $('#tabela-paciente tbody tr').each(function () {
+                $(this).hide();
+                target = $(this).find('td').text().toLowerCase();
+                if (target.match(re) || target.match('^' + search)) {
+                    $(this).show();
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#tabela-paciente').DataTable({
+                "language": {
+                    "emptyTable": "Sem nenhum dado",
+                    "zeroRecords": "Sem nenhum dado",
+                    "info": "Exibindo _START_ a _END_ de _TOTAL_ dados",
+                    "infoEmpty": "Exibindo 0 a 0 de 0 dados",
+                    "thousands": ",",
+                    "lengthMenu": "Exibindo _MENU_ dado por páginas",
+                    "paginate": {
+                        "first": "Primeira Pagina",
+                        "last": "Ultimo",
+                        "next": "Próximo",
+                        "previous": "Anterior"
+                    }
+
+                },
+                exportOptions: {
+                    columns: ':not(.remove)'
+                },
+                "iDisplayLength": 10,
+                "searching": true,
+                "bPaginate": true,
+                "bFilter": true,
+                "bAutoWidth": true
+            });
+        });
+    </script>
+}

@@ -1,84 +1,184 @@
 ﻿@model QualityOfLife.Models.Pedido
-
+@using QualityOfLife.Models.Enums;
 @{
     ViewData["Title"] = "Edit";
 }
-
-<h2>Edit</h2>
-
-<h4>Pedido</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TipoAtendimento" class="control-label"></label>
-                <select asp-for="TipoAtendimento" class="form-control"></select>
-                <span asp-validation-for="TipoAtendimento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DataPedido" class="control-label"></label>
-                <input asp-for="DataPedido" class="form-control" />
-                <span asp-validation-for="DataPedido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Valor" class="control-label"></label>
-                <input asp-for="Valor" class="form-control" />
-                <span asp-validation-for="Valor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Desconto" class="control-label"></label>
-                <input asp-for="Desconto" class="form-control" />
-                <span asp-validation-for="Desconto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Credito" class="control-label"></label>
-                <input asp-for="Credito" class="form-control" />
-                <span asp-validation-for="Credito" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Observacoes" class="control-label"></label>
-                <input asp-for="Observacoes" class="form-control" />
-                <span asp-validation-for="Observacoes" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Criado" class="control-label"></label>
-                <input asp-for="Criado" class="form-control" />
-                <span asp-validation-for="Criado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CriadoData" class="control-label"></label>
-                <input asp-for="CriadoData" class="form-control" />
-                <span asp-validation-for="CriadoData" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Modificado" class="control-label"></label>
-                <input asp-for="Modificado" class="form-control" />
-                <span asp-validation-for="Modificado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModificadoData" class="control-label"></label>
-                <input asp-for="ModificadoData" class="form-control" />
-                <span asp-validation-for="ModificadoData" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+<datalist id="tipoAtendimento">
+    @foreach (var item in Html.GetEnumSelectList<TipoAtendimento>())
+    {
+        <option value="@item.Value"> @item.Text</option>
+    }
+</datalist>
+<datalist id="formaPagamento">
+    @foreach (var item in Html.GetEnumSelectList<FormaPagamento>())
+    {
+        <option value="@item.Value"> @item.Text</option>
+    }
+</datalist>
+<datalist id="localPagamento">
+    @foreach (var item in Html.GetEnumSelectList<LocalPagamento>())
+    {
+        <option value="@item.Value"> @item.Text</option>
+    }
+</datalist>
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Editar</h2>
+        </div>
+        <div class="col-lg-6" style="text-align:right; margin-top:10px;">
+            <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
+                Voltar
+            </a>
+        </div>
     </div>
 </div>
+<br />
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@using (Html.BeginForm("Edit", "Pedidos", FormMethod.Post, new { @class = "container", autocomplete = "off" }))
+{
+    <div class="row">
+        <h4>Informações do Pedido</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Criado" class="form-control" />
+        <input type="hidden" asp-for="CriadoData" class="form-control" />
+        <input type="hidden" asp-for="Modificado" class="form-control" value="@ViewBag.CurrentUser" />
+        <input type="hidden" asp-for="ModificadoData" class="form-control" value="@ViewBag.Data" />
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group col-md-4">
+            <label asp-for="mesreferencia" class="control-label"></label>
+            <input asp-for="mesreferencia" class="form-control" type="month" />
+            <span asp-validation-for="mesreferencia" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="TipoAtendimento" class="control-label"></label>
+            <input asp-for="TipoAtendimento" id="tpAtendimento" onclick="resetForm('tpAtendimento')" class="form-control" list="tipoAtendimento" />
+            <span asp-validation-for="TipoAtendimento" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="DataPedido" class="control-label"></label>
+            <input asp-for="DataPedido" class="form-control" type="date" />
+            <span asp-validation-for="DataPedido" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Valor" class="control-label"></label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">R$</span>
+                <input asp-for="Valor" type="text" class="form-control" placeholder="Ex: 160 ou 1200" onkeyup="somenteNumeros(this);" style="text-align:right;">
+                <span class="input-group-text">,00</span>
+            </div>
+            <span asp-validation-for="Valor" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Desconto" class="control-label"></label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">R$</span>
+                <input asp-for="Desconto" type="text" class="form-control" placeholder="Ex: 160 ou 1200" onkeyup="somenteNumeros(this);" style="text-align:right;">
+                <span class="input-group-text">,00</span>
+            </div>
+            <span asp-validation-for="Desconto" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Credito" class="control-label"></label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">R$</span>
+                <input asp-for="Credito" type="text" class="form-control" placeholder="Ex: 160 ou 1200" onkeyup="somenteNumeros(this);" style="text-align:right;">
+                <span class="input-group-text">,00</span>
+            </div>
+            <span asp-validation-for="Credito" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Total" class="control-label"></label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">R$</span>
+                <input asp-for="Total" type="text" class="form-control" placeholder="Ex: 160 ou 1200" onkeyup="somenteNumeros(this);" style="text-align:right;">
+                <span class="input-group-text">,00</span>
+            </div>
+            <span asp-validation-for="Total" class="text-danger"></span>
+        </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <h4>Informações do Pagamento</h4>
+        <hr />
+        <div class="form-group col-md-3">
+            <div class="form-check">
+                <label>
+                    <input id="pag" value="@Model.Pagamento.ToString()" type="hidden" />
+                    <input class="form-check-input" type="checkbox" id="pagamento" asp-for="Pagamento" onchange="onchangePagamento()" /> @Html.DisplayNameFor(model => model.Pagamento)
+                </label>
+            </div>
+            <div class="form-check">
+                <label>
+                    <input class="form-check-input" type="checkbox" asp-for="ReciboEmitido" /> @Html.DisplayNameFor(model => model.ReciboEmitido)
+                </label>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="DataPagamento" class="control-label"></label>
+            <input asp-for="DataPagamento" id="dataPagamento" class="form-control" type="date" onclick="resetForm('dataPagamento')"  />
+            <span asp-validation-for="DataPagamento" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="FormaPagamento" class="control-label"></label>
+            <input asp-for="FormaPagamento" id="forma" class="form-control" type="text" list="formaPagamento" onclick="resetForm('forma')"/>
+            <span asp-validation-for="FormaPagamento" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="LocalPagamento" class="control-label"></label>
+            <input asp-for="LocalPagamento" id="local" class="form-control" type="text" list="localPagamento" onclick="resetForm('local')" />
+            <span asp-validation-for="LocalPagamento" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-12">
+            @Html.LabelFor(m => m.Observacoes)
+            @Html.TextAreaFor(m => m.Observacoes)
+            @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <br />
+            <input type="submit" value="Salvar" class="btn btn-primary" />
+        </div>
+    </div>
 }
+
+
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=v5z53k0b99mq6jdq7rmord5xg2u6jwborbuov669whaeecsp"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: 'textarea',
+        height: 300,
+        menubar: false,
+        statusbar: false,
+        theme: 'modern'
+    });
+
+    window.onload = function () {
+        var pagamento = $("#pagamento");
+        if (pagamento[0].checked) {
+            $("#local").removeAttr("disabled");
+            $("#forma").removeAttr("disabled");
+            $("#dataPagamento").removeAttr("disabled");
+        } else {
+            $("#local").attr("disabled", "disabled");
+            $("#forma").attr("disabled", "disabled");
+            $("#dataPagamento").attr("disabled", "disabled");
+        }
+    }
+    function onchangePagamento() {
+        var pagamento = $("#pagamento");
+        if (pagamento[0].checked) {
+            $("#local").removeAttr("disabled");
+            $("#forma").removeAttr("disabled");
+            $("#dataPagamento").removeAttr("disabled");
+        } else {
+            $("#local").attr("disabled", "disabled");
+            $("#forma").attr("disabled", "disabled");
+            $("#dataPagamento").attr("disabled", "disabled");
+        }
+    }
+
+    function resetForm(id) {
+        with (document) {
+            getElementById(id).value = "";
+        }
+    }
+</script>

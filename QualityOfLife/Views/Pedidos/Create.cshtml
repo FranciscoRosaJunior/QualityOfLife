@@ -10,7 +10,19 @@
         <option value="@item.Cpf"> @item.Nome</option>
     }
 </datalist>
-<h2>Novo Pedido</h2>
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Novo Pedido</h2>
+        </div>
+        <div class="col-lg-6" style="text-align:right; margin-top:10px;">
+            <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
+                Voltar
+            </a>
+        </div>
+    </div>
+</div>
+<br />
 
 @using (Html.BeginForm("CreatePost", "Pedidos", FormMethod.Post, new { @class = "row", onsubmit = "return sendForm();" }))
 {

@@ -11,6 +11,7 @@ using PdfSharpCore.Drawing.Layout;
 using PdfSharpCore.Pdf;
 using QualityOfLife.Data;
 using QualityOfLife.Models;
+using QualityOfLife.Models.Enums;
 
 namespace QualityOfLife.Controllers
 {
@@ -40,13 +41,31 @@ namespace QualityOfLife.Controllers
             }
 
             var pedido = await _context.Pedido
+                .Include(x => x.Paciente)
+                .Include(x => x.Paciente.Responsavel)
+                .Include(x => x.Profissional)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            if(pedido.Pagamento == true)
+            {
+                var localPag = GetEnumValues<LocalPagamento>();
+                ViewBag.local = localPag[pedido.LocalPagamento - 1].ToString();
+                var formaPag = GetEnumValues<FormaPagamento>();
+                ViewBag.forma = formaPag[pedido.FormaPagamento - 1].ToString();
+            }
             if (pedido == null)
             {
                 return NotFound();
             }
 
             return View(pedido);
+        }
+        public static T[] GetEnumValues<T>() where T : struct
+        {
+            if (!typeof(T).IsEnum)
+            {
+                return null;
+            }
+            return (T[])Enum.GetValues(typeof(T));
         }
 
         // GET: Pedidos/Create
@@ -432,7 +451,8 @@ namespace QualityOfLife.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.CurrentUser = User.Identity.Name;
+            ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             var pedido = await _context.Pedido.FindAsync(id);
             if (pedido == null)
             {
@@ -446,7 +466,7 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("TipoAtendimento,DataPedido,Valor,Desconto,Credito,Total,Observacoes,Id,Criado,CriadoData,Modificado,ModificadoData")] Pedido pedido)
+        public async Task<IActionResult> Edit(long id, Pedido pedido)
         {
             if (id != pedido.Id)
             {

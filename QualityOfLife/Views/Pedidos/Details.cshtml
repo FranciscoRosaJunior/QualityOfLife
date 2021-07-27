@@ -4,81 +4,145 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Detalhes do Pedido</h2>
+        </div>
+        <div class="col-lg-6" style="text-align:right; margin-top:10px;">
+            <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
+                Voltar
+            </a>
+        </div>
+    </div>
+</div>
+<br />
 
-<div>
-    <h4>Pedido</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.TipoAtendimento)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TipoAtendimento)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DataPedido)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DataPedido)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Valor)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Valor)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Desconto)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Desconto)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Credito)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Credito)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Total)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Total)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Observacoes)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Observacoes)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Criado)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Criado)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.CriadoData)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CriadoData)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Modificado)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Modificado)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ModificadoData)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ModificadoData)
-        </dd>
-    </dl>
+<div class="container">
+    <div class="card col-md-10" style="margin-top:20px; margin-left:80px;">
+        <dl class="dl-horizontal" style="margin-left:10px;">
+            <h4 style="text-align:center"><b>Dados do Paciente</b></h4>
+            <dd style="margin-top:10px">
+                Paciente: @Html.DisplayFor(model => model.Paciente.Nome)
+            </dd>
+            <dd>
+                CPF Paciente: @Html.DisplayFor(model => model.Paciente.Cpf)
+            </dd>
+            <dd>
+                Responsável: @Html.DisplayFor(model => model.Paciente.Responsavel.Nome)
+            </dd>
+            <dd>
+                CPF Responsável: @Html.DisplayFor(model => model.Paciente.Responsavel.Cpf)
+            </dd>
+        </dl>
+    </div>
+    <div class="card col-md-10" style="margin-top:20px; margin-left:80px;">
+        <dl class="dl-horizontal" style="margin-left:10px;">
+            <h4 style="text-align:center"><b>Dados do Pedido</b></h4>
+            <dd style="margin-top:10px">
+                Número: @Model.DataPedido.ToString("yyyy")/@Model.Id.ToString().PadLeft(5, '0')
+            </dd>
+            <dd style="margin-top:10px">
+                Data: @Model.DataPedido.ToString("dd/MM/yyyy")
+            </dd>
+            <dd>
+                Valor dos Atendimentos: R$ @Html.DisplayFor(model => model.Valor),00
+            </dd>
+            <dd>
+                Créditos: R$ @Html.DisplayFor(model => model.Credito),00
+            </dd>
+            <dd>
+                Desconto: R$ @Html.DisplayFor(model => model.Desconto),00
+            </dd>
+            <dd>
+                Total à Pagar: R$ @Html.DisplayFor(model => model.Total),00
+            </dd>
+        </dl>
+    </div>
+
+    @{
+        if (Model.Pagamento == true)
+        {
+            <div class="card col-md-10" style="margin-top:20px; margin-left:80px;">
+                <dl class="dl-horizontal" style="margin-left:10px;">
+                    <h4 style="text-align:center"><b>Dados do Pagamento</b></h4>
+
+                    <dd style="margin-top:10px">
+                        Data do Pagamento: @Model.DataPagamento.ToString("dd/MM/yyyy")
+                    </dd>
+                    <dd>
+                        Valor do Pagamento: R$ @Html.DisplayFor(model => model.Total),00
+                    </dd>
+                    <dd>
+                        Forma de Pagamento: @ViewBag.forma
+                    </dd>
+                    <dd>
+                        Local de Pagamento: @ViewBag.local
+                    </dd>
+                    @{
+                        if (Model.ReciboEmitido == true)
+                        {
+                            <dd>
+                                Recibo Emitido? Sim
+                            </dd>
+                        }
+                        else
+                        {
+                            <dd>
+                                Recibo Emitido? Não
+                            </dd>
+                        }
+                    }
+
+                </dl>
+            </div>
+        }
+        else
+        {
+            <div class="card col-md-10" style="margin-top:20px; margin-left:80px;">
+                <dl class="dl-horizontal" style="margin-left:10px;">
+                    <h4 style="text-align:center"><b>Dados do Pagamento</b></h4>
+                    <dd style="margin-top:10px">
+                        Pagamento não realizado.
+                    </dd>
+                </dl>
+            </div>
+        }
+    }
+
+    <div class="col-md-10" style="margin-top:20px; margin-left:80px;">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-primary" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
+            Editar
+        </a>
+        <a href="javascript:void(0);" onclick="ModalDelete('ModalDelete')" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
+            Deletar
+        </a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+@*ModalDelete*@
+<div class="modal fade" tabindex="-1" role="dialog" id="modalPaginas">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">DELETAR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"><b>Deseja realmente deletar o pedido Nº: @Model.DataPedido.ToString("yyyy")/@Model.Id.ToString().PadLeft(5, '0'), do(a) paciente @Model.Paciente.Nome?</b></div>
+            <div class="modal-footer">
+                <form asp-action="Delete" style="display:inline">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="submit" value="Sim" class="btn btn-danger" style="display: inline;" />
+                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+    function ModalDelete(url) {
+        $(".modal-body").load(url); // chama diretório/arquivo dentro do corpo do modal
+        $("#modalPaginas").modal('show'); // Abre o modal visualmente
+    }
+</script>

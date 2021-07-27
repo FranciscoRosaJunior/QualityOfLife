@@ -198,6 +198,8 @@ namespace QualityOfLife.Migrations
 
                     b.Property<string>("Local");
 
+                    b.Property<int>("LocalAtendimento");
+
                     b.Property<string>("Modificado");
 
                     b.Property<DateTime>("ModificadoData")
@@ -392,9 +394,15 @@ namespace QualityOfLife.Migrations
                     b.Property<DateTime>("CriadoData")
                         .HasColumnType("DATETIME");
 
+                    b.Property<DateTime>("DataPagamento");
+
                     b.Property<DateTime>("DataPedido");
 
                     b.Property<double>("Desconto");
+
+                    b.Property<int>("FormaPagamento");
+
+                    b.Property<int>("LocalPagamento");
 
                     b.Property<string>("Modificado");
 
@@ -405,7 +413,11 @@ namespace QualityOfLife.Migrations
 
                     b.Property<long?>("PacienteId");
 
+                    b.Property<bool>("Pagamento");
+
                     b.Property<long?>("ProfissionalId");
+
+                    b.Property<bool>("ReciboEmitido");
 
                     b.Property<int>("TipoAtendimento");
 

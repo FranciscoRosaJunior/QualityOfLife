@@ -57,6 +57,9 @@
                         <th id="textoCenter">
                             @Html.DisplayNameFor(model => model.Total)
                         </th>
+                        <th id="textoCenter">
+                            Pago?
+                        </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -67,8 +70,8 @@
                             <td class="col-md-3" id="textoCenter">
                                 @Html.DisplayFor(modelItem => item.Paciente.Nome)
                             </td>
-                            <td class="col-md-2" id="textoCenter">
-                                @Html.DisplayFor(modelItem => item.DataPedido)
+                            <td class="col-md-1" id="textoCenter">
+                                @item.DataPedido.ToString("dd/MM/yyyy")
                             </td>
                             <td class="col-md-1" id="textoCenter">
                                 R$ @Html.DisplayFor(modelItem => item.Valor),00
@@ -82,6 +85,21 @@
                             <td class="col-md-1" id="textoCenter">
                                 R$ @Html.DisplayFor(modelItem => item.Total),00
                             </td>
+                            @{
+                                if (item.Pagamento == true)
+                                {
+                                    <td class="col-md-1" id="textoCenter">
+                                        Sim
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="col-md-1" id="textoCenter">
+                                        Não
+                                    </td>
+                                }
+                            }
+
                             <td class="col-sm-2" id="textoCenter">
                                 <a asp-action="GerarPdf2" asp-route-id="@item.Id" title="Gerar Pdf" class="btn btn-sm btn-danger waves-effect px-1">
                                     <i class="fa fa-archive" aria-hidden="true"></i>

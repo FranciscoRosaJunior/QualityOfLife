@@ -1,4 +1,4 @@
-﻿using ConsultorioTO.Models.Enums;
+﻿using QualityOfLife.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace QualityOfLife.Models
         public DateTime DataHora { get; set; }
         public string Local { get; set; }
         public TipoAtendimento TipoAtendimento { get; set; }
+        public LocalAtendimento LocalAtendimento { get; set; }
         public bool Presenca { get; set; }
         public bool FaltaJustificada { get; set; }
         public bool Falta { get; set; }

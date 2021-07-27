@@ -22,6 +22,7 @@ namespace QualityOfLife.Models
         //Um paciente pode ter apenas um
         [DisplayName("Responsável")]
         public Responsavel Responsavel { get; set; }
+        [DisplayName("Status")]
         public StatusPaciente StatusPacientes { get; set; }
         //Fim apenas um
 

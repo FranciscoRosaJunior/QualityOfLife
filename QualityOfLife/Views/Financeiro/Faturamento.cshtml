@@ -1,0 +1,26 @@
+﻿@model IEnumerable<QualityOfLife.Models.ViewModels.FaturamentoViewModels>
+
+@{
+    ViewData["Title"] = "VisualizaAtendimentos";
+}
+
+
+
+
+
+
+@using (Html.BeginForm("GerarFaturamento", "Financeiro", FormMethod.Post, new { @class = "row", onsubmit = "return sendForm();" }))
+{
+    <form class="row col-12">
+        @*<input type="hidden" name="pacientePost" class="form-control" value="@ViewBag.Cpf" />
+        <input type="hidden" name="mesPost" class="form-control" value="@ViewBag.Mes" />*@
+        <div class="form-group col-sm-4">
+            <label> Mês Referência</label>
+            <input type="month" class="form-control" name="mes" />
+        </div>
+        <div class="form-group col-12" style="margin-top:10px;">
+            @*<input type="submit" asp-action="Create" id="consulta" class="btn btn-primary btn-sm" value="Consultar">*@
+            <input type="submit" id="novoFaturamento" class="btn btn-primary btn-sm" value="Gerar">
+        </div>
+    </form>
+}
