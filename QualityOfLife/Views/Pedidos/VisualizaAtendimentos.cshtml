@@ -4,6 +4,11 @@
     ViewData["Title"] = "VisualizaAtendimentos";
 }
 <link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+@section styles {
+    <link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+}
 <datalist id="pacientes">
     @foreach (var item in ViewBag.Paciente)
     {
@@ -31,7 +36,7 @@
 
     @if (Model.Count() > 0)
     {
-        <table class="table">
+        <table class="table" id="tabela-atendimentos">
             <thead>
                 <tr>
                     <th class="col-sm-2">
@@ -132,9 +137,53 @@
                 }
             </tbody>
         </table>
-        
+
     }
 }
+@section scripts {
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $('#search_input').bind('keyup click change', function () {
+            search = $(this).val().toLowerCase();
+            var re = new RegExp(search, 'g');
 
+            $('#tabela-atendimentos tbody tr').each(function () {
+                $(this).hide();
+                target = $(this).find('td').text().toLowerCase();
+                if (target.match(re) || target.match('^' + search)) {
+                    $(this).show();
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#tabela-atendimentos').DataTable({
+                "language": {
+                    "emptyTable": "Sem nenhum dado",
+                    "zeroRecords": "Sem nenhum dado",
+                    "info": "Exibindo _START_ a _END_ de _TOTAL_ dados",
+                    "infoEmpty": "Exibindo 0 a 0 de 0 dados",
+                    "thousands": ",",
+                    "lengthMenu": "Exibindo _MENU_ dado por páginas",
+                    "paginate": {
+                        "first": "Primeira Pagina",
+                        "last": "Ultimo",
+                        "next": "Próximo",
+                        "previous": "Anterior"
+                    }
+
+                },
+                exportOptions: {
+                    columns: ':not(.remove)'
+                },
+                "iDisplayLength": 10,
+                "searching": true,
+                "bPaginate": true,
+                "bFilter": true,
+                "bAutoWidth": true
+            });
+        });
+    </script>
+}
 
 

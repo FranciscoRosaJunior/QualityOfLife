@@ -285,6 +285,7 @@ namespace QualityOfLife.Migrations
                     DataHora = table.Column<DateTime>(nullable: false),
                     Local = table.Column<string>(nullable: true),
                     TipoAtendimento = table.Column<int>(nullable: false),
+                    LocalAtendimento = table.Column<int>(nullable: false),
                     Presenca = table.Column<bool>(nullable: false),
                     FaltaJustificada = table.Column<bool>(nullable: false),
                     Falta = table.Column<bool>(nullable: false),
@@ -390,7 +391,12 @@ namespace QualityOfLife.Migrations
                     Total = table.Column<double>(nullable: false),
                     PacienteId = table.Column<long>(nullable: true),
                     ProfissionalId = table.Column<long>(nullable: true),
-                    Observacoes = table.Column<string>(nullable: true)
+                    Observacoes = table.Column<string>(nullable: true),
+                    Pagamento = table.Column<bool>(nullable: false),
+                    DataPagamento = table.Column<DateTime>(nullable: false),
+                    FormaPagamento = table.Column<int>(nullable: false),
+                    LocalPagamento = table.Column<int>(nullable: false),
+                    ReciboEmitido = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

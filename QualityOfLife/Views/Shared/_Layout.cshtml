@@ -86,10 +86,10 @@
                 </ul>
                 <partial name="_LoginPartial" />
 
-                <form class="d-flex">
+                @*<form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Buscar">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-                </form>
+                </form>*@
             </div>
         </div>
     </nav>
@@ -127,6 +127,6 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
-    @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", false)
 </body>
 </html>

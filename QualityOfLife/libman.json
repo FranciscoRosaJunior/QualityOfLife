@@ -16,6 +16,16 @@
       "files": [
         "jquery.dataTables.min.js"
       ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "fullcalendar@5.9.0",
+      "destination": "wwwroot/lib/fullcalendar/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "@fullcalendar/core@5.9.0",
+      "destination": "wwwroot/lib/fullcalendar/core/"
     }
   ]
 }

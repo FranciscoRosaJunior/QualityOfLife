@@ -93,46 +93,6 @@
                             Não
                         </td>
                             }
-                        @*@if (item.FaltaJustificada == true)
-                                {
-                                    <td>
-                                        Sim
-                                    </td>
-                                }
-                                @if (item.FaltaJustificada == false)
-                                {
-                                    <td>
-                                        Não
-                                    </td>
-                                }
-                                @if (item.Falta == true)
-                                {
-                                    <td>
-                                        Sim
-                                    </td>
-                                }
-                                @if (item.Falta == false)
-                                {
-                                    <td>
-                                        Não
-                                    </td>
-                                }
-                                @if (item.Reagendar == true)
-                                {
-                                    <td>
-                                        Sim
-                                    </td>
-                                }
-                                @if (item.Reagendar == false)
-                                {
-                                    <td>
-                                        Não
-                                    </td>
-                                }
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Anotações)
-                            </td>*@
                         <td class="col-md-2" style="text-align:right;">
                             <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary">
                                 <i class="fa fa-pen" aria-hidden="true"></i>
@@ -169,7 +129,9 @@
         });
         $(document).ready(function () {
             $('#tabela-agenda').DataTable({
+                "ordering": false,
                 "language": {
+                    "search": "Pesquisar",
                     "emptyTable": "Sem nenhum dado",
                     "zeroRecords": "Sem nenhum dado",
                     "info": "Exibindo _START_ a _END_ de _TOTAL_ dados",

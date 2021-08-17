@@ -9,7 +9,7 @@ using QualityOfLife.Data;
 namespace QualityOfLife.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210714163418_Inicial")]
+    [Migration("20210816183828_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -199,6 +199,8 @@ namespace QualityOfLife.Migrations
                     b.Property<bool>("FaltaJustificada");
 
                     b.Property<string>("Local");
+
+                    b.Property<int>("LocalAtendimento");
 
                     b.Property<string>("Modificado");
 
@@ -394,9 +396,15 @@ namespace QualityOfLife.Migrations
                     b.Property<DateTime>("CriadoData")
                         .HasColumnType("DATETIME");
 
+                    b.Property<DateTime>("DataPagamento");
+
                     b.Property<DateTime>("DataPedido");
 
                     b.Property<double>("Desconto");
+
+                    b.Property<int>("FormaPagamento");
+
+                    b.Property<int>("LocalPagamento");
 
                     b.Property<string>("Modificado");
 
@@ -407,7 +415,11 @@ namespace QualityOfLife.Migrations
 
                     b.Property<long?>("PacienteId");
 
+                    b.Property<bool>("Pagamento");
+
                     b.Property<long?>("ProfissionalId");
+
+                    b.Property<bool>("ReciboEmitido");
 
                     b.Property<int>("TipoAtendimento");
 

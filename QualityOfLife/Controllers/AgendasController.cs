@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QualityOfLife.Data;
 using QualityOfLife.Models;
+using QualityOfLife.Models.ViewModels;
 using QualityOfLife.Services;
 
 namespace QualityOfLife.Controllers
@@ -23,14 +24,59 @@ namespace QualityOfLife.Controllers
             _agendaServ = agendaServ;
         }
 
-        // GET: Agendas
-        public async Task<IActionResult> Index()
+        public async Task<JsonResult> GetEvents()
         {
-            var Model = await _context.Agenda
+            List<CalendarioViewModels> calendario = new List<CalendarioViewModels>();
+            List<Agenda> listAgenda = new List<Agenda>();
+
+            var agendas = await _context.Agenda
                 .Include(x => x.Paciente)
                 .Include(x => x.Profissional)
                 .ToListAsync();
-            return View(Model);
+
+            foreach (var agenda in agendas)
+            {
+                calendario.Add(new CalendarioViewModels()
+                {
+                    DataHora = agenda.DataHora,
+                    Anotações = agenda.Anotações,
+                    NomePaciente = await _context.Paciente.Where(x => x.Id == agenda.Paciente.Id).Select(x => x.Nome).FirstOrDefaultAsync(),
+                    NomeProfissional = await _context.Profissional.Where(x => x.Id == agenda.Profissional.Id).Select(x => x.Nome).FirstOrDefaultAsync()
+                });
+            }
+            
+            return Json(calendario.OrderBy(x => x.DataHora));
+        }
+
+        // GET: Agendas
+        public async Task<IActionResult> Index()
+        {
+            List<Agenda> listAgenda = new List<Agenda>();
+
+            var agendas = await _context.Agenda
+                .Include(x => x.Paciente)
+                .Include(x => x.Profissional)
+                .ToListAsync();
+
+            foreach (var agenda in agendas)
+            {
+                listAgenda.Add(new Agenda()
+                {
+                    DataHora = agenda.DataHora,
+                    Local = agenda.Local,
+                    TipoAtendimento = agenda.TipoAtendimento,
+                    Presenca = agenda.Presenca,
+                    FaltaJustificada = agenda.FaltaJustificada,
+                    Falta = agenda.Falta,
+                    Reagendar = agenda.Reagendar,
+                    Anotações = agenda.Anotações,
+                    Repetir = agenda.Repetir,
+                    Valor = agenda.Valor,
+                    Paciente = await _context.Paciente.Where(x => x.Id == agenda.Paciente.Id).FirstOrDefaultAsync(),
+                    Profissional = await _context.Profissional.Where(x => x.Id == agenda.Profissional.Id).FirstOrDefaultAsync()
+                });
+            }
+            return View(listAgenda.OrderByDescending(x => x.DataHora));
         }
 
         // GET: Agendas/Details/5

@@ -29,6 +29,7 @@ namespace QualityOfLife.Controllers
         {
             return View(await _context.Pedido
                 .Include(x => x.Paciente)
+                .OrderByDescending(x => x.DataPedido)
                 .ToListAsync());
         }
 
