@@ -51,32 +51,12 @@ namespace QualityOfLife.Controllers
         // GET: Agendas
         public async Task<IActionResult> Index()
         {
-            List<Agenda> listAgenda = new List<Agenda>();
-
             var agendas = await _context.Agenda
                 .Include(x => x.Paciente)
                 .Include(x => x.Profissional)
                 .ToListAsync();
 
-            foreach (var agenda in agendas)
-            {
-                listAgenda.Add(new Agenda()
-                {
-                    DataHora = agenda.DataHora,
-                    Local = agenda.Local,
-                    TipoAtendimento = agenda.TipoAtendimento,
-                    Presenca = agenda.Presenca,
-                    FaltaJustificada = agenda.FaltaJustificada,
-                    Falta = agenda.Falta,
-                    Reagendar = agenda.Reagendar,
-                    Anotações = agenda.Anotações,
-                    Repetir = agenda.Repetir,
-                    Valor = agenda.Valor,
-                    Paciente = await _context.Paciente.Where(x => x.Id == agenda.Paciente.Id).FirstOrDefaultAsync(),
-                    Profissional = await _context.Profissional.Where(x => x.Id == agenda.Profissional.Id).FirstOrDefaultAsync()
-                });
-            }
-            return View(listAgenda.OrderByDescending(x => x.DataHora));
+            return View(agendas.OrderByDescending(x => x.DataHora));
         }
 
         // GET: Agendas/Details/5
