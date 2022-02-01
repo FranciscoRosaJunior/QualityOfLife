@@ -14,7 +14,7 @@
                 </a>
                 <div class="dropdown-menu">
                     <a class="nav-link" asp-area="Identity" asp-page="">Editar</a>
-                    <a class="nav-link" asp-area="Identity" asp-page="/Account/Logout">Sair</a>
+                    <a class="nav-link" asp-controller="Home"asp-action="Logout" >Sair</a>
                 </div>
             </li>
         </ul>
@@ -22,6 +22,8 @@
 }
 else
 {
+    <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Registrar</a>
     <ul class="nav navbar-nav navbar-right">
         <li class="nav-item">
             <a class="nav-link text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

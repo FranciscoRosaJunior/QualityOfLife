@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConsultorioTO.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -96,6 +97,7 @@ namespace QualityOfLife.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 agenda.Valor = agenda.Valor + ",00";
                 agenda.Paciente = await _context.Paciente.Where(x => x.Cpf == agenda.Paciente.Cpf).FirstOrDefaultAsync();
                 agenda.Profissional = await _context.Profissional.Where(x => x.Cpf == agenda.Profissional.Cpf).FirstOrDefaultAsync();

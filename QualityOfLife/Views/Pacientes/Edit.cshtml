@@ -6,7 +6,7 @@
 <datalist id="responsaveis">
     @foreach (var item in ViewBag.Responsavel)
     {
-    <option value="@item.Cpf"> @item.Nome</option>
+        <option value="@item.Cpf"> @item.Nome</option>
     }
 </datalist>
 <datalist id="status">
@@ -34,17 +34,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="Criado" class="form-control" />
-            <input type="hidden" asp-for="CriadoData" class="form-control"  />
+            <input type="hidden" asp-for="CriadoData" class="form-control" />
             <input type="hidden" asp-for="Modificado" class="form-control" value="@ViewBag.CurrentUser" />
             <input type="hidden" asp-for="ModificadoData" class="form-control" value="@ViewBag.Data" />
 
-            @*<div class="form-group">
-            <label asp-for="Responsavel" class="control-label"></label>
-            <input asp-for="Responsavel" class="form-control" list="responsaveis" />
-        </div>*@
             <div class="form-group">
                 <label asp-for="Responsavel" class="control-label"></label>
                 <input asp-for="Responsavel.Cpf" class="form-control" list="responsaveis" />
+                <input type="hidden" asp-for="Responsavel.Nome" class="form-control" value="null" />
             </div>
             <div class="form-group">
                 <label asp-for="Nome" class="control-label"></label>

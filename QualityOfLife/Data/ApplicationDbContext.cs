@@ -15,7 +15,8 @@ namespace QualityOfLife.Data
         }
         public DbSet<ProfissionalPaciente> ProfissionalPacientes { get; set; }
         public DbSet<ProfissionalPedido> ProfissionalPedidos { get; set; }
-        
+        public DbSet<AgendaPedido> AgendaPedidos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -32,5 +33,9 @@ namespace QualityOfLife.Data
         public DbSet<QualityOfLife.Models.Profissional> Profissional { get; set; }
         
         public DbSet<QualityOfLife.Models.Pedido> Pedido { get; set; }
+        
+        public DbSet<QualityOfLife.Models.ContasApagar> ContasApagar { get; set; }
+        
+        public DbSet<QualityOfLife.Models.Recibo> Recibo { get; set; }
     }
 }

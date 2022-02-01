@@ -15,7 +15,6 @@ namespace QualityOfLife.Models
         public DateTime DataHora { get; set; }
         public string Local { get; set; }
         public TipoAtendimento TipoAtendimento { get; set; }
-        //public LocalAtendimento LocalAtendimento { get; set; }
         public bool Presenca { get; set; }
         public bool FaltaJustificada { get; set; }
         public bool Falta { get; set; }
@@ -24,7 +23,7 @@ namespace QualityOfLife.Models
         public int Repetir { get; set; }
         public string Valor { get; set; }
 
-
+        public ICollection<AgendaPedido> AgendaPedidos { get; set; } = new List<AgendaPedido>();
 
         public Agenda()
         {

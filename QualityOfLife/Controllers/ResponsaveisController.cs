@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Correios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QualityOfLife.Data;
 using QualityOfLife.Models;
 using QualityOfLife.Models.Enums;
+using System.Configuration;
 
 namespace QualityOfLife.Controllers
 {
@@ -47,12 +50,13 @@ namespace QualityOfLife.Controllers
         // GET: Responsaveis/Create
         public IActionResult Create()
         {
-            List<string> tipoLogradouro = new List<string>();
-            foreach(var item in Enum.GetValues(typeof(TipoLogradouro)))
-            {
-                tipoLogradouro.Add(item.ToString());
-            }
-            ViewBag.TipoLogradouro = tipoLogradouro;
+            //List<string> tipoLogradouro = new List<string>();
+            //foreach(var item in Enum.GetValues(typeof(TipoLogradouro)))
+            //{
+            //    tipoLogradouro.Add(item.ToString());
+            //}
+            //ViewBag.TipoLogradouro = tipoLogradouro;
+            ViewBag.erroCep = "";
             ViewBag.CurrentUser = User.Identity.Name;
             ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             return View();
@@ -67,6 +71,17 @@ namespace QualityOfLife.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(responsavel.Nome != null) responsavel.Nome = responsavel.Nome.ToUpper();
+                if(responsavel.Profissao != null) responsavel.Profissao = responsavel.Profissao.ToUpper();
+                if(responsavel.Email != null) responsavel.Email = responsavel.Email.ToLower();
+                if(responsavel.Rua != null) responsavel.Rua = responsavel.Rua.ToUpper();
+                if(responsavel.Complemento != null) responsavel.Complemento = responsavel.Complemento.ToUpper();
+                if(responsavel.Bairro != null) responsavel.Bairro = responsavel.Bairro.ToUpper();
+                if(responsavel.Cidade != null) responsavel.Cidade = responsavel.Cidade.ToUpper();
+                if(responsavel.Estado != null) responsavel.Estado = responsavel.Estado.ToUpper();
+
+
+                
                 _context.Add(responsavel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -115,6 +130,14 @@ namespace QualityOfLife.Controllers
             {
                 try
                 {
+                    if (responsavel.Nome != null) responsavel.Nome = responsavel.Nome.ToUpper();
+                    if (responsavel.Profissao != null) responsavel.Profissao = responsavel.Profissao.ToUpper();
+                    if (responsavel.Email != null) responsavel.Email = responsavel.Email.ToLower();
+                    if (responsavel.Rua != null) responsavel.Rua = responsavel.Rua.ToUpper();
+                    if (responsavel.Complemento != null) responsavel.Complemento = responsavel.Complemento.ToUpper();
+                    if (responsavel.Bairro != null) responsavel.Bairro = responsavel.Bairro.ToUpper();
+                    if (responsavel.Cidade != null) responsavel.Cidade = responsavel.Cidade.ToUpper();
+                    if (responsavel.Estado != null) responsavel.Estado = responsavel.Estado.ToUpper();
                     _context.Update(responsavel);
                     await _context.SaveChangesAsync();
                 }
@@ -166,6 +189,22 @@ namespace QualityOfLife.Controllers
         //    await _context.SaveChangesAsync();
         //    return RedirectToAction(nameof(Index));
         //}
+
+        public async Task<JsonResult> BuscarCep(string cep)
+        {
+            cep = cep.Replace("-", "").Replace(".", "");
+            var correios = new CorreiosApi();
+            var dados = await correios.consultaCEPAsync(cep);
+
+            return Json(dados.@return);
+        }
+
+        public async Task<JsonResult> BuscarCpf(string cpf)
+        {
+            var dados = await _context.Responsavel.Where(x => x.Cpf == cpf).FirstOrDefaultAsync();
+            if (dados != null) return Json(dados.Id);
+            else return Json(0);
+        }
 
         private bool ResponsavelExists(long id)
         {

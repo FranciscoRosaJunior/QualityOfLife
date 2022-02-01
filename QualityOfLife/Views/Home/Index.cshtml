@@ -39,7 +39,7 @@
                 <p id="pDetails"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
@@ -62,7 +62,6 @@
                 success: function (data) {
                     $.each(data, function (i, v) {
                         var Hora = moment(v.dataHora).format('HH:mm');
-                        console.log(v.nomeProfissional);
                         events.push({
                             title: Hora + " - " + v.nomePaciente,
                             profissional : v.nomeProfissional,

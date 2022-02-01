@@ -4,38 +4,38 @@
     ViewData["Title"] = "Responsável";
 }
 <link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+@section styles {
+    <link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+}
+<style>
+    #textoCenter {
+        text-align: center;
+    }
+
+    #btn-novo {
+        float: right;
+        padding: .5em 1em;
+        margin-top: 2px;
+    }
+</style>
+<h3 style="margin-top:10px;">
+    Responsavéis
+    <a asp-action="Create" class="btn btn-sm btn-danger waves-effect px-1" id="btn-novo">Cadastrar</a>
+</h3>
 <div class="Detalhes">
     <div class="row">
-        <div class="col-lg-6">
-            <h2>Responsáveis</h2>
-        </div>
-        <div class="col-lg-6" style="text-align:right; margin-top:20px;">
-            <a asp-action="Create" target="_blank" title="Cadastrar" class="btn btn-sm btn-info">
-                Cadastrar
-            </a>
-        </div>
-    </div>
-</div>
-<br />
-<div class="Detalhes">
-    <div class="row">
-        <div class="col-lg-12">
-            <table class="table table-striped">
-                <thead class="bg-danger text-white">
+        <div class="col-md-12">
+            <table class="table table-striped" id="tabela-responsaveis">
+                <thead class="bg-primary text-white">
                     <tr>
-                        <th>
+                        <th id="textoCenter">
                             @Html.DisplayNameFor(model => model.Nome)
                         </th>
-                        <th>
+                        <th id="textoCenter">
                             @Html.DisplayNameFor(model => model.Cpf)
                         </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DataNascimento)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Profissao)
-                        </th>
-                        <th>
+                        <th id="textoCenter">
                             @Html.DisplayNameFor(model => model.Telefone1)
                         </th>
                         <th></th>
@@ -45,32 +45,24 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>
+                            <td class="col-md-5" id="textoCenter">
                                 @Html.DisplayFor(modelItem => item.Nome)
                             </td>
-                            <td>
+                            <td class="col-md-3" id="textoCenter">
                                 @Html.DisplayFor(modelItem => item.Cpf)
                             </td>
-                            @{ 
-                                string nascimento = item.DataNascimento.ToString("dd/MM/yyyy");
-                            }
-                            <td>
-                                @nascimento
+                            <td class="col-md-2" id="textoCenter">
+                                R$ @Html.DisplayFor(modelItem => item.Telefone1)
                             </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Profissao)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Telefone1)
-                            </td>
-                            <td style="text-align:right;">
-                                <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary">
+
+                            <td class="col-sm-2" id="textoCenter">
+                                <a asp-action="Edit" asp-route-id="@item.Id" title="Editar" class="btn btn-sm btn-primary waves-effect px-1">
                                     <i class="fa fa-pen" aria-hidden="true"></i>
                                 </a>
-                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-sm btn-info">
+                                <a asp-action="Details" asp-route-id="@item.Id" title="Detalhar" class="btn btn-sm btn-info waves-effect px-1">
                                     <i class="fa fa-list" aria-hidden="true"></i>
                                 </a>
-                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Deletar" class="btn btn-sm btn-danger">
+                                <a asp-action="Details" asp-route-id="@item.Id" title="Deletar" class="btn btn-sm btn-danger">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </a>
                             </td>
@@ -81,32 +73,50 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("table").DataTable({
-            "language": {
-                "emptyTable": "Sem nenhum dado",
-                "zeroRecords": "Sem nenhum dado",
-                "info": "Exibindo _START_ a _END_ de _TOTAL_ dados",
-                "infoEmpty": "Exibindo 0 a 0 de 0 dados",
-                "thousands": ",",
-                "lengthMenu": "Exibindo _MENU_ dado por páginas",
-                "paginate": {
-                    "first": "Primeira Pagina",
-                    "last": "Ultimo",
-                    "next": "Próximo",
-                    "previous": "Anterior"
-                }
+@section scripts {
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $('#search_input').bind('keyup click change', function () {
+            search = $(this).val().toLowerCase();
+            var re = new RegExp(search, 'g');
 
-            },
-            exportOptions: {
-                columns: ':not(.remove)'
-            },
-            "iDisplayLength": 15,
-            "searching": false,
-            "bPaginate": true,
-            "bFilter": true,
-            "bAutoWidth": false
+            $('#tabela-responsaveis tbody tr').each(function () {
+                $(this).hide();
+                target = $(this).find('td').text().toLowerCase();
+                if (target.match(re) || target.match('^' + search)) {
+                    $(this).show();
+                }
+            });
         });
-    });
-</script>
+        $(document).ready(function () {
+            $('#tabela-responsaveis').DataTable({
+                "order": [[1, "asc"]],
+                "language": {
+                    "search": "Procurar",
+                    "emptyTable": "Sem nenhum dado",
+                    "zeroRecords": "Sem nenhum dado",
+                    "info": "Exibindo _START_ a _END_ de _TOTAL_ dados",
+                    "infoEmpty": "Exibindo 0 a 0 de 0 dados",
+                    "thousands": ",",
+                    "lengthMenu": "Exibindo _MENU_ dado por páginas",
+                    "paginate": {
+                        "first": "Primeira Pagina",
+                        "last": "Ultimo",
+                        "next": "Próximo",
+                        "previous": "Anterior"
+                    }
+
+                },
+                exportOptions: {
+                    columns: ':not(.remove)'
+                },
+                "iDisplayLength": 10,
+                "searching": true,
+                "bPaginate": true,
+                "bFilter": true,
+                "bAutoWidth": true
+            });
+        });
+    </script>
+}

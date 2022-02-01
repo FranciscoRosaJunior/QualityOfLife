@@ -16,7 +16,7 @@
                 <h2>Agenda</h2>
             </div>
             <div class="col-lg-6" style="text-align:right; margin-top:20px;">
-                <a asp-action="Create" target="_blank" title="Cadastrar" class="btn btn-sm btn-info">
+                <a asp-action="Create" title="Cadastrar" class="btn btn-sm btn-info">
                     Cadastrar
                 </a>
             </div>
@@ -82,13 +82,13 @@
                         </td>
                             }
                         <td class="col-md-2" style="text-align:right;">
-                            <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary">
+                            <a asp-action="Edit" asp-route-id="@item.Id"  title="Editar" class="btn btn-sm btn-primary">
                                 <i class="fa fa-pen" aria-hidden="true"></i>
                             </a>
-                            <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-sm btn-info">
+                            <a asp-action="Details" asp-route-id="@item.Id" title="Detalhar" class="btn btn-sm btn-info">
                                 <i class="fa fa-list" aria-hidden="true"></i>
                             </a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" target="_blank" title="Deletar" class="btn btn-sm btn-danger">
+                            <a asp-action="Delete" asp-route-id="@item.Id" title="Deletar" class="btn btn-sm btn-danger">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </a>
                         </td>

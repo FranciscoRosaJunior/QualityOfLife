@@ -31,7 +31,7 @@
     }
 </style>
 <h3 style="margin-top:10px;">
-    Novo Pedido
+    Pedidos
     <a asp-action="Create" class="btn btn-sm btn-danger waves-effect px-1" id="btn-novo">Novo Pedido</a>
 </h3>
 
@@ -108,10 +108,13 @@
                                 <a asp-action="GerarPdf2" asp-route-id="@item.Id" title="Gerar Pdf" class="btn btn-sm btn-danger waves-effect px-1">
                                     <i class="fa fa-archive" aria-hidden="true"></i>
                                 </a>
-                                <a asp-action="Edit" asp-route-id="@item.Id" target="_blank" title="Editar" class="btn btn-sm btn-primary waves-effect px-1">
+                                <a asp-action="GerarRecibo" asp-controller="Recibos" asp-route-id="@item.Id" title="Gerar Recibo" class="btn btn-sm btn-info waves-effect px-1">
+                                    <i class="fa fa-book" aria-hidden="true"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" title="Editar" class="btn btn-sm btn-primary waves-effect px-1">
                                     <i class="fa fa-pen" aria-hidden="true"></i>
                                 </a>
-                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" title="Detalhar" class="btn btn-sm btn-info waves-effect px-1">
+                                <a asp-action="Details" asp-route-id="@item.Id" title="Detalhar" class="btn btn-sm btn-warning waves-effect px-1">
                                     <i class="fa fa-list" aria-hidden="true"></i>
                                 </a>
                             </td>
@@ -142,6 +145,7 @@
             $('#tabela-pedido').DataTable({
                 "order": [[7, "desc"]],
                 "language": {
+                    "search": "Procurar",
                     "emptyTable": "Sem nenhum dado",
                     "zeroRecords": "Sem nenhum dado",
                     "info": "Exibindo _START_ a _END_ de _TOTAL_ dados",

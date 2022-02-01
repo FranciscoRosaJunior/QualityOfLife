@@ -1,5 +1,11 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Options
+
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
     <link rel="apple-touch-icon" sizes="57x57" href="/images/icn/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/images/icn/apple-icon-60x60.png">
@@ -28,7 +34,7 @@
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap-quartz.min"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap-quartz.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
@@ -66,6 +72,7 @@
                                 <li><a class="nav-link" asp-area="" asp-controller="Boletos" asp-action="Index">Boletos</a></li>
                                 <li><a class="nav-link" asp-area="" asp-controller="Recibos" asp-action="Index">Recibos</a></li>
                                 <li><a class="nav-link" asp-area="" asp-controller="Financeiro" asp-action="Faturamento">Relatório Faturamento</a></li>
+                                <li><a class="nav-link" asp-area="" asp-controller="ContasApagar" asp-action="Index">Contas à Pagar</a></li>
                             </ul>
                         </div>
                     </li>
@@ -87,20 +94,20 @@
                 <partial name="_LoginPartial" />
 
                 @*<form class="d-flex">
-                    <input class="form-control me-sm-2" type="text" placeholder="Buscar">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-                </form>*@
+                        <input class="form-control me-sm-2" type="text" placeholder="Buscar">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+                    </form>*@
             </div>
         </div>
     </nav>
 
-    <partial name="_CookieConsentPartial" />
+    @*<partial name="_CookieConsentPartial" />*@
 
     <div class="container body-content">
         @RenderBody()
         <br />
-        <footer style="bottom: 0; position: fixed; ">
-            <p style="float: right; margin-right:5px; margin-top:5px;">&copy; 2020 - Marcella Rosa Terapeuta Ocupacional Infantil</p>
+        <footer style="bottom: 0; position: relative; ">
+            <p style="float: right; margin-right:5px; margin-top:5px;">&copy; 2022 - Marcella Rosa & Equipe</p>
         </footer>
     </div>
 
@@ -108,6 +115,7 @@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/datatable/js/jquery.dataTables.min.js"></script>
         <script src="~/lib/datatable/css/jquery.dataTables.css"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>

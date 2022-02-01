@@ -10,7 +10,7 @@ namespace QualityOfLife.Models
     {
         [Key]
         public long Id { get; set; }
-        public Paciente Pedido { get; set; }
+        public Pedido Pedido { get; set; }
         public Profissional Profissional { get; set; }
     }
 }

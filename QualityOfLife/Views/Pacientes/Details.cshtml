@@ -44,43 +44,19 @@
         <dd>
             @Html.DisplayFor(model => model.StatusPacientes)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Criado)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Criado)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.CriadoData)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CriadoData)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Modificado)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Modificado)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ModificadoData)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ModificadoData)
-        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" target="_blank" class="btn btn-sm btn-primary" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-primary" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
         Editar
     </a>
-    <a href="javascript:void(0);" onclick="ModalDelete('ModalDelete')" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
+    <button type="button" data-toggle="modal" data-target="#modalDel" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
         Deletar
-    </a>
+    </button>
 </div>
-@*ModalDelete*@
-<div class="modal fade" tabindex="-1" role="dialog" id="modalPaginas">
-    <div class="modal-dialog modal-lg" role="document">
+<!-- Modal -->
+<div class="modal fade" id="modalDel" tabindex="-1" role="dialog" aria-labelledby="modalDelLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">DELETAR</h5>
@@ -88,13 +64,13 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body"><b>Deseja realmente deletar o usuário @Model.Nome?</b></div>
+            <div class="modal-body"><b>Deseja realmente deletar o paciente @Model.Nome?</b></div>
             <div class="modal-footer">
                 <form asp-action="Delete" style="display:inline">
                     <input type="hidden" asp-for="Id" />
-                    <input type="submit" value="Sim" class="btn btn-danger" />
+                    <input type="submit" value="Sim" class="btn btn-danger" style="display: inline;" />
                 </form>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
             </div>
         </div>
     </div>

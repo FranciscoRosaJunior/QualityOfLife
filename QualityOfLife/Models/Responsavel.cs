@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace QualityOfLife.Models
         public string Nome { get; set; }
 
         [DisplayName("CPF")]
-        public string Cpf { get; set; }
+        public string Cpf { get; set; } 
 
         [DisplayName("Data de Nascimento")]
         public DateTime DataNascimento { get; set; }
@@ -27,14 +28,14 @@ namespace QualityOfLife.Models
         public string Telefone1 { get; set; }
         [DisplayName("Fixo")]
         public string Telefone2 { get; set; }
-        [DisplayName("Contato outro responsável")]
+        [DisplayName("Outro responsável")]
         public string Telefone3 { get; set; }
 
         //Dados Endereço
         [DisplayName("Tipo Logradouro")]
         public string TipoLogradouro { get; set; }
         public string Cep { get; set; }
-        [DisplayName("Logradouro")]
+        [DisplayName("Endereço")]
         public string Rua { get; set; }
         [DisplayName("Número")]
         public string Numero { get; set; }

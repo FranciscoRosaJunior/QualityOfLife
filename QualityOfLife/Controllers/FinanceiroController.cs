@@ -1,6 +1,4 @@
-﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Drawing;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -11,9 +9,7 @@ using QualityOfLife.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace QualityOfLife.Controllers
@@ -49,7 +45,7 @@ namespace QualityOfLife.Controllers
                 ICollection<FaturamentoViewModels> model = new List<FaturamentoViewModels>();
 
                 var pacientesList = await _context.Paciente
-                    .Where(x => x.StatusPacientes.ToString() == "3")
+                    .Where(x => x.StatusPacientes.ToString() == "3" || x.StatusPacientes.ToString() == "2")
                     .Include(x => x.Responsavel)
                     .ToListAsync();
 
@@ -164,25 +160,61 @@ namespace QualityOfLife.Controllers
             
             int nomes = 1;
             int index = 0;
+
             row++;
             for (index = row; index < agenda.Count() + row; index++)
             {
                 var datas = agenda.ElementAt(index - row);
                 if (nomes == 1)
                 {
-                    worksheet.Cells[index, 1].Value = paciente.Select(x => x.Responsavel.Nome);
-                    worksheet.Cells[index, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                    worksheet.Cells[index, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
+                    if(agenda.Count == 1)
+                    {
+                        worksheet.Cells[index, 1].Value = paciente.Select(x => x.Responsavel.Nome);
+                        worksheet.Cells[index, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells[index, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
+
+                        worksheet.Cells[index, 2].Value = paciente.Select(x => x.Responsavel.Cpf);
+                        worksheet.Cells[index, 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells[index, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
+
+                        worksheet.Cells[index, 3].Value = datas.DataHora;
+                        worksheet.Cells[index, 3].Style.Numberformat.Format = "dd/mm/yyyy";
+                        worksheet.Cells[index, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
+                        worksheet.Cells[index, 3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
+                        index++;
+
+                        worksheet.Cells[index, 1].Value = paciente.Select(x => x.Nome);
+                        worksheet.Cells[index, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells[index, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
+
+                        worksheet.Cells[index, 2].Value = paciente.Select(x => x.Cpf);
+                        worksheet.Cells[index, 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells[index, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
+
+                        worksheet.Cells[index, 3].Value = "";
+                        worksheet.Cells[index, 3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
+                        nomes++;
+                    }
+                    else
+                    {
+                        worksheet.Cells[index, 1].Value = paciente.Select(x => x.Responsavel.Nome);
+                        worksheet.Cells[index, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells[index, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
+
+                        worksheet.Cells[index, 2].Value = paciente.Select(x => x.Responsavel.Cpf);
+                        worksheet.Cells[index, 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells[index, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
+
+                        worksheet.Cells[index, 3].Value = datas.DataHora;
+                        worksheet.Cells[index, 3].Style.Numberformat.Format = "dd/mm/yyyy";
+                        worksheet.Cells[index, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
+                        worksheet.Cells[index, 3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
+                        nomes++;
+                    }
                     
-                    worksheet.Cells[index, 2].Value = paciente.Select(x => x.Responsavel.Cpf);
-                    worksheet.Cells[index, 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                    worksheet.Cells[index, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
-                    
-                    worksheet.Cells[index, 3].Value = datas.DataHora;
-                    worksheet.Cells[index, 3].Style.Numberformat.Format = "dd/mm/yyyy";
-                    worksheet.Cells[index, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
-                    worksheet.Cells[index, 3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                    nomes++;
                 }
                 else if (nomes == 2)
                 {

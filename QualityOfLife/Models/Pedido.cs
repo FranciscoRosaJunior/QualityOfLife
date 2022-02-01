@@ -34,7 +34,8 @@ namespace QualityOfLife.Models
         public int LocalPagamento { get; set; }
         [DisplayName("Recibo Emitido?")]
         public bool ReciboEmitido { get; set; }
-        //Pagamento, data Pagamento, Modo Pagamento, Local Pagamento, Recibo
+
+        public ICollection<AgendaPedido> AgendaPedidos { get; set; } = new List<AgendaPedido>();
 
         public Pedido()
         {

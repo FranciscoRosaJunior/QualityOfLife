@@ -48,6 +48,29 @@ namespace QualityOfLife.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ContasApagar",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Criado = table.Column<string>(nullable: true),
+                    CriadoData = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    Modificado = table.Column<string>(nullable: true),
+                    ModificadoData = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    Descricao = table.Column<string>(nullable: true),
+                    TipoContaPagar = table.Column<int>(nullable: false),
+                    Valor = table.Column<double>(nullable: false),
+                    DataVencimento = table.Column<DateTime>(nullable: false),
+                    Pagamento = table.Column<bool>(nullable: false),
+                    DataPagamento = table.Column<DateTime>(nullable: false),
+                    Observacoes = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContasApagar", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Profissional",
                 columns: table => new
                 {
@@ -285,7 +308,6 @@ namespace QualityOfLife.Migrations
                     DataHora = table.Column<DateTime>(nullable: false),
                     Local = table.Column<string>(nullable: true),
                     TipoAtendimento = table.Column<int>(nullable: false),
-                    LocalAtendimento = table.Column<int>(nullable: false),
                     Presenca = table.Column<bool>(nullable: false),
                     FaltaJustificada = table.Column<bool>(nullable: false),
                     Falta = table.Column<bool>(nullable: false),
@@ -442,32 +464,6 @@ namespace QualityOfLife.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProfissionalPedidos",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PedidoId = table.Column<long>(nullable: true),
-                    ProfissionalId = table.Column<long>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProfissionalPedidos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProfissionalPedidos_Paciente_PedidoId",
-                        column: x => x.PedidoId,
-                        principalTable: "Paciente",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProfissionalPedidos_Profissional_ProfissionalId",
-                        column: x => x.ProfissionalId,
-                        principalTable: "Profissional",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Relatorio",
                 columns: table => new
                 {
@@ -500,6 +496,88 @@ namespace QualityOfLife.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AgendaPedidos",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PedidoId = table.Column<long>(nullable: true),
+                    AgendaId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AgendaPedidos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AgendaPedidos_Agenda_AgendaId",
+                        column: x => x.AgendaId,
+                        principalTable: "Agenda",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AgendaPedidos_Pedido_PedidoId",
+                        column: x => x.PedidoId,
+                        principalTable: "Pedido",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProfissionalPedidos",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PedidoId = table.Column<long>(nullable: true),
+                    ProfissionalId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfissionalPedidos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProfissionalPedidos_Pedido_PedidoId",
+                        column: x => x.PedidoId,
+                        principalTable: "Pedido",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProfissionalPedidos_Profissional_ProfissionalId",
+                        column: x => x.ProfissionalId,
+                        principalTable: "Profissional",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Recibo",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Criado = table.Column<string>(nullable: true),
+                    CriadoData = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    Modificado = table.Column<string>(nullable: true),
+                    ModificadoData = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    responsavelId = table.Column<long>(nullable: true),
+                    pedidoId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recibo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Recibo_Pedido_pedidoId",
+                        column: x => x.pedidoId,
+                        principalTable: "Pedido",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Recibo_Responsavel_responsavelId",
+                        column: x => x.responsavelId,
+                        principalTable: "Responsavel",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Agenda_PacienteId",
                 table: "Agenda",
@@ -509,6 +587,16 @@ namespace QualityOfLife.Migrations
                 name: "IX_Agenda_ProfissionalId",
                 table: "Agenda",
                 column: "ProfissionalId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AgendaPedidos_AgendaId",
+                table: "AgendaPedidos",
+                column: "AgendaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AgendaPedidos_PedidoId",
+                table: "AgendaPedidos",
+                column: "PedidoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Anamnese_PacienteId",
@@ -598,6 +686,16 @@ namespace QualityOfLife.Migrations
                 column: "ProfissionalId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Recibo_pedidoId",
+                table: "Recibo",
+                column: "pedidoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recibo_responsavelId",
+                table: "Recibo",
+                column: "responsavelId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Relatorio_PacienteId",
                 table: "Relatorio",
                 column: "PacienteId");
@@ -611,7 +709,7 @@ namespace QualityOfLife.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Agenda");
+                name: "AgendaPedidos");
 
             migrationBuilder.DropTable(
                 name: "Anamnese");
@@ -635,7 +733,7 @@ namespace QualityOfLife.Migrations
                 name: "Boleto");
 
             migrationBuilder.DropTable(
-                name: "Pedido");
+                name: "ContasApagar");
 
             migrationBuilder.DropTable(
                 name: "ProfissionalPacientes");
@@ -644,13 +742,22 @@ namespace QualityOfLife.Migrations
                 name: "ProfissionalPedidos");
 
             migrationBuilder.DropTable(
+                name: "Recibo");
+
+            migrationBuilder.DropTable(
                 name: "Relatorio");
+
+            migrationBuilder.DropTable(
+                name: "Agenda");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Pedido");
 
             migrationBuilder.DropTable(
                 name: "Paciente");

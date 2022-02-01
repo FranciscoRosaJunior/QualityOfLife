@@ -3,157 +3,120 @@
 @{
     ViewData["Title"] = "Responsável/Detalhes";
 }
-
+<style>
+    #perfil {
+        width: 1100px;
+        height: 300px;
+        border-style: solid;
+        background: #ffffff;
+    }
+    #perfil3 {
+        flex-direction: row;
+        justify-content: left;
+        display: flex;
+        margin-top: 30px;
+        flex-direction: row;
+        justify-content: left;
+        align-items: baseline;
+        color:deeppink;
+    }
+</style>
 <link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
-<div class="Detalhes">
-    <div class="row">
-        <div class="col-lg-6">
-            <h2>Detalhes</h2>
-        </div>
-        <div class="col-lg-6" style="text-align:right; margin-top:20px;">
-            <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
-                Voltar
-            </a>
+
+<div class=" container">
+    <div class="Detalhes">
+        <div class="row col-sm-12">
+            <div class="col-sm-6">
+                <h2>Responsável</h2>
+            </div>
+            <div class="col-sm-6" style="text-align:right; margin-top:10px;">
+                <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
+                    Voltar
+                </a>
+            </div>
         </div>
     </div>
-</div>
-<br />
+    <div class="row col-sm-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group col-sm-4">
+            <label asp-for="Cpf" class="control-label"></label>
+            <input asp-for="Cpf" class="form-control" disabled />
 
-<div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Cpf)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cpf)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DataNascimento)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DataNascimento)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Profissao)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Profissao)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Telefone1)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Telefone1)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Telefone2)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Telefone2)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Telefone3)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Telefone3)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Cep)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cep)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TipoLogradouro)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TipoLogradouro)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Rua)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Rua)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Numero)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Numero)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Complemento)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Complemento)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Bairro)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Bairro)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Cidade)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cidade)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Criado)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Criado)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.CriadoData)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CriadoData)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Modificado)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Modificado)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ModificadoData)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ModificadoData)
-        </dd>
-    </dl>
+        </div>
+        <div class="form-group col-sm-8">
+            <label asp-for="Nome" class="control-label"></label>
+            <input asp-for="Nome" class="form-control" disabled />
+        </div>
+        <div class="form-group col-sm-6">
+            <label asp-for="Email" class="control-label"></label>
+            <input asp-for="Email" class="form-control" disabled />
+
+        </div>
+        <div class="form-group col-sm-6">
+            <label asp-for="Profissao" class="control-label"></label>
+            <input asp-for="Profissao" class="form-control" disabled />
+
+        </div>
+        <div class="form-group col-sm-4">
+            <label asp-for="Telefone1" class="control-label"></label>
+            <input asp-for="Telefone1" class="form-control" disabled />
+
+        </div>
+        <div class="form-group col-sm-4">
+            <label asp-for="Telefone2" class="control-label"></label>
+            <input asp-for="Telefone2" class="form-control" disabled />
+        </div>
+        <div class="form-group col-sm-4">
+            <label asp-for="Telefone3" class="control-label"></label>
+            <input asp-for="Telefone3" class="form-control" disabled />
+        </div>
+        <div class="form-group col-sm-4">
+            <label asp-for="Cep" class="control-label"></label>
+            <input name="cep" asp-for="Cep" class="form-control" disabled />
+        </div>
+        <div class="form-group col-sm-12">
+            <hr />
+        </div>
+        <div class="form-group col-sm-6">
+            <label asp-for="Rua" class="control-label"></label>
+            <input name="rua" asp-for="Rua" class="form-control" disabled />
+        </div>
+        <div class="form-group col-sm-2">
+            <label asp-for="Numero" class="control-label"></label>
+            <input name="numero" asp-for="Numero" class="form-control" disabled />
+        </div>
+
+        <div class="form-group col-sm-4">
+            <label asp-for="Complemento" class="control-label"></label>
+            <input name="complemento" asp-for="Complemento" class="form-control" disabled />
+        </div>
+        <div class="form-group col-sm-5">
+            <label asp-for="Bairro" class="control-label"></label>
+            <input name="bairro" asp-for="Bairro" class="form-control" disabled />
+        </div>
+        <div class="form-group col-sm-5">
+            <label asp-for="Cidade" class="control-label"></label>
+            <input name="cidade" asp-for="Cidade" class="form-control" disabled />
+        </div>
+        <div class="form-group col-sm-2">
+            <label asp-for="Estado" class="control-label"></label>
+            <input name="estado" asp-for="Estado" class="form-control" disabled />
+        </div>
+    </div>
+    <br />
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-primary" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
+            Editar
+        </a>
+        <button type="button" data-toggle="modal" data-target="#modalDel" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
+            Deletar
+        </button>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" target="_blank" class="btn btn-sm btn-primary" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
-        Editar
-    </a>
-    <a href="javascript:void(0);" onclick="ModalDelete('ModalDelete')" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
-        Deletar
-    </a>
-</div>
-@*ModalDelete*@
-<div class="modal fade" tabindex="-1" role="dialog" id="modalPaginas">
-    <div class="modal-dialog modal-lg" role="document">
+
+<!-- Modal -->
+<div class="modal fade" id="modalDel" tabindex="-1" role="dialog" aria-labelledby="modalDelLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">DELETAR</h5>
@@ -161,7 +124,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body"><b>Deseja realmente deletar o usuário @Model.Nome?</b></div>
+            <div class="modal-body"><b>Deseja realmente deletar o responsável @Model.Nome?</b></div>
             <div class="modal-footer">
                 <form asp-action="Delete" style="display:inline">
                     <input type="hidden" asp-for="Id" />
@@ -172,10 +135,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function ModalDelete(url) {
-        $(".modal-body").load(url); // chama diretório/arquivo dentro do corpo do modal
-        $("#modalPaginas").modal('show'); // Abre o modal visualmente
-    }
-</script>

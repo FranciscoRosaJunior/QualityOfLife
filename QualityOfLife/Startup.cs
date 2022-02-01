@@ -45,6 +45,8 @@ namespace QualityOfLife
                     builder.MigrationsAssembly("QualityOfLife")));
 
             services.AddScoped<AgendaService>();
+            services.AddScoped<PedidoService>();
+            services.AddScoped<ReciboService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,5 +76,6 @@ namespace QualityOfLife
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
     }
 }

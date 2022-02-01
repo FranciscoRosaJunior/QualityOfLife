@@ -1,0 +1,133 @@
+﻿@model IEnumerable<QualityOfLife.Models.ContasApagar>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+@section styles {
+    <link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+}
+<div class="container">
+    <div class="Detalhes">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2>Contas à Pagar</h2>
+            </div>
+            <div class="col-lg-6" style="text-align:right; margin-top:20px;">
+                <a asp-action="Create" title="Cadastrar" class="btn btn-sm btn-info">
+                    Cadastrar
+                </a>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped" id="tabela-contasApagar">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Descricao)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TipoContaPagar)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Valor)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DataVencimento)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Pagamento)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DataPagamento)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Descricao)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TipoContaPagar)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Valor)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataVencimento)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Pagamento)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataPagamento)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $('#search_input').bind('keyup click change', function () {
+            search = $(this).val().toLowerCase();
+            var re = new RegExp(search, 'g');
+
+            $('#tabela-contasApagar tbody tr').each(function () {
+                $(this).hide();
+                target = $(this).find('td').text().toLowerCase();
+                if (target.match(re) || target.match('^' + search)) {
+                    $(this).show();
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#tabela-contasApagar').DataTable({
+                "ordering": false,
+                "language": {
+                    "search": "Pesquisar",
+                    "emptyTable": "Sem nenhum dado",
+                    "zeroRecords": "Sem nenhum dado",
+                    "info": "Exibindo _START_ a _END_ de _TOTAL_ dados",
+                    "infoEmpty": "Exibindo 0 a 0 de 0 dados",
+                    "thousands": ",",
+                    "lengthMenu": "Exibindo _MENU_ dado por páginas",
+                    "paginate": {
+                        "first": "Primeira Pagina",
+                        "last": "Ultimo",
+                        "next": "Próximo",
+                        "previous": "Anterior"
+                    }
+
+                },
+                exportOptions: {
+                    columns: ':not(.remove)'
+                },
+                "iDisplayLength": 10,
+                "searching": true,
+                "bPaginate": true,
+                "bFilter": true,
+                "bAutoWidth": true
+            });
+        });
+    </script>
+}
+

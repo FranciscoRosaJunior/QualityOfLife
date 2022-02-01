@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,13 +16,13 @@ namespace QualityOfLife.Models
         [DisplayName("CPF")]
         public string Cpf { get; set; }
 
-        [DisplayName("Data de Nascimento")]
+        [DisplayName("Data Nascimento")]
         public DateTime DataNascimento { get; set; }
-
 
         //Um paciente pode ter apenas um
         [DisplayName("Responsável")]
         public Responsavel Responsavel { get; set; }
+
         [DisplayName("Status")]
         public StatusPaciente StatusPacientes { get; set; }
         //Fim apenas um
@@ -37,11 +38,12 @@ namespace QualityOfLife.Models
         {
         }
 
-        public Paciente(string nome, string cpf, DateTime dataNascimento, Responsavel responsavel)
+        public Paciente(string nome, string cpf, DateTime dataNascimento, StatusPaciente statusPaciente, Responsavel responsavel)
         {
             Nome = nome;
             Cpf = cpf;
             DataNascimento = dataNascimento;
+            StatusPacientes = statusPaciente;
             Responsavel = responsavel;
         }
     }

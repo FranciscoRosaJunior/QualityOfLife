@@ -114,14 +114,15 @@
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-primary" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
             Editar
         </a>
-        <a href="javascript:void(0);" onclick="ModalDelete('ModalDelete')" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
+        <button type="button" data-toggle="modal" data-target="#modalDel" style="width:80px; height:30px;" class="btn btn-sm btn-danger">
             Deletar
-        </a>
+        </button>
     </div>
 </div>
-@*ModalDelete*@
-<div class="modal fade" tabindex="-1" role="dialog" id="modalPaginas">
-    <div class="modal-dialog modal-lg" role="document">
+
+<!-- Modal -->
+<div class="modal fade" id="modalDel" tabindex="-1" role="dialog" aria-labelledby="modalDelLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">DELETAR</h5>
@@ -140,9 +141,3 @@
         </div>
     </div>
 </div>
-<script>
-    function ModalDelete(url) {
-        $(".modal-body").load(url); // chama diretório/arquivo dentro do corpo do modal
-        $("#modalPaginas").modal('show'); // Abre o modal visualmente
-    }
-</script>

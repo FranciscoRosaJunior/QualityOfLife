@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConsultorioTO.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -70,9 +71,13 @@ namespace QualityOfLife.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Paciente paciente)
         {
+            ViewBag.CurrentUser = User.Identity.Name;
+            ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
             if (ModelState.IsValid)
             {
                 paciente.Responsavel = await _context.Responsavel.Where(x => x.Cpf == paciente.Responsavel.Cpf).FirstOrDefaultAsync();
+                if (paciente.Nome != null) paciente.Nome = paciente.Nome.ToUpper();
                 _context.Add(paciente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -161,7 +166,12 @@ namespace QualityOfLife.Controllers
         //    await _context.SaveChangesAsync();
         //    return RedirectToAction(nameof(Index));
         //}
-
+        public async Task<JsonResult> BuscarCpf(string cpf)
+        {
+            var dados = await _context.Paciente.Where(x => x.Cpf == cpf).FirstOrDefaultAsync();
+            if (dados != null) return Json(dados.Id);
+            else return Json(0);
+        }
         private bool PacienteExists(long id)
         {
             return _context.Paciente.Any(e => e.Id == id);

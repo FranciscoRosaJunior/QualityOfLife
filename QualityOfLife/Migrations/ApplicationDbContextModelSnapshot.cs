@@ -198,8 +198,6 @@ namespace QualityOfLife.Migrations
 
                     b.Property<string>("Local");
 
-                    b.Property<int>("LocalAtendimento");
-
                     b.Property<string>("Modificado");
 
                     b.Property<DateTime>("ModificadoData")
@@ -226,6 +224,24 @@ namespace QualityOfLife.Migrations
                     b.HasIndex("ProfissionalId");
 
                     b.ToTable("Agenda");
+                });
+
+            modelBuilder.Entity("QualityOfLife.Models.AgendaPedido", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long?>("AgendaId");
+
+                    b.Property<long?>("PedidoId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AgendaId");
+
+                    b.HasIndex("PedidoId");
+
+                    b.ToTable("AgendaPedidos");
                 });
 
             modelBuilder.Entity("QualityOfLife.Models.Anamnese", b =>
@@ -348,6 +364,40 @@ namespace QualityOfLife.Migrations
                     b.HasIndex("PacienteResponsavelId");
 
                     b.ToTable("Boleto");
+                });
+
+            modelBuilder.Entity("QualityOfLife.Models.ContasApagar", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Criado");
+
+                    b.Property<DateTime>("CriadoData")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<DateTime>("DataPagamento");
+
+                    b.Property<DateTime>("DataVencimento");
+
+                    b.Property<string>("Descricao");
+
+                    b.Property<string>("Modificado");
+
+                    b.Property<DateTime>("ModificadoData")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<string>("Observacoes");
+
+                    b.Property<bool>("Pagamento");
+
+                    b.Property<int>("TipoContaPagar");
+
+                    b.Property<double>("Valor");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContasApagar");
                 });
 
             modelBuilder.Entity("QualityOfLife.Models.Paciente", b =>
@@ -522,6 +572,34 @@ namespace QualityOfLife.Migrations
                     b.ToTable("ProfissionalPedidos");
                 });
 
+            modelBuilder.Entity("QualityOfLife.Models.Recibo", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Criado");
+
+                    b.Property<DateTime>("CriadoData")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<string>("Modificado");
+
+                    b.Property<DateTime>("ModificadoData")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<long?>("pedidoId");
+
+                    b.Property<long?>("responsavelId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("pedidoId");
+
+                    b.HasIndex("responsavelId");
+
+                    b.ToTable("Recibo");
+                });
+
             modelBuilder.Entity("QualityOfLife.Models.Relatorio", b =>
                 {
                     b.Property<long>("Id")
@@ -664,6 +742,17 @@ namespace QualityOfLife.Migrations
                         .HasForeignKey("ProfissionalId");
                 });
 
+            modelBuilder.Entity("QualityOfLife.Models.AgendaPedido", b =>
+                {
+                    b.HasOne("QualityOfLife.Models.Agenda", "Agenda")
+                        .WithMany("AgendaPedidos")
+                        .HasForeignKey("AgendaId");
+
+                    b.HasOne("QualityOfLife.Models.Pedido", "Pedido")
+                        .WithMany("AgendaPedidos")
+                        .HasForeignKey("PedidoId");
+                });
+
             modelBuilder.Entity("QualityOfLife.Models.Anamnese", b =>
                 {
                     b.HasOne("QualityOfLife.Models.Paciente", "Paciente")
@@ -713,13 +802,24 @@ namespace QualityOfLife.Migrations
 
             modelBuilder.Entity("QualityOfLife.Models.ProfissionalPedido", b =>
                 {
-                    b.HasOne("QualityOfLife.Models.Paciente", "Pedido")
+                    b.HasOne("QualityOfLife.Models.Pedido", "Pedido")
                         .WithMany()
                         .HasForeignKey("PedidoId");
 
                     b.HasOne("QualityOfLife.Models.Profissional", "Profissional")
                         .WithMany()
                         .HasForeignKey("ProfissionalId");
+                });
+
+            modelBuilder.Entity("QualityOfLife.Models.Recibo", b =>
+                {
+                    b.HasOne("QualityOfLife.Models.Pedido", "pedido")
+                        .WithMany()
+                        .HasForeignKey("pedidoId");
+
+                    b.HasOne("QualityOfLife.Models.Responsavel", "responsavel")
+                        .WithMany()
+                        .HasForeignKey("responsavelId");
                 });
 
             modelBuilder.Entity("QualityOfLife.Models.Relatorio", b =>

@@ -9,26 +9,28 @@ using QualityOfLife.Models;
 
 namespace QualityOfLife.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
+
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            return RedirectToAction("/Account/Login", "Identity");
         }
 
-        public IActionResult About()
+        [HttpGet]
+        public IActionResult Login(string returnUrl = null)
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Contact()
+        [HttpGet]
+        public IActionResult Logout(string returnUrl = null)
         {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
+            return RedirectToAction("/Account/Logout", "Identity");
         }
 
         public IActionResult Privacy()

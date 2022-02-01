@@ -1,0 +1,86 @@
+﻿@model QualityOfLife.Models.ContasApagar
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>ContasApagar</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Descricao" class="control-label"></label>
+                <input asp-for="Descricao" class="form-control" />
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoContaPagar" class="control-label"></label>
+                <select asp-for="TipoContaPagar" class="form-control"></select>
+                <span asp-validation-for="TipoContaPagar" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Valor" class="control-label"></label>
+                <input asp-for="Valor" class="form-control" />
+                <span asp-validation-for="Valor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataVencimento" class="control-label"></label>
+                <input asp-for="DataVencimento" class="form-control" />
+                <span asp-validation-for="DataVencimento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Pagamento" /> @Html.DisplayNameFor(model => model.Pagamento)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataPagamento" class="control-label"></label>
+                <input asp-for="DataPagamento" class="form-control" />
+                <span asp-validation-for="DataPagamento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Observacoes" class="control-label"></label>
+                <input asp-for="Observacoes" class="form-control" />
+                <span asp-validation-for="Observacoes" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Criado" class="control-label"></label>
+                <input asp-for="Criado" class="form-control" />
+                <span asp-validation-for="Criado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CriadoData" class="control-label"></label>
+                <input asp-for="CriadoData" class="form-control" />
+                <span asp-validation-for="CriadoData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Modificado" class="control-label"></label>
+                <input asp-for="Modificado" class="form-control" />
+                <span asp-validation-for="Modificado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModificadoData" class="control-label"></label>
+                <input asp-for="ModificadoData" class="form-control" />
+                <span asp-validation-for="ModificadoData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
