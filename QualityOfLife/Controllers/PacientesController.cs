@@ -61,6 +61,14 @@ namespace QualityOfLife.Controllers
             StatusPaciente.Add("Ativo");
             StatusPaciente.Add("Inativo");
             ViewBag.StatusPaciente = StatusPaciente;
+            List<string> DiaAtendimentos = new List<string>();
+            DiaAtendimentos.Add("Segunda");
+            DiaAtendimentos.Add("Terça");
+            DiaAtendimentos.Add("Quarta");
+            DiaAtendimentos.Add("Quinta");
+            DiaAtendimentos.Add("Sexta");
+            DiaAtendimentos.Add("Sabado");
+            ViewBag.DiaAtendimentos = DiaAtendimentos;
             return View();
         }
 
@@ -69,13 +77,30 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Paciente paciente)
+        public async Task<IActionResult> Create(Paciente paciente, List<string> diaAtendimento)
         {
             ViewBag.CurrentUser = User.Identity.Name;
             ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             if (ModelState.IsValid)
             {
+                int i = 1;
+                paciente.DiaAtendimento = "";
+                foreach (string dia in diaAtendimento)
+                {
+
+                    if (diaAtendimento.Count > i)
+                    {
+                        paciente.DiaAtendimento = paciente.DiaAtendimento + dia + ", ";
+                        i++;
+                    }
+                    else
+                    {
+                        paciente.DiaAtendimento = paciente.DiaAtendimento + dia + ".";
+                    }
+
+                }
+
                 paciente.Responsavel = await _context.Responsavel.Where(x => x.Cpf == paciente.Responsavel.Cpf).FirstOrDefaultAsync();
                 if (paciente.Nome != null) paciente.Nome = paciente.Nome.ToUpper();
                 _context.Add(paciente);
@@ -103,6 +128,14 @@ namespace QualityOfLife.Controllers
             StatusPaciente.Add("Ativo");
             StatusPaciente.Add("Inativo");
             ViewBag.StatusPaciente = StatusPaciente;
+            List<string> DiaAtendimentos = new List<string>();
+            DiaAtendimentos.Add("Segunda");
+            DiaAtendimentos.Add("Terça");
+            DiaAtendimentos.Add("Quarta");
+            DiaAtendimentos.Add("Quinta");
+            DiaAtendimentos.Add("Sexta");
+            DiaAtendimentos.Add("Sabado");
+            ViewBag.DiaAtendimentos = DiaAtendimentos;
             var paciente = await _context.Paciente.FindAsync(id);
             if (paciente == null)
             {
@@ -116,7 +149,7 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, Paciente paciente)
+        public async Task<IActionResult> Edit(long id, Paciente paciente, List<string> diaAtendimento)
         {
             if (id != paciente.Id)
             {
@@ -127,6 +160,22 @@ namespace QualityOfLife.Controllers
             {
                 try
                 {
+                    int i = 1;
+                    paciente.DiaAtendimento = "";
+                    foreach (string dia in diaAtendimento)
+                    {
+
+                        if (diaAtendimento.Count > i)
+                        {
+                            paciente.DiaAtendimento = paciente.DiaAtendimento + dia + ", ";
+                            i++;
+                        }
+                        else
+                        {
+                            paciente.DiaAtendimento = paciente.DiaAtendimento + dia + ".";
+                        }
+
+                    }
                     paciente.Responsavel = await _context.Responsavel.Where(x => x.Cpf == paciente.Responsavel.Cpf).FirstOrDefaultAsync();
                     _context.Update(paciente);
                     await _context.SaveChangesAsync();

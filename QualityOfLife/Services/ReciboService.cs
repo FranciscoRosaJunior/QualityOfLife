@@ -60,7 +60,7 @@ namespace QualityOfLife.Services
                 XFont fonttitulo = new XFont("Arial", 20, XFontStyle.Bold);
 
                 //pontos do valor
-                string valor = "R$ " + pedido.Valor + ",00";
+                string valor = "R$ " + pedido.Total + ",00";
                 int xValor = 60;
                 int yValor = yTitulo + 56;
                 string valorPorExtenso = toExtenso(Convert.ToDecimal(pedido.Valor));
@@ -74,20 +74,29 @@ namespace QualityOfLife.Services
                 string linha3 = "terapia ocupacional realizado a " + pedido.Paciente.Nome + " no(s) dia(s) ";
                 string linha4 =  "";
                 int TotalAgendas = 1;
+                string diaAnterior = "1";
 
                 foreach (var agenda in agendas)
                 {
-                    if (TotalAgendas != agendas.Count())
+                    if (diaAnterior != agenda.Agenda.DataHora.Day.ToString())
                     {
-                        linha4 = linha4 + agenda.Agenda.DataHora.Day.ToString() + ", ";
-                        TotalAgendas++;
+                        diaAnterior = agenda.Agenda.DataHora.Day.ToString();
+
+                        if (TotalAgendas != agendas.Count())
+                        {
+
+                            linha4 = linha4 + diaAnterior + ", ";
+
+                            TotalAgendas++;
+                        }
+                        else
+                        {
+                            mes = agenda.Agenda.DataHora.ToString("MMMM");
+                            ano = agenda.Agenda.DataHora.Year.ToString();
+                            linha4 = linha4 + diaAnterior + " de " + mes + " " + ano + ".";
+                        }
                     }
-                    else
-                    {
-                        mes = agenda.Agenda.DataHora.ToString("MMMM");
-                        ano = agenda.Agenda.DataHora.Year.ToString();
-                        linha4 = linha4 + agenda.Agenda.DataHora.Day.ToString() + " de " + mes + " " + ano + ".";
-                    }
+                     
                     
                 }
 

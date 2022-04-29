@@ -1,0 +1,156 @@
+﻿@model QualityOfLife.Models.AgendaEmLote
+@using QualityOfLife.Models.Enums;
+@{
+    ViewData["Title"] = "Agenda/Cadastro em Lote";
+}
+<datalist id="pacientes">
+    @foreach (var item in ViewBag.Paciente)
+    {
+        <option value="@item.Nome-@item.Cpf"></option>
+    }
+</datalist>
+<datalist id="profissionais">
+    @foreach (var item in ViewBag.Profissional)
+    {
+        <option value="@item.Cpf"> @item.Nome</option>
+    }
+</datalist>
+<datalist id="tipoAtendimento">
+    @foreach (var item in Html.GetEnumSelectList<TipoAtendimento>())
+    {
+        <option value="@item.Value"> @item.Text</option>
+    }
+</datalist>
+<datalist id="local">
+    @foreach (var item in Html.GetEnumSelectList<LocalAtendimento>())
+    {
+        <option value="@item.Text"></option>
+    }
+</datalist>
+@using (Html.BeginForm("EmLote", "Agendas", FormMethod.Post, new { @class = "container", autocomplete = "off" }))
+{
+    <div class="container">
+        <div class="Detalhes">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2>Cadastro em Lote</h2>
+                </div>
+                <div class="col-lg-6" style="text-align:right; margin-top:10px;">
+                    <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
+                        Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row col-md-10">
+            <div class="form-group col-md-6">
+                <label asp-for="Profissional" class="control-label"></label>
+                <input asp-for="Profissional.Cpf" class="form-control" list="profissionais" />
+                <span asp-validation-for="Profissional.Cpf" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Local" class="control-label"></label>
+                <input asp-for="Local" class="form-control" list="local" />
+                <span asp-validation-for="Local" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="TipoAtendimento" class="control-label"></label>
+                <input asp-for="TipoAtendimento" class="form-control" list="tipoAtendimento" />
+                <span asp-validation-for="TipoAtendimento" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Valor" class="control-label"></label>
+                <div class="input-group mb-4">
+                    <span class="input-group-text">R$</span>
+                    <input asp-for="Valor" type="text" class="form-control" placeholder="Ex: 160 ou 1200" onkeyup="somenteNumeros(this);">
+                    <span class="input-group-text">,00</span>
+                </div>
+                <span asp-validation-for="Valor" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="MesReferencia" class="control-label"></label>
+                <input type="month" class="form-control" name="mes" id="mes" />
+                <span asp-validation-for="MesReferencia" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6"></div>
+            <div class="form-group col-md-6">
+                <label class="control-label">Adicionar data de feriado</label>
+                <input type="date" class="form-control" id="dataFeriado" name="dataFeriado" onchange="preencheFeriados()" />
+                <span id="spandataFeriado" class="text-danger" style="font-size:11px"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label">Adicionar Pacientes</label>
+                <input name="paciente" id="paciente" class="form-control" list="pacientes" onchange="preenchePacientes()" />
+                <span id="spanPaciente" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label">Feriados</label>
+                <textarea class="col-md-12" name="txtFer" id="txtFer" rows="5" cols="100"></textarea>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label">Pacientes</label>
+                <textarea class="col-md-12" name="txtPacientes" id="txtPacientes" rows="5" cols="100"></textarea>
+            </div>
+            <br />
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+        </div>
+    </div>
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+<script>
+    function preenchePacientes() {
+        var paciente = $('#paciente').val();
+        var pacientes = $('#txtPacientes').val();
+        console.log(pacientes);
+        if (pacientes.includes(paciente)) {
+            document.getElementById('spanPaciente').innerHTML = 'Texto sobre paciente!';
+
+        }
+        else {
+            if (pacientes == "") {
+                console.log('sem pacientes');
+                var textopacientes = paciente;
+                $("textarea[name='txtPacientes']").val(textopacientes);
+            }
+            else {
+                console.log('com pacientes');
+                var textopacientes = pacientes + ', ' + paciente;
+                $("textarea[name='txtPacientes']").val(textopacientes);
+            }
+            document.getElementById('spanPaciente').innerHTML = '';
+        }
+
+        resetForm('paciente');
+    };
+    function preencheFeriados() {
+        var dataFeriado = $('#dataFeriado').val();
+        var data = new moment(dataFeriado).format('DD/MM/YYYY');
+        var mesRef = $("#mes").val();
+        console.log(data);
+        if (dataFeriado.includes(mesRef)) {
+            if ($("#txtFer").val() == "") {
+                var textoFeriado = data;
+                $("textarea[name='txtFer']").val(textoFeriado);
+            }
+            else {
+                var textoFeriado = $("#txtFer").val() + ', ' + data;
+                $("textarea[name='txtFer']").val(textoFeriado);
+            }
+            document.getElementById('spandataFeriado').innerHTML = '';
+        }
+        else {
+            document.getElementById('spandataFeriado').innerHTML = 'A data do feriado não está dentro do mês de referência!';
+        }
+
+        resetForm('dataFeriado');
+    };
+    function resetForm(id) {
+        with (document) {
+            getElementById(id).value = "";
+        }
+    }
+</script>

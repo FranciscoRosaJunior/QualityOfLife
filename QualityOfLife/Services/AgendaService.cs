@@ -32,7 +32,7 @@ namespace QualityOfLife.Services
                 //data enviada mais 1 dia
                 DateTime diaMaisUm = dataHora.AddDays(1);
 
-                while(diaMaisUm < DiaUmMesSeguinte)
+                while (diaMaisUm < DiaUmMesSeguinte)
                 {
                     datas.Add(diaMaisUm);
                     diaMaisUm = diaMaisUm.AddDays(1);
@@ -50,7 +50,7 @@ namespace QualityOfLife.Services
                     diaMaisSete = diaMaisSete.AddDays(7);
                 }
             }
-            else if(repetir == 3)
+            else if (repetir == 3)
             {
                 //data enviada mais 1 mês
                 DateTime diaMaisMes = dataHora.AddMonths(1);
@@ -66,5 +66,41 @@ namespace QualityOfLife.Services
 
             return datas;
         }
+
+        internal List<DateTime> BuscaDatasPorDia(AgendaEmLote agendaEmLote, Paciente dadosPaciente, List<string> listaFeriados)
+        {
+            List<DateTime> datas = new List<DateTime>();
+            string[] diasAtendimento = dadosPaciente.DiaAtendimento.Split(',');
+
+            foreach (var item in diasAtendimento)
+            {
+                string diaAtendimento = item.Replace('.', ' ').Trim();
+                DateTime DiaUmMesSeguinte = new DateTime(agendaEmLote.MesReferencia.Year, agendaEmLote.MesReferencia.Month, DateTime.DaysInMonth(agendaEmLote.MesReferencia.Year, agendaEmLote.MesReferencia.Month)).AddDays(1);
+
+                DateTime Dia = agendaEmLote.MesReferencia.AddDays(0);
+
+                while (Dia < DiaUmMesSeguinte)
+                {
+                    string diaDaSemana = Dia.ToString("dddd");
+                    if (diaDaSemana.ToLower().Contains(diaAtendimento.ToLower()))
+                    {
+                        string data = Dia.ToString("dd/MM/yyyy");
+                        if (!listaFeriados.Contains(data))
+                        {
+                            datas.Add(Dia);
+                        }
+                        Dia = Dia.AddDays(1);
+                    }
+                    else
+                    {
+                        Dia = Dia.AddDays(1);
+                    }
+
+                }
+
+            }
+            return(datas.OrderBy(x => x.TimeOfDay).ToList());
+        }
+
     }
 }

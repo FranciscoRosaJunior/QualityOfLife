@@ -119,11 +119,11 @@ namespace QualityOfLife.Controllers
                     .Include(x => x.Paciente)
                     .ToListAsync();
 
-                string mesAnterior = model.Select(x => x.DataHora).FirstOrDefault().AddMonths(-1).Month.ToString();
+                string mesAnterior = model.Select(x => x.DataHora.AddMonths(-1)).FirstOrDefault().ToString("MM/yyyy");
 
                 var presenca = model.Where(x => x.Presenca == true);
                 var faltaJustificada = await _context.Agenda
-                    .Where(x => x.Paciente.Cpf == pacientePost && x.DataHora.Month.ToString().Contains(mesAnterior) && x.FaltaJustificada == true)
+                    .Where(x => x.Paciente.Cpf == pacientePost && x.DataHora.ToString("MM/yyyy").Contains(mesAnterior) && x.FaltaJustificada == true)
                     .ToListAsync();
                 int i = 1;
 

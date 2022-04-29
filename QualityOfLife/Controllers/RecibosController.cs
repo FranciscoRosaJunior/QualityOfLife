@@ -44,6 +44,7 @@ namespace QualityOfLife.Controllers
             var agendas = await _context.AgendaPedidos
                 .Where(x => x.Pedido.Id == pedido.Id)
                 .Include(x => x.Agenda)
+                .OrderBy(x => x.Agenda.DataHora)
                 .ToListAsync();
             var document = await _servico.PdfRecibo(responsavel, pedido, agendas);
 

@@ -35,14 +35,23 @@
         <dt>
             @Html.DisplayNameFor(model => model.DataNascimento)
         </dt>
+        @{ 
+            string dataNascimento = Model.DataNascimento.ToString("dd/MM/yyyy");
+        }
         <dd>
-            @Html.DisplayFor(model => model.DataNascimento)
+            @dataNascimento
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.StatusPacientes)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.StatusPacientes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DiaAtendimento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DiaAtendimento)
         </dd>
     </dl>
 </div>

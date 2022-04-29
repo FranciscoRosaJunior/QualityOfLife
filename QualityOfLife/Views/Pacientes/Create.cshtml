@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Paciente/Cadastrar";
 }
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
 
 <datalist id="responsaveis">
     @foreach (var item in ViewBag.Responsavel)
@@ -10,92 +11,140 @@
         <option value="@item.Cpf"> @item.Nome</option>
     }
 </datalist>
+
 <datalist id="status">
     @foreach (var item in ViewBag.StatusPaciente)
     {
         <option value="@item"></option>
     }
 </datalist>
-<div class="Detalhes">
-    <div class="row">
-        <div class="col-lg-6">
-            <h2>Cadastrar</h2>
+@using (Html.BeginForm("Create", "Pacientes", FormMethod.Post, new { @class = "container", autocomplete = "off" }))
+{
+    <div class="container">
+        <div class="Detalhes">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2>Cadastrar</h2>
+                </div>
+                <div class="col-lg-6" style="text-align:right; margin-top:10px;">
+                    <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
+                        Voltar
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-6" style="text-align:right; margin-top:10px;">
-            <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
-                Voltar
-            </a>
-        </div>
-    </div>
-</div>
-<br />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Criado" class="form-control" value="@ViewBag.CurrentUser" />
-            <input type="hidden" asp-for="CriadoData" class="form-control" value="@ViewBag.Data" />
-            <input type="hidden" asp-for="Modificado" class="form-control" />
-            <input type="hidden" asp-for="ModificadoData" class="form-control" value="0001-01-01 00:00:00" />
+        <br />
 
-            <div class="form-group">
-                <label asp-for="Cpf" class="control-label"></label>
-                <input asp-for="Cpf" class="form-control" id="RegraValida" maxlength="14" onkeydown="javascript: fMasc( this, mCPF );" onclick="resetForm('RegraValida')" onchange="buscarCpf()" />
-                <span asp-validation-for="Cpf" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" style='text-transform:uppercase' />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DataNascimento" class="control-label"></label>
-                <input type="date" asp-for="DataNascimento" class="form-control" style='text-transform:uppercase' />
-                <span asp-validation-for="DataNascimento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Responsavel" class="control-label"></label>
-                <input asp-for="Responsavel.Cpf" class="form-control" list="responsaveis" />
-                <input type="hidden" asp-for="Responsavel.Nome" class="form-control" value="null" />
-                <span asp-validation-for="Responsavel.Cpf" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StatusPacientes" class="control-label"></label>
-                <input asp-for="StatusPacientes" class="form-control" list="status" />
-                <span asp-validation-for="StatusPacientes" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <input type="submit" value="Salvar" class="btn btn-primary" />
-            </div>
-            <button type="button" id="abrir" data-toggle="modal" data-target="#RespExistente" style="display: none;">
-                Deletar
-            </button>
-        </form>
-    </div>
-</div>
+        <div class="row col-md-12">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Criado" class="form-control" value="@ViewBag.CurrentUser" />
+                <input type="hidden" asp-for="CriadoData" class="form-control" value="@ViewBag.Data" />
+                <input type="hidden" asp-for="Modificado" class="form-control" />
+                <input type="hidden" asp-for="ModificadoData" class="form-control" value="0001-01-01 00:00:00" />
+                <div class="form-group col-md-5">
+                    <label asp-for="Nome" class="control-label"></label>
+                    <input asp-for="Nome" class="form-control" style='text-transform:uppercase' />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-5">
+                    <label asp-for="Cpf" class="control-label"></label>
+                    <input asp-for="Cpf" class="form-control" id="RegraValida" maxlength="14" onkeydown="javascript: fMasc( this, mCPF );" onclick="resetForm('RegraValida')" onchange="buscarCpf()" />
+                    <span asp-validation-for="Cpf" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-5">
+                    <label asp-for="Responsavel" class="control-label"></label>
+                    <input asp-for="Responsavel.Cpf" class="form-control" list="responsaveis" />
+                    <input type="hidden" asp-for="Responsavel.Nome" class="form-control" value="null" />
+                    <span asp-validation-for="Responsavel.Cpf" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="DataNascimento" class="control-label"></label>
+                    <input type="date" asp-for="DataNascimento" class="form-control" style='text-transform:uppercase' />
+                    <span asp-validation-for="DataNascimento" class="text-danger"></span>
+                </div>
 
-<!-- Modal -->
-<div class="modal fade" id="RespExistente" tabindex="-1" role="dialog" aria-labelledby="RespExistenteLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Paciente já cadastrado!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <div class="form-group col-md-2">
+                    <label asp-for="StatusPacientes" class="control-label"></label>
+                    <input asp-for="StatusPacientes" class="form-control" list="status" />
+                    <span asp-validation-for="StatusPacientes" class="text-danger"></span>
+                </div>
+                @*<div class="form-group col-md-6">
+            <label asp-for="DiaAtendimento" class="control-label"></label>
+            <input asp-for="DiaAtendimento" class="form-control" list="diaAtendimento" />
+            <span asp-validation-for="DiaAtendimento" class="text-danger"></span>
+        </div>*@
+                <div class="form-group col-md-12">
+                    <label asp-for="DiaAtendimento" class="control-label"></label>
+                    <br />
+                    <div class="form-check form-check-inline">
+                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="segunda" id="segunda" list="diaAtendimento">
+                        <label class="form-check-label" for="segunda">
+                            Segunda
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="terca" id="terça">
+                        <label class="form-check-label" for="terca">
+                            Terça
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="quarta" id="quarta">
+                        <label class="form-check-label" for="quarta">
+                            Quarta
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="quinta" id="quinta">
+                        <label class="form-check-label" for="quinta">
+                            Quinta
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="sexta" id="sexta">
+                        <label class="form-check-label" for="sexta">
+                            Sexta
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="sabado" id="sábado">
+                        <label class="form-check-label" for="sabado">
+                            Sábado
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Salvar" class="btn btn-primary" />
+                </div>
+                <button type="button" id="abrir" data-toggle="modal" data-target="#RespExistente" style="display: none;">
+                    Deletar
                 </button>
-            </div>
-            <div class="modal-body"><b>Deseja atualizar os dados do Paciente?</b></div>
-            <div class="modal-footer">
-                <form asp-action="Edit" style="display:inline">
-                    <input value="Sim" class="btn btn-danger" style="display: inline;" onclick="editarId()" />
-                </form>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="resetForm('RegraValida')">Não</button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="RespExistente" tabindex="-1" role="dialog" aria-labelledby="RespExistenteLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Paciente já cadastrado!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"><b>Deseja atualizar os dados do Paciente?</b></div>
+                <div class="modal-footer">
+                    <form asp-action="Edit" style="display:inline">
+                        <input value="Sim" class="btn btn-danger" style="display: inline;" onclick="editarId()" />
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="resetForm('RegraValida')">Não</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script>
+}
+    <script>
     var idPaciente = '0';
     //cpf
     function valida_cpf() {
@@ -181,4 +230,4 @@
             getElementById(id).value = "";
         }
     }
-</script>
+    </script>

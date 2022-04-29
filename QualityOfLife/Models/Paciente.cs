@@ -25,6 +25,9 @@ namespace QualityOfLife.Models
 
         [DisplayName("Status")]
         public StatusPaciente StatusPacientes { get; set; }
+
+        [DisplayName("Dia do Atendimento")]
+        public string DiaAtendimento { get; set; }
         //Fim apenas um
 
         //Um paciente pode ter varios 

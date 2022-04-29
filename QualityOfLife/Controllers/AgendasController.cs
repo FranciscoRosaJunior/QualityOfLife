@@ -77,7 +77,76 @@ namespace QualityOfLife.Controllers
 
             return View(agenda);
         }
+        // GET: Agendas/Create
+        public async Task<IActionResult> EmLote()
+        {
+            ViewBag.Profissional = await _context.Profissional.ToListAsync();
+            ViewBag.Paciente = await _context.Paciente.ToListAsync();
+            return View();
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EmLote(AgendaEmLote agendaEmLote, DateTime mes, string txtPacientes, string txtFer)
+        {
+            List<string> ListaFeriados = new List<string>();
+            List<string> ListaPacientes = new List<string>();
+
+            if(txtFer != null)
+            {
+                string[] feriados = txtFer.Split(',');
+
+                foreach (var feriado in feriados)
+                {
+                    ListaFeriados.Add(feriado.Trim());
+                }
+            }
+            
+            if(txtPacientes != null)
+            {
+                string[] pacientes = txtPacientes.Split(',');
+
+                foreach (var paciente in pacientes)
+                {
+                    string cpf = paciente.Trim();
+                    int i = cpf.Length - 14;
+                    cpf = cpf.Substring(i, 14);
+                    ListaPacientes.Add(cpf);
+
+                    var DadosProfissional = await _context.Profissional.Where(x => x.Cpf == agendaEmLote.Profissional.Cpf).FirstOrDefaultAsync();
+                    var DadosPaciente = await _context.Paciente.Where(x => x.Cpf == cpf).FirstOrDefaultAsync();
+                    agendaEmLote.MesReferencia = mes;
+                    //chama a criação da agenda
+                    var datas = _agendaServ.BuscaDatasPorDia(agendaEmLote, DadosPaciente, ListaFeriados);
+
+                    foreach (var item in datas)
+                    {
+                        var ag = new Agenda
+                        {
+                            Criado = User.Identity.Name,
+                            CriadoData = DateTime.Now,
+                            Profissional = DadosProfissional,
+                            DataHora = item,
+                            Local = agendaEmLote.Local,
+                            Paciente = DadosPaciente,
+                            TipoAtendimento = agendaEmLote.TipoAtendimento,
+                            Presenca = true,
+                            FaltaJustificada = false,
+                            Falta = false,
+                            Reagendar = false,
+                            Anotações = "",
+                            Repetir = 0,
+                            Valor = agendaEmLote.Valor
+                        };
+                        _context.Add(ag);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction(nameof(Index));
+
+            }
+            return View();
+        }
         // GET: Agendas/Create
         public async Task<IActionResult> Create()
         {
