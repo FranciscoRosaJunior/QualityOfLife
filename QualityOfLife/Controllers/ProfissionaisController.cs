@@ -11,6 +11,7 @@ using QualityOfLife.Models;
 
 namespace QualityOfLife.Controllers
 {
+    [Authorize]
     public class ProfissionaisController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -14,6 +14,7 @@ using QualityOfLife.Services;
 
 namespace QualityOfLife.Controllers
 {
+    [Authorize]
     public class AgendasController : Controller
     {
         private readonly ApplicationDbContext _context;

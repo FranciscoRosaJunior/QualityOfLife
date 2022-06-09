@@ -14,7 +14,8 @@
                 </a>
                 <div class="dropdown-menu">
                     <a class="nav-link" asp-area="Identity" asp-page="">Editar</a>
-                    <a class="nav-link" asp-controller="Home"asp-action="Logout" >Sair</a>
+                    <a class="nav-link" asp-controller="Home" asp-action="Logout">Sair</a>
+                    @*<a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
                 </div>
             </li>
         </ul>
@@ -22,8 +23,6 @@
 }
 else
 {
-    <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Registrar</a>
     <ul class="nav navbar-nav navbar-right">
         <li class="nav-item">
             <a class="nav-link text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,8 +32,8 @@ else
         <li class="nav-item">
             <div class="dropdown">
                 <button type="button" class="btn btn-primary nav-link dropdown-toggle" data-toggle="dropdown">
-                    <div>Entre com seu login</div>
-                    ou cadastre-se
+                    <div>Entrar</div>
+                    ou cadastrar
                 </button>
                 <div class="dropdown-menu">
                     <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>

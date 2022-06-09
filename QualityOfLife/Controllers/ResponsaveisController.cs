@@ -14,6 +14,7 @@ using System.Configuration;
 
 namespace QualityOfLife.Controllers
 {
+    [Authorize]
     public class ResponsaveisController : Controller
     {
         private readonly ApplicationDbContext _context;

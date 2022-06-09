@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace QualityOfLife.Controllers
 {
+    [Authorize]
     public class FinanceiroController : Controller
     {
         private readonly ApplicationDbContext _context;

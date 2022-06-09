@@ -18,6 +18,7 @@ using QualityOfLife.Services;
 
 namespace QualityOfLife.Controllers
 {
+    [Authorize]
     public class PedidosController : Controller
     {
         private readonly ApplicationDbContext _context;
