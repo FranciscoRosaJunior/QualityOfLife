@@ -67,6 +67,17 @@ namespace QualityOfLife.Controllers
                         .Where(x => x.DataHora.ToString("yyyy-MM") == mesRef)
                         .ToListAsync();
 
+                        //Retirar pois é paleativo para pacinetes que pagam o mês depois
+                        if (agenda.Count == 0)
+                        {
+                            string NovomesRef = "";
+                            NovomesRef = mes.AddMonths(-1).ToString("yyyy-MM");
+                            agenda = await _context.Agenda
+                            .Where(x => x.Paciente.Id == paciente.Id)
+                            .Where(x => x.DataHora.ToString("yyyy-MM") == NovomesRef)
+                            .ToListAsync();
+                        }
+
                         model.Add(new FaturamentoViewModels()
                         {
                             Pacientes = pacientes,
@@ -77,7 +88,7 @@ namespace QualityOfLife.Controllers
                 }
 
                 var result = Relatorio(model, mes.ToString("MMMM/yyyy"));
-                return File(result, System.Net.Mime.MediaTypeNames.Application.Octet, $"Relatório Faturamento " + mes.ToString("MMMM-yyyy")+".xlsx");
+                return File(result, System.Net.Mime.MediaTypeNames.Application.Octet, $"Relatório Faturamento " + mes.ToString("MMMM-yyyy") + ".xlsx");
             }
         }
         public byte[] Relatorio(ICollection<FaturamentoViewModels> faturamentos, string mes)
@@ -146,8 +157,8 @@ namespace QualityOfLife.Controllers
 
                 worksheet.Cells[row, 3, row, 8].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells[row, 3, row, 8].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#a8a8a8"));
-                worksheet.Cells[row +1, 1, row+1, 8].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[row +1, 1, row+1, 8].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#a8a8a8"));
+                worksheet.Cells[row + 1, 1, row + 1, 8].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[row + 1, 1, row + 1, 8].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#a8a8a8"));
 
 
                 file.Compression = CompressionLevel.BestCompression;
@@ -157,7 +168,7 @@ namespace QualityOfLife.Controllers
 
         private int RelatorioBody(ExcelWorksheet worksheet, int row, ICollection<Paciente> paciente, ICollection<Agenda> agenda, ICollection<Pedido> pedido)
         {
-            
+
             int nomes = 1;
             int index = 0;
 
@@ -167,7 +178,7 @@ namespace QualityOfLife.Controllers
                 var datas = agenda.ElementAt(index - row);
                 if (nomes == 1)
                 {
-                    if(agenda.Count == 1)
+                    if (agenda.Count == 1)
                     {
                         worksheet.Cells[index, 1].Value = paciente.Select(x => x.Responsavel.Nome);
                         worksheet.Cells[index, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
@@ -214,7 +225,7 @@ namespace QualityOfLife.Controllers
 
                         nomes++;
                     }
-                    
+
                 }
                 else if (nomes == 2)
                 {
@@ -241,7 +252,7 @@ namespace QualityOfLife.Controllers
                     worksheet.Cells[index, 3].Style.Numberformat.Format = "dd/mm/yyyy";
                     worksheet.Cells[index, 3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                     worksheet.Cells[index, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.CenterContinuous;
-                    
+
                 }
                 worksheet.Cells[index, 4].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                 worksheet.Cells[index, 5].Style.Border.BorderAround(ExcelBorderStyle.Thin);
@@ -308,8 +319,8 @@ namespace QualityOfLife.Controllers
             {
                 worksheet.Column(col).Width = 20;
             }
-            
-            
+
+
             return index;
         }
 

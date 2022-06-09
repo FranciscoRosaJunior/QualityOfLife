@@ -137,6 +137,7 @@ namespace QualityOfLife.Controllers
             DiaAtendimentos.Add("Sabado");
             ViewBag.DiaAtendimentos = DiaAtendimentos;
             var paciente = await _context.Paciente.FindAsync(id);
+            paciente.DiaAtendimento = "";
             if (paciente == null)
             {
                 return NotFound();

@@ -32,12 +32,12 @@ namespace QualityOfLife.Services
                 .Where(x => x.Id == ResponsavelId).FirstOrDefaultAsync();
 
             var agenda = await _context.Agenda
-                .Where(x => x.Paciente.Id == pedido.Paciente.Id && x.DataHora.ToString().Contains(pedido.mesreferencia) && x.Presenca == true).ToListAsync();
+                .Where(x => x.Paciente.Id == pedido.Paciente.Id && x.DataHora.ToString().Contains(pedido.mesreferencia) && x.Presenca == true).OrderBy(x => x.DataHora).ToListAsync();
 
             string mesAnterior = agenda.Select(x => x.DataHora).FirstOrDefault().AddMonths(-1).Month.ToString();
 
             var datas = await _context.Agenda
-                .Where(x => x.Paciente.Id == pedido.Paciente.Id && x.DataHora.Month.ToString().Contains(mesAnterior) && x.FaltaJustificada == true).Select(x => x.DataHora).ToListAsync();
+                .Where(x => x.Paciente.Id == pedido.Paciente.Id && x.DataHora.Month.ToString().Contains(mesAnterior) && x.FaltaJustificada == true).OrderBy(x => x.DataHora).Select(x => x.DataHora).ToListAsync();
 
             string linhaDatas = "";
 
@@ -186,9 +186,18 @@ namespace QualityOfLife.Services
                         ////ELEMENT 4 - SMALL 80
                         graph.DrawRectangle(rect_style1, 425, RetBrancoTab, 145 - bordaRetangulo, rect_height);
 
-                        string valor = item.Valor.PadLeft(sifrao, ' ');
+                        string valor = item.Valor;
+                        tf.DrawString("R$", fontParagraph, XBrushes.Black, new XRect(425, RetBrancoTab, 980, 30), format);
 
-                        tf.DrawString("R$ " + valor, fontParagraph, XBrushes.Black, new XRect(427, RetBrancoTab, 980, 30), format);
+                        if (valor.Contains(",00")) valor = valor.Replace(",00", "");
+                        if (valor.Length > 3)
+                        {
+                            tf.DrawString(valor + ",00", fontParagraph, XBrushes.Black, new XRect(526, RetBrancoTab, 980, 30), format);
+                        }
+                        else
+                        {
+                            tf.DrawString(valor + ",00", fontParagraph, XBrushes.Black, new XRect(530, RetBrancoTab, 980, 30), format);
+                        }
                         i++;
                     }
 
@@ -220,8 +229,17 @@ namespace QualityOfLife.Services
                     tf.DrawString("SUBTOTAL", fontTabelaNegrito, XBrushes.Black, new XRect(26, RetRosaTab + 4, 980, 30), format);
                     graph.DrawRectangle(rect_style1, 425, RetRosaTab + 2, 142, 18);
 
-                    string subtotal = SomaSubtotal.ToString().PadLeft(sifrao - 3, ' ') + ",00";
-                    tf.DrawString("R$ " + subtotal, fontParagraph, XBrushes.Black, new XRect(427, RetRosaTab + 4, 980, 30), format);
+                    string subtotal = SomaSubtotal.ToString() + ",00";
+                    tf.DrawString("R$", fontParagraph, XBrushes.Black, new XRect(425, RetRosaTab + 4, 980, 30), format);
+
+                    if (subtotal.Length > 3)
+                    {
+                        tf.DrawString(subtotal, fontParagraph, XBrushes.Black, new XRect(524, RetRosaTab + 4, 980, 30), format);
+                    }
+                    else
+                    {
+                        tf.DrawString(subtotal, fontParagraph, XBrushes.Black, new XRect(530, RetRosaTab + 4, 980, 30), format);
+                    }
 
                     RetRosaTab = RetRosaTab + 25;
                     graph.DrawRectangle(rect_style2, 20, RetRosaTab, pdfPage.Width - 2 * 20, 66);//Retangulo Rosa Maior
@@ -312,29 +330,62 @@ namespace QualityOfLife.Services
                     tf.DrawString("Créditos", fontTabelaNegrito, XBrushes.Black, new XRect(372, RetRosaTab + 4, 45, 18), format);
 
                     //Valor Crédito
-                    string credito = pedido.Credito.ToString().PadLeft(sifrao - 3, ' ') + ",00";
+                    string credito = pedido.Credito.ToString() + ",00";
                     graph.DrawRectangle(rect_style1, 425, RetRosaTab + 2, 142, 19);//Retangulo branco fim 1 linha
-                    if (credito.TrimStart() != "0,00") tf.DrawString("R$ " + credito, fontParagraph, XBrushes.Black, new XRect(427, RetRosaTab + 4, 200, 18), format);
+                    if (credito.TrimStart() != "0,00")
+                    {
+                        tf.DrawString("R$", fontParagraph, XBrushes.Black, new XRect(425, RetRosaTab + 4, 200, 18), format);
 
+                        if (credito.Length > 6)
+                        {
+                            tf.DrawString(credito, fontParagraph, XBrushes.Black, new XRect(524, RetRosaTab + 4, 200, 18), format);
+                        }
+                        else
+                        {
+                            tf.DrawString(credito, fontParagraph, XBrushes.Black, new XRect(530, RetRosaTab + 4, 200, 18), format);
+                        }
+                             
+                    }
                     //Escrito Descontos
                     graph.DrawRectangle(rect_style1, 318, RetRosaTab + 23, 105, 20);//Retangulo branco meio 2 linha
                     tf.DrawString("Descontos", fontTabelaNegrito, XBrushes.Black, new XRect(359, RetRosaTab + 25, 48, 18), format);
 
                     //Valor Descontos
-                    string desconto = pedido.Desconto.ToString().PadLeft(sifrao - 3, ' ') + ",00";
+                    string desconto = pedido.Desconto.ToString() + ",00";
                     graph.DrawRectangle(rect_style1, 425, RetRosaTab + 23, 142, 20);//Retangulo branco fim 2 linha
-                    if (desconto.TrimStart() != "0,00") tf.DrawString("R$ " + desconto, fontParagraph, XBrushes.Black, new XRect(427, RetRosaTab + 25, 200, 18), format);
+                    if (desconto.TrimStart() != "0,00") 
+                    {
+                        tf.DrawString("R$", fontParagraph, XBrushes.Black, new XRect(425, RetRosaTab + 25, 200, 18), format);
+                        if (desconto.Length > 6)
+                        {
+                            tf.DrawString(desconto, fontParagraph, XBrushes.Black, new XRect(524, RetRosaTab + 25, 200, 18), format);
+                        }
+                        else
+                        {
+                            tf.DrawString(desconto, fontParagraph, XBrushes.Black, new XRect(530, RetRosaTab + 25, 200, 18), format);
+                        }
 
+                            
+
+                    }
                     //Escrito Total a Pagar
                     graph.DrawRectangle(rect_style1, 318, RetRosaTab + 45, 105, 19);//Retangulo branco meio 3 linha
                     tf.DrawString("Total à Pagar", fontTabelaNegrito, XBrushes.Black, new XRect(344, RetRosaTab + 47, 100, 18), format);
 
                     SomaTotal = SomaSubtotal + pedido.Desconto - pedido.Credito;
-                    string total = SomaTotal.ToString().PadLeft(sifraoTotal - 2, ' ') + ",00";
+                    string total = SomaTotal.ToString() + ",00";
                     //Valor Total a Pagar
                     graph.DrawRectangle(rect_style1, 425, RetRosaTab + 45, 142, 19);//Retangulo branco fim 3 linha
-                    tf.DrawString("R$ " + total, fontCabecalho, XBrushes.Black, new XRect(427, RetRosaTab + 47, 200, 18), format);
+                    tf.DrawString("R$", fontCabecalho, XBrushes.Black, new XRect(425, RetRosaTab + 47, 200, 18), format);
 
+                    if (total.Length > 6)
+                    {
+                        tf.DrawString(total, fontCabecalho, XBrushes.Black, new XRect(509, RetRosaTab + 47, 200, 18), format);
+                    }
+                    else
+                    {
+                        tf.DrawString(total, fontCabecalho, XBrushes.Black, new XRect(517, RetRosaTab + 47, 200, 18), format);
+                    }
                     //Retangulo Atenção
                     graph.DrawRectangle(rect_style2, 20, RetRosaTab + 64, pdfPage.Width - 2 * 20, 84);
                     graph.DrawRectangle(rect_style1, 24, RetRosaTab + 66, pdfPage.Width - 2 * 20 - 7, 79);

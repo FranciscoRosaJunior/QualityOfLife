@@ -136,7 +136,7 @@ namespace QualityOfLife.Controllers
                             Reagendar = false,
                             Anotações = "",
                             Repetir = 0,
-                            Valor = agendaEmLote.Valor
+                            Valor = agendaEmLote.Valor + ",00"
                         };
                         _context.Add(ag);
                     }
