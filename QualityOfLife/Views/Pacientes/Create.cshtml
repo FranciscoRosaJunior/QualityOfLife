@@ -1,5 +1,5 @@
 ﻿@model QualityOfLife.Models.Paciente
-
+@using QualityOfLife.Models.Enums;
 @{
     ViewData["Title"] = "Paciente/Cadastrar";
 }
@@ -16,6 +16,12 @@
     @foreach (var item in ViewBag.StatusPaciente)
     {
         <option value="@item"></option>
+    }
+</datalist>
+<datalist id="diaAtendimento">
+    @foreach (var item in Html.GetEnumSelectList<DiasDaSemana>())
+    {
+        <option value="@item.Text"></option>
     }
 </datalist>
 @using (Html.BeginForm("Create", "Pacientes", FormMethod.Post, new { @class = "container", autocomplete = "off" }))
@@ -35,87 +41,74 @@
         </div>
         <br />
 
+
         <div class="row col-md-12">
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Criado" class="form-control" value="@ViewBag.CurrentUser" />
-                <input type="hidden" asp-for="CriadoData" class="form-control" value="@ViewBag.Data" />
-                <input type="hidden" asp-for="Modificado" class="form-control" />
-                <input type="hidden" asp-for="ModificadoData" class="form-control" value="0001-01-01 00:00:00" />
+
                 <div class="form-group col-md-5">
                     <label asp-for="Nome" class="control-label"></label>
-                    <input asp-for="Nome" class="form-control" style='text-transform:uppercase' />
+                    <input name="Nome" id="Nome" class="form-control" style='text-transform:uppercase' />
                     <span asp-validation-for="Nome" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-5">
                     <label asp-for="Cpf" class="control-label"></label>
-                    <input asp-for="Cpf" class="form-control" id="RegraValida" maxlength="14" onkeydown="javascript: fMasc( this, mCPF );" onclick="resetForm('RegraValida')" onchange="buscarCpf()" />
+                    <input name="Cpf" id="Cpf" class="form-control" id="RegraValida" maxlength="14" onkeydown="javascript: fMasc( this, mCPF );" onclick="resetForm('RegraValida')" onchange="buscarCpf()" />
                     <span asp-validation-for="Cpf" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-5">
                     <label asp-for="Responsavel" class="control-label"></label>
-                    <input asp-for="Responsavel.Cpf" class="form-control" list="responsaveis" />
+                    <input asp-for="Responsavel.Cpf" id="Responsavel" class="form-control" list="responsaveis" />
                     <input type="hidden" asp-for="Responsavel.Nome" class="form-control" value="null" />
                     <span asp-validation-for="Responsavel.Cpf" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-3">
                     <label asp-for="DataNascimento" class="control-label"></label>
-                    <input type="date" asp-for="DataNascimento" class="form-control" style='text-transform:uppercase' />
+                    <input type="date" name="DataNascimento" id="DataNascimento" class="form-control" style='text-transform:uppercase' />
                     <span asp-validation-for="DataNascimento" class="text-danger"></span>
                 </div>
 
                 <div class="form-group col-md-2">
                     <label asp-for="StatusPacientes" class="control-label"></label>
-                    <input asp-for="StatusPacientes" class="form-control" list="status" />
+                    <input name="StatusPacientes" id="StatusPacientes" class="form-control" list="status" />
                     <span asp-validation-for="StatusPacientes" class="text-danger"></span>
                 </div>
-                @*<div class="form-group col-md-6">
-            <label asp-for="DiaAtendimento" class="control-label"></label>
-            <input asp-for="DiaAtendimento" class="form-control" list="diaAtendimento" />
-            <span asp-validation-for="DiaAtendimento" class="text-danger"></span>
-        </div>*@
-                <div class="form-group col-md-12">
-                    <label asp-for="DiaAtendimento" class="control-label"></label>
-                    <br />
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="segunda" id="segunda" list="diaAtendimento">
-                        <label class="form-check-label" for="segunda">
-                            Segunda
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="terca" id="terça">
-                        <label class="form-check-label" for="terca">
-                            Terça
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="quarta" id="quarta">
-                        <label class="form-check-label" for="quarta">
-                            Quarta
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="quinta" id="quinta">
-                        <label class="form-check-label" for="quinta">
-                            Quinta
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="sexta" id="sexta">
-                        <label class="form-check-label" for="sexta">
-                            Sexta
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="sabado" id="sábado">
-                        <label class="form-check-label" for="sabado">
-                            Sábado
-                        </label>
-                    </div>
+                <div class="form-group col-md-3">
+                    <label name="quantAtendimento" class="control-label">Atendimentos Semanais</label>
+                    <select name="numeroAtendimento" id="numeroAtendimento" class="form-select" oninput="camposAtendimento()">
+                        <option value="0" style="color:black">0</option>
+                        <option value="1" style="color:black">1</option>
+                        <option value="2" style="color:black">2</option>
+                        <option value="3" style="color:black">3</option>
+                        <option value="4" style="color:black">4</option>
+                        <option value="5" style="color:black">5</option>
+                        <option value="6" style="color:black">6</option>
+                        <option value="7" style="color:black">7</option>
+                    </select>
                 </div>
+
+                <div class="row" id="listaAtendimento"></div>
+
+                <span id="span-modelo" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" name="dia-0">Dia Da Semana</label>
+                                <input type="text" name="dia-0" id="dia-0" class="form-control" list="diaAtendimento">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" name="hora-0">Horário</label>
+                                <input type="time" name="hora-0" class="form-control" id="hora-0">
+                            </div>
+                        </div>
+                    </div>
+                </span>
+
+                <span id="span-real"></span>
                 <div class="form-group">
-                    <input type="submit" value="Salvar" class="btn btn-primary" />
+                    <input type="button" value="Salvar" class="btn btn-primary" onclick="salvar()" />
                 </div>
                 <button type="button" id="abrir" data-toggle="modal" data-target="#RespExistente" style="display: none;">
                     Deletar
@@ -144,7 +137,58 @@
         </div>
     </div>
 }
-    <script>
+
+
+<script>
+
+    function salvar() {
+        var nome = $('#Nome').val();
+        var cpf = $('#Cpf').val();
+        var responsavel = $('#Responsavel').val();
+        var dataNascimento = $('#DataNascimento').val();
+        var status = $('#StatusPacientes').val();
+        var quant = $('#numeroAtendimento').val();
+        var i = 1;
+        var listDataHora = [];
+        while (i <= quant) {
+            var dia = $('#dia-' + i.toString()).val();
+            var hora = $('#hora-' + i.toString()).val();
+            listDataHora.push(dia + '-' + hora);
+            i = i + 1;
+        }
+        $.ajax({
+            method: "POST",
+            url: "/Pacientes/Create",
+            data: {
+                nome: nome, cpf: cpf, responsavel: responsavel, dataNascimento: dataNascimento,
+                status: status, listDataHora: listDataHora},
+            success: function () {
+                        var location = "@Url.Action("Index")";
+                        window.location.href = location;
+            },
+            error: function (error) {
+                alert('failed');
+            }
+        })
+    };
+
+    function camposAtendimento() {
+        var spanModelo = $('#span-modelo').html();
+        var spanModeloString = spanModelo.toString();
+        var campos = $('#numeroAtendimento').val();
+
+        var i = 1;
+        var texto = '';
+
+        while (i <= campos) {
+            texto = texto + spanModeloString.replace(/-0/g, '-' + i.toString())
+            i = i + 1;
+        }
+
+        $('#span-real').html(texto);
+    };
+
+
     var idPaciente = '0';
     //cpf
     function valida_cpf() {
@@ -230,4 +274,4 @@
             getElementById(id).value = "";
         }
     }
-    </script>
+</script>

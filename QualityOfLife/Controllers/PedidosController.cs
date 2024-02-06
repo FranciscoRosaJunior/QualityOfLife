@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ConsultorioTO.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -33,10 +34,11 @@ namespace QualityOfLife.Controllers
         // GET: Pedidos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Pedido
-                .Include(x => x.Paciente)
+            var pedido = await _context.Pedido
+                .Include(x => x.Paciente.Responsavel)
                 .OrderByDescending(x => x.DataPedido)
-                .ToListAsync());
+                .ToListAsync();
+            return View(pedido);
         }
 
         // GET: Pedidos/Details/5
@@ -75,12 +77,47 @@ namespace QualityOfLife.Controllers
             return (T[])Enum.GetValues(typeof(T));
         }
 
-        // GET: Pedidos/Create
-        public async Task<IActionResult> Create(string paciente, string mes)
+        public async Task<IActionResult> CreateAvulso(string paciente, string profissional)
         {
             ViewBag.cpf = paciente;
-            ViewBag.Mes = mes;
-            ViewBag.Paciente = await _context.Paciente.ToListAsync();
+            ViewBag.Paciente = await _context.Paciente.Where(x => x.StatusPacientes < (StatusPaciente)4).ToListAsync();
+            ViewBag.Profissional = await _context.Profissional.Where(x => x.Ativo == true).ToListAsync();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAvulsoPost(Pedido pedido, string paciente, string profissional)
+        {
+            try
+            {
+                ViewBag.cpf = paciente;
+                ViewBag.Paciente = await _context.Paciente.Where(x => x.StatusPacientes < (StatusPaciente)4).ToListAsync();
+                ViewBag.Profissional = await _context.Profissional.Where(x => x.Ativo == true).ToListAsync();
+
+                pedido.CriadoData = DateTime.Now;
+                pedido.Criado = User.Identity.Name;
+                pedido.DataPedido = DateTime.Now;
+                pedido.Paciente = await _context.Paciente.FirstOrDefaultAsync(x => x.Cpf == paciente);
+                pedido.Profissional = await _context.Profissional.FirstOrDefaultAsync(x => x.Cpf == profissional);
+
+                _context.Add(pedido);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View(pedido);
+            }
+            
+        }
+
+        // GET: Pedidos/Create
+        public async Task<IActionResult> Create(string paciente, DateTime mes)
+        {
+            string mesString = mes.ToString("yyyy-MM-dd");
+            ViewBag.cpf = paciente;
+            ViewBag.Mes =mes.ToString("MMM/yyyy"); 
+            ViewBag.Paciente = await _context.Paciente.Where(x => x.StatusPacientes < (StatusPaciente)4).ToListAsync();
             if (paciente == null)
             {
                 List<PedidoAgenda> PedidoAgenda = new List<PedidoAgenda>();
@@ -90,7 +127,7 @@ namespace QualityOfLife.Controllers
             {
                 var model = await _context.Agenda.Where(x => x.Paciente.Cpf == paciente)
                     .Where(x => x.DataHora.ToString()
-                    .Contains(mes)).Include(x => x.Profissional).ToListAsync();
+                    .Contains(mesString)).Include(x => x.Profissional).ToListAsync();
                 List<PedidoAgenda> PedidoAgenda = new List<PedidoAgenda>();
                 foreach (var agenda in model)
                 {
@@ -107,11 +144,13 @@ namespace QualityOfLife.Controllers
 
         }
 
+        
+
         // POST: Pedidos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<JsonResult> CreatePost(Pedido pedido, string pacientePost, string mesPost, List<int> idsAgenda)
+        public async Task<JsonResult> CreatePost(Pedido pedido, string pacientePost, DateTime mes, string mesPost, List<int> idsAgenda)
         {
             if (ModelState.IsValid)
             {
@@ -198,14 +237,6 @@ namespace QualityOfLife.Controllers
 
         }
 
-
-
-
-
-
-
-
-
         // GET: Pedidos/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
@@ -215,7 +246,10 @@ namespace QualityOfLife.Controllers
             }
             ViewBag.CurrentUser = User.Identity.Name;
             ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            var pedido = await _context.Pedido.FindAsync(id);
+            var pedido = await _context.Pedido
+                .Include(x => x.Paciente)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             if (pedido == null)
             {
                 return NotFound();

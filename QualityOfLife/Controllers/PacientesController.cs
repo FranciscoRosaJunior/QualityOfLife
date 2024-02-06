@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QualityOfLife.Data;
+using QualityOfLife.Interfaces.IRepositories.IAgenda;
 using QualityOfLife.Models;
 
 namespace QualityOfLife.Controllers
@@ -16,7 +17,6 @@ namespace QualityOfLife.Controllers
     public class PacientesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         public PacientesController(ApplicationDbContext context)
         {
             _context = context;
@@ -26,7 +26,10 @@ namespace QualityOfLife.Controllers
         public async Task<IActionResult> Index()
         {
             var Model = await _context.Paciente
+                .Where(x => x.StatusPacientes < (StatusPaciente)4)
+                .OrderBy(x => x.Nome)
                 .Include(x => x.Responsavel)
+                .Include(x => x.PacienteDiaAtendimento)
                 .ToListAsync();
             return View(Model);
         }
@@ -41,6 +44,7 @@ namespace QualityOfLife.Controllers
 
             var paciente = await _context.Paciente
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (paciente == null)
             {
                 return NotFound();
@@ -77,38 +81,51 @@ namespace QualityOfLife.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Paciente paciente, List<string> diaAtendimento)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(string nome, string cpf, string responsavel, DateTime dataNascimento, StatusPaciente status,
+                List<string> listDataHora)
         {
-            ViewBag.CurrentUser = User.Identity.Name;
-            ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-            if (ModelState.IsValid)
+            var paciente = new Paciente();
+            try
             {
-                int i = 1;
-                paciente.DiaAtendimento = "";
-                foreach (string dia in diaAtendimento)
+
+                paciente = new Paciente
                 {
-
-                    if (diaAtendimento.Count > i)
-                    {
-                        paciente.DiaAtendimento = paciente.DiaAtendimento + dia + ", ";
-                        i++;
-                    }
-                    else
-                    {
-                        paciente.DiaAtendimento = paciente.DiaAtendimento + dia + ".";
-                    }
-
-                }
-
-                paciente.Responsavel = await _context.Responsavel.Where(x => x.Cpf == paciente.Responsavel.Cpf).FirstOrDefaultAsync();
-                if (paciente.Nome != null) paciente.Nome = paciente.Nome.ToUpper();
+                    Criado = User.Identity.Name,
+                    CriadoData = DateTime.Now,
+                    Nome = nome.ToUpper(),
+                    Cpf = cpf,
+                    DataNascimento = dataNascimento,
+                    Responsavel = await _context.Responsavel.Where(x => x.Cpf == responsavel).FirstOrDefaultAsync(),
+                    StatusPacientes = status
+                };
                 _context.Add(paciente);
                 await _context.SaveChangesAsync();
+
+
+                var pacienteCriado = await _context.Paciente
+                    .Where(x => x.Cpf == cpf)
+                    .FirstOrDefaultAsync();
+
+                foreach (var item in listDataHora)
+                {
+                    string[] diaHora = item.Split('-');
+                    var diaHoraAtendimento = new PacienteDiaAtendimento
+                    {
+                        DiaDaSemana = diaHora[0],
+                        Horario = Convert.ToDateTime(diaHora[1]),
+                        Paciente = pacienteCriado
+                    };
+                    _context.Add(diaHoraAtendimento);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(paciente);
+            catch
+            {
+                return View(paciente);
+            }
         }
 
         // GET: Pacientes/Edit/5
@@ -118,27 +135,23 @@ namespace QualityOfLife.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.Atendimento = 2;
             ViewBag.CurrentUser = User.Identity.Name;
             ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             ViewBag.Responsavel = await _context.Responsavel.ToListAsync();
-            List<string> StatusPaciente = new List<string>();
-            StatusPaciente.Add("Nenhum");
-            StatusPaciente.Add("Prospeccao");
-            StatusPaciente.Add("Avaliacao");
-            StatusPaciente.Add("Ativo");
-            StatusPaciente.Add("Inativo");
+            List<string> StatusPaciente = new List<string>
+            {
+                "Nenhum",
+                "Prospeccao",
+                "Avaliacao",
+                "Ativo",
+                "Inativo"
+            };
             ViewBag.StatusPaciente = StatusPaciente;
-            List<string> DiaAtendimentos = new List<string>();
-            DiaAtendimentos.Add("Segunda");
-            DiaAtendimentos.Add("Terça");
-            DiaAtendimentos.Add("Quarta");
-            DiaAtendimentos.Add("Quinta");
-            DiaAtendimentos.Add("Sexta");
-            DiaAtendimentos.Add("Sabado");
-            ViewBag.DiaAtendimentos = DiaAtendimentos;
-            var paciente = await _context.Paciente.FindAsync(id);
-            paciente.DiaAtendimento = "";
+            var paciente = await _context.Paciente
+                .Include(x => x.PacienteDiaAtendimento)
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
             if (paciente == null)
             {
                 return NotFound();
@@ -150,59 +163,62 @@ namespace QualityOfLife.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, Paciente paciente, List<string> diaAtendimento)
+        public async Task<IActionResult> Edit(long id, string nome, string cpf, string responsavel, DateTime dataNascimento, StatusPaciente status,
+                List<string> listDataHora)
         {
-            if (id != paciente.Id)
-            {
-                return NotFound();
-            }
+            var Paciente = await _context.Paciente
+                .Include(x => x.PacienteDiaAtendimento)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                
+                Paciente.Modificado = User.Identity.Name;
+                Paciente.ModificadoData = DateTime.Now;
+                Paciente.Nome = nome.ToUpper();
+                Paciente.Cpf = cpf;
+                Paciente.DataNascimento = dataNascimento;
+                Paciente.Responsavel = await _context.Responsavel.FirstOrDefaultAsync(x => x.Cpf == responsavel);
+                Paciente.StatusPacientes = status;
+                _context.Update(Paciente);
+                await _context.SaveChangesAsync();
+
+
+                foreach(var i in Paciente.PacienteDiaAtendimento)
                 {
-                    int i = 1;
-                    paciente.DiaAtendimento = "";
-                    foreach (string dia in diaAtendimento)
+                    _context.PacienteDiaAtendimento.Remove(i);
+                    
+                }
+
+                await _context.SaveChangesAsync();
+
+                foreach (var item in listDataHora)
+                {
+                    string[] diaHora = item.Split('-');
+                    var diaHoraAtendimento = new PacienteDiaAtendimento
                     {
-
-                        if (diaAtendimento.Count > i)
-                        {
-                            paciente.DiaAtendimento = paciente.DiaAtendimento + dia + ", ";
-                            i++;
-                        }
-                        else
-                        {
-                            paciente.DiaAtendimento = paciente.DiaAtendimento + dia + ".";
-                        }
-
-                    }
-                    paciente.Responsavel = await _context.Responsavel.Where(x => x.Cpf == paciente.Responsavel.Cpf).FirstOrDefaultAsync();
-                    _context.Update(paciente);
+                        DiaDaSemana = diaHora[0],
+                        Horario = Convert.ToDateTime(diaHora[1]),
+                        Paciente = Paciente
+                    };
+                    _context.Add(diaHoraAtendimento);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PacienteExists(paciente.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(paciente);
+            catch (Exception)
+            {
+                return View(Paciente);
+            }
         }
 
-        // GET: Pacientes/Delete/5
+        // POST: Pacientes/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
             var paciente = await _context.Paciente.FindAsync(id);
-            _context.Paciente.Remove(paciente);
+            paciente.StatusPacientes = (StatusPaciente)4; //Inativo = 4
+            _context.Paciente.Update(paciente);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

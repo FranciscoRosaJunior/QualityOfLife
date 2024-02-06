@@ -37,5 +37,7 @@ namespace QualityOfLife.Data
         public DbSet<QualityOfLife.Models.ContasApagar> ContasApagar { get; set; }
         
         public DbSet<QualityOfLife.Models.Recibo> Recibo { get; set; }
+        
+        public DbSet<QualityOfLife.Models.PacienteDiaAtendimento> PacienteDiaAtendimento { get; set; }
     }
 }

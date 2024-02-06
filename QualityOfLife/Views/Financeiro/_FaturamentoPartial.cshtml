@@ -1,0 +1,57 @@
+﻿@model IEnumerable<QualityOfLife.Models.ViewModels.FaturamentoViewModels>
+
+<div class="Detalhes">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped" id="tabela-pedido">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Paciente.Responsavel.Nome)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Paciente.Responsavel.Cpf)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Pedido.Valor)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Pedido.DataPagamento)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Pedido.FormaPagamento)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.Pedido.LocalPagamento)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="col-md-3" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.Paciente.Responsavel.Nome)
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.Paciente.Responsavel.Cpf)
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                R$ @Html.DisplayFor(modelItem => item.Pedido.Valor),00
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.Pedido.DataPagamento)
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.Pedido.FormaPagamento)
+                            </td>
+                            <td class="col-md-2" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.Pedido.LocalPagamento)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,85 +1,134 @@
 ﻿@model QualityOfLife.Models.ContasApagar
-
+@using QualityOfLife.Models.Enums;
 @{
     ViewData["Title"] = "Create";
 }
-
-<h2>Create</h2>
-
-<h4>ContasApagar</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+<datalist id="tipoConta">
+    @foreach (var item in Html.GetEnumSelectList<TipoContaPagar>())
+    {
+        <option value="@item.Text"></option>
+    }
+</datalist>
+<datalist id="formaPagamento">
+    @foreach (var item in Html.GetEnumSelectList<FormaPagamento>())
+    {
+        <option value="@item.Value"> @item.Text</option>
+    }
+</datalist>
+@using (Html.BeginForm("Create", "ContasApagar", FormMethod.Post, new { @class = "container", autocomplete = "off" }))
+{
+    <h2>Contas à Pagar</h2>
+    <hr />
+    <div class="row">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <input type="hidden" asp-for="Criado" class="form-control" value="@ViewBag.CurrentUser" />
+            <input type="hidden" asp-for="CriadoData" class="form-control" value="@ViewBag.Data" />
+            <input type="hidden" asp-for="Modificado" class="form-control" />
+            <input type="hidden" asp-for="ModificadoData" class="form-control" value="0001-01-01 00:00:00" />
+
+            <div class="form-group col-md-8">
                 <label asp-for="Descricao" class="control-label"></label>
                 <input asp-for="Descricao" class="form-control" />
                 <span asp-validation-for="Descricao" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="TipoContaPagar" class="control-label"></label>
-                <select asp-for="TipoContaPagar" class="form-control"></select>
+                <input type="text" asp-for="TipoContaPagar" class="form-control" list="tipoConta" />
                 <span asp-validation-for="TipoContaPagar" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="Valor" class="control-label"></label>
-                <input asp-for="Valor" class="form-control" />
+                <div class="input-group mb-3">
+                    <span class="input-group-text">R$</span>
+                    <input asp-for="Valor" type="text" class="form-control" placeholder="Ex: 1200,25">
+                </div>
                 <span asp-validation-for="Valor" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="DataVencimento" class="control-label"></label>
-                <input asp-for="DataVencimento" class="form-control" />
+                <input type="date" asp-for="DataVencimento" class="form-control" />
                 <span asp-validation-for="DataVencimento" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Pagamento" /> @Html.DisplayNameFor(model => model.Pagamento)
-                    </label>
+            <div class="form-group col-md-4">
+            </div>
+            <div class="form-group col-md-2">
+                <label asp-for="Pagamento" class="control-label"></label>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" asp-for="Pagamento" id="pagamento" onchange="onchangePagamento()" />
+                    <label class="custom-control-label" for="pagamento"></label>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-3">
                 <label asp-for="DataPagamento" class="control-label"></label>
-                <input asp-for="DataPagamento" class="form-control" />
+                <input type="date" asp-for="DataPagamento" id="dataPagamento" class="form-control" />
                 <span asp-validation-for="DataPagamento" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Observacoes" class="control-label"></label>
-                <input asp-for="Observacoes" class="form-control" />
-                <span asp-validation-for="Observacoes" class="text-danger"></span>
+            <div class="form-group col-md-4">
+                <label asp-for="FormaPagamento" class="control-label"></label>
+                <input asp-for="FormaPagamento" id="forma" class="form-control" type="text" list="formaPagamento" onclick="resetForm('forma')" />
+                <span asp-validation-for="FormaPagamento" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Criado" class="control-label"></label>
-                <input asp-for="Criado" class="form-control" />
-                <span asp-validation-for="Criado" class="text-danger"></span>
+            <div class="form-group col-md-3">
+                <label asp-for="QuantParc" class="control-label"></label>
+                <input type="number" asp-for="QuantParc" id="quantParc" class="form-control" />
+                <span asp-validation-for="QuantParc" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CriadoData" class="control-label"></label>
-                <input asp-for="CriadoData" class="form-control" />
-                <span asp-validation-for="CriadoData" class="text-danger"></span>
+            <div class="form-group col-md-12">
+                @Html.LabelFor(m => m.Observacoes)
+                @Html.TextAreaFor(m => m.Observacoes)
+                @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
             </div>
-            <div class="form-group">
-                <label asp-for="Modificado" class="control-label"></label>
-                <input asp-for="Modificado" class="form-control" />
-                <span asp-validation-for="Modificado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModificadoData" class="control-label"></label>
-                <input asp-for="ModificadoData" class="form-control" />
-                <span asp-validation-for="ModificadoData" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+            <br />
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-success">Salvar</button> |
+                <button asp-action="Index" class="btn btn-info">Voltar</button>
             </div>
         </form>
     </div>
-</div>
+}
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=v5z53k0b99mq6jdq7rmord5xg2u6jwborbuov669whaeecsp"></script>
+    <script>
+        window.onload = function () {
+            var pagamento = $("#pagamento");
+            if (pagamento[0].checked) {
+                $("#dataPagamento").removeAttr("disabled");
+                $("#forma").removeAttr("disabled");
+                $("#quantParc").removeAttr("disabled");
+            } else {
+                $("#dataPagamento").attr("disabled", "disabled");
+                $("#forma").attr("disabled", "disabled");
+                $("#quantParc").attr("disabled", "disabled");
+            }
+        }
+        function onchangePagamento() {
+            var pagamento = $("#pagamento");
+            if (pagamento[0].checked) {
+                $("#dataPagamento").removeAttr("disabled");
+                $("#forma").removeAttr("disabled");
+                $("#quantParc").removeAttr("disabled");
+            } else {
+                $("#dataPagamento").attr("disabled", "disabled");
+                $("#forma").attr("disabled", "disabled");
+                $("#quantParc").attr("disabled", "disabled");
+            }
+        }
+        tinymce.init({
+            selector: 'textarea',
+            height: 300,
+            menubar: false,
+            statusbar: false,
+            theme: 'modern'
+        });
+        function resetForm(id) {
+            with (document) {
+                getElementById(id).value = "";
+            }
+        }
+    </script>
 }

@@ -9,7 +9,7 @@ namespace QualityOfLife.Models
 {
     public class Pedido : Entidades
     {
-        public TipoAtendimento TipoAtendimento { get; set; }
+        //public TipoAtendimento TipoAtendimento { get; set; }
         [DisplayName("Data do Pedido")]
         public DateTime DataPedido { get; set; }
         [DisplayName("Mês Referência")]
@@ -41,9 +41,8 @@ namespace QualityOfLife.Models
         {
         }
 
-        public Pedido(TipoAtendimento tipoAtendimento, DateTime dataPedido, string mesreferencia, double valor, double desconto, double credito, double total, Paciente paciente, Profissional profissional, string observacoes, bool pagamento, DateTime dataPagamento, int formaPagamento, int localPagamento, bool reciboEmitido)
+        public Pedido(DateTime dataPedido, string mesreferencia, double valor, double desconto, double credito, double total, Paciente paciente, Profissional profissional, string observacoes, bool pagamento, DateTime dataPagamento, int formaPagamento, int localPagamento, bool reciboEmitido)
         {
-            TipoAtendimento = tipoAtendimento;
             DataPedido = dataPedido;
             this.mesreferencia = mesreferencia;
             Valor = valor;

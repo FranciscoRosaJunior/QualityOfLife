@@ -376,11 +376,13 @@ namespace QualityOfLife.Migrations
                     b.Property<DateTime>("CriadoData")
                         .HasColumnType("DATETIME");
 
-                    b.Property<DateTime>("DataPagamento");
+                    b.Property<DateTime?>("DataPagamento");
 
                     b.Property<DateTime>("DataVencimento");
 
                     b.Property<string>("Descricao");
+
+                    b.Property<int>("FormaPagamento");
 
                     b.Property<string>("Modificado");
 
@@ -390,6 +392,8 @@ namespace QualityOfLife.Migrations
                     b.Property<string>("Observacoes");
 
                     b.Property<bool>("Pagamento");
+
+                    b.Property<int>("QuantParc");
 
                     b.Property<int>("TipoContaPagar");
 
@@ -414,8 +418,6 @@ namespace QualityOfLife.Migrations
 
                     b.Property<DateTime>("DataNascimento");
 
-                    b.Property<string>("DiaAtendimento");
-
                     b.Property<string>("Modificado");
 
                     b.Property<DateTime>("ModificadoData")
@@ -432,6 +434,24 @@ namespace QualityOfLife.Migrations
                     b.HasIndex("ResponsavelId");
 
                     b.ToTable("Paciente");
+                });
+
+            modelBuilder.Entity("QualityOfLife.Models.PacienteDiaAtendimento", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("DiaDaSemana");
+
+                    b.Property<DateTime>("Horario");
+
+                    b.Property<long?>("PacienteId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PacienteId");
+
+                    b.ToTable("PacienteDiaAtendimento");
                 });
 
             modelBuilder.Entity("QualityOfLife.Models.Pedido", b =>
@@ -471,8 +491,6 @@ namespace QualityOfLife.Migrations
 
                     b.Property<bool>("ReciboEmitido");
 
-                    b.Property<int>("TipoAtendimento");
-
                     b.Property<double>("Total");
 
                     b.Property<double>("Valor");
@@ -492,6 +510,8 @@ namespace QualityOfLife.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Ativo");
 
                     b.Property<string>("Bairro");
 
@@ -641,6 +661,8 @@ namespace QualityOfLife.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("Ativo");
+
                     b.Property<string>("Bairro");
 
                     b.Property<string>("Cep");
@@ -778,6 +800,13 @@ namespace QualityOfLife.Migrations
                     b.HasOne("QualityOfLife.Models.Responsavel", "Responsavel")
                         .WithMany("Pacientes")
                         .HasForeignKey("ResponsavelId");
+                });
+
+            modelBuilder.Entity("QualityOfLife.Models.PacienteDiaAtendimento", b =>
+                {
+                    b.HasOne("QualityOfLife.Models.Paciente", "Paciente")
+                        .WithMany("PacienteDiaAtendimento")
+                        .HasForeignKey("PacienteId");
                 });
 
             modelBuilder.Entity("QualityOfLife.Models.Pedido", b =>

@@ -27,5 +27,8 @@ namespace QualityOfLife.Models
         [Column(TypeName = "DATETIME")]
         public DateTime ModificadoData { get; set; }
 
+        
+
+
     }
 }

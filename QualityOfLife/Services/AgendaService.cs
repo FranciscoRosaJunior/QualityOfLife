@@ -4,10 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using QualityOfLife.Interfaces.IRepositories.IAgenda;
+using Microsoft.EntityFrameworkCore;
 
 namespace QualityOfLife.Services
 {
-    public class AgendaService
+    public class AgendaService : IAgendaService
     {
         private readonly ApplicationDbContext _context;
 
@@ -15,6 +17,53 @@ namespace QualityOfLife.Services
         {
             _context = context;
         }
+
+
+        public async Task<List<Agenda>> BuscaPresencaAsync(string paciente, string dataInicio, string dataFim)
+        {
+            var model = new List<Agenda>();
+            if (paciente == null && dataInicio == null)
+            {
+                DateTime dataAtual = DateTime.Now;
+                model = await _context.Agenda
+                    .Where(x => x.DataHora.ToString("dd/MM/yyyy")
+                    .Contains(dataAtual.ToString("dd/MM/yyyy"))).Include(x => x.Profissional)
+                    .OrderBy(x => x.DataHora)
+                    .ToListAsync();
+            }
+            else if (paciente != null && dataInicio == null)
+            {
+                model = await _context.Agenda
+                    .Where(x => x.Paciente.Cpf == paciente)
+                    .Include(x => x.Profissional)
+                    .OrderBy(x => x.DataHora)
+                    .ToListAsync();
+            }
+            else if (paciente == null && dataInicio != null)
+            {
+                DateTime DataInicio = DateTime.Parse(dataInicio);
+                DateTime DataFim = DateTime.Parse(dataFim);
+                model = await _context.Agenda
+                    .Where(x => x.DataHora >= DataInicio)
+                    .Where(x => x.DataHora <= DataFim)
+                    .Include(x => x.Profissional)
+                    .OrderBy(x => x.DataHora)
+                    .ToListAsync();
+            }
+            else
+            {
+                DateTime DataInicio = DateTime.Parse(dataInicio);
+                DateTime DataFim = DateTime.Parse(dataFim);
+                model = await _context.Agenda.Where(x => x.Paciente.Cpf == paciente)
+                    .Where(x => x.DataHora >= DataInicio)
+                    .Where(x => x.DataHora <= DataFim)
+                    .Include(x => x.Profissional)
+                    .OrderBy(x => x.DataHora)
+                    .ToListAsync();
+            }
+            return model;
+        }
+
 
         public List<DateTime> BuscaDatas(int repetir, DateTime dataHora)
         {
@@ -67,24 +116,29 @@ namespace QualityOfLife.Services
             return datas;
         }
 
-        internal List<DateTime> BuscaDatasPorDia(AgendaEmLote agendaEmLote, Paciente dadosPaciente, List<string> listaFeriados)
+        public async Task<List<DateTime>> BuscaDatasPorDia(AgendaEmLote agendaEmLote, Paciente dadosPaciente, List<string> listaFeriados)
         {
             List<DateTime> datas = new List<DateTime>();
-            string[] diasAtendimento = dadosPaciente.DiaAtendimento.Split(',');
+
+           var diasAtendimento = await _context.PacienteDiaAtendimento
+                .Where(x => x.Paciente.Id == dadosPaciente.Id)
+                .ToListAsync();
+
 
             foreach (var item in diasAtendimento)
             {
-                string diaAtendimento = item.Replace('.', ' ').Trim();
                 DateTime DiaUmMesSeguinte = new DateTime(agendaEmLote.MesReferencia.Year, agendaEmLote.MesReferencia.Month, DateTime.DaysInMonth(agendaEmLote.MesReferencia.Year, agendaEmLote.MesReferencia.Month)).AddDays(1);
-
                 DateTime Dia = agendaEmLote.MesReferencia.AddDays(0);
+                item.DiaDaSemana = ConvertDiaParaIngles(item.DiaDaSemana).ToLower();
 
                 while (Dia < DiaUmMesSeguinte)
                 {
-                    string diaDaSemana = Dia.ToString("dddd");
-                    if (diaDaSemana.ToLower().Contains(diaAtendimento.ToLower()))
+                    string diaDaSemana = Dia.DayOfWeek.ToString().ToLower();
+                    if (diaDaSemana.Contains(item.DiaDaSemana))
                     {
                         string data = Dia.ToString("dd/MM/yyyy");
+                        String[] hora = item.Horario.ToString("HH:mm").Split(':');
+                        Dia = Dia.Date.AddHours(Convert.ToDouble(hora[0]));
                         if (!listaFeriados.Contains(data))
                         {
                             datas.Add(Dia);
@@ -99,8 +153,20 @@ namespace QualityOfLife.Services
                 }
 
             }
-            return(datas.OrderBy(x => x.TimeOfDay).ToList());
+            return (datas.OrderBy(x => x.Date).ToList());
         }
 
+        public string ConvertDiaParaIngles(string diaDaSemana)
+        {
+            if (diaDaSemana == "Segunda") return "Monday";
+            if (diaDaSemana == "Terça") return "Tuesday";
+            if (diaDaSemana == "Quarta") return "Wednesday";
+            if (diaDaSemana == "Quinta") return "Thursday";
+            if (diaDaSemana == "Sexta") return "Friday";
+            if (diaDaSemana == "Sábado") return "Saturday";
+            if (diaDaSemana == "Domingo") return "Sunday";
+
+            else return diaDaSemana;
+        }
     }
 }

@@ -19,13 +19,17 @@
         margin-top: 2px;
     }
 </style>
-<h3 style="margin-top:10px;">
-    Responsavéis
-    <a asp-action="Create" class="btn btn-sm btn-danger waves-effect px-1" id="btn-novo">Cadastrar</a>
-</h3>
-<div class="Detalhes">
-    <div class="row">
-        <div class="col-md-12">
+<div class="container">
+    <div class="Detalhes">
+        <div class="row col-md-12">
+            <h3 style="margin-top:10px;">
+                Responsavéis
+                <a asp-action="Create" class="btn btn-sm btn-danger waves-effect px-1" id="btn-novo">Cadastrar</a>
+            </h3>
+        </div>
+    </div>
+    <div class="Detalhes">
+        <div class="row col-md-12">
             <table class="table table-striped" id="tabela-responsaveis">
                 <thead class="bg-primary text-white">
                     <tr>
@@ -73,6 +77,7 @@
         </div>
     </div>
 </div>
+
 @section scripts {
     <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
     <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>

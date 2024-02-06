@@ -36,13 +36,13 @@
                             @Html.DisplayNameFor(model => model.Cpf)
                         </th>
                         <th id="textoCenter">
-                            @Html.DisplayNameFor(model => model.DataNascimento)
-                        </th>
-                        <th id="textoCenter">
-                            @Html.DisplayNameFor(model => model.StatusPacientes)
+                            @Html.DisplayNameFor(model => model.PacienteDiaAtendimento)
                         </th>
                         <th id="textoCenter">
                             @Html.DisplayNameFor(model => model.Responsavel)
+                        </th>
+                        <th id="textoCenter">
+                            @Html.DisplayNameFor(model => model.StatusPacientes)
                         </th>
                         <th></th>
                     </tr>
@@ -50,44 +50,69 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
+                        <tr>
+                            <td class="col-md-4" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.Nome)
+                            </td>
+                            <td class="col-md-2" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.Cpf)
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                @foreach (var i in item.PacienteDiaAtendimento)
+                                {
+                                    string dia = i.DiaDaSemana.ToString();
+                                    string hora = i.Horario.ToString("HH:mm");
+                                    string diaHora = dia + " - " + hora;
+                                    <div>@diaHora</div>
+                                }
 
-                    <tr>
-                        <td class="col-md-3" id="textoCenter">
-                            @Html.DisplayFor(modelItem => item.Nome)
-                        </td>
-                        <td class="col-md-2" id="textoCenter">
-                            @Html.DisplayFor(modelItem => item.Cpf)
-                        </td>
-                        @{
-                            string nascimento = item.DataNascimento.ToString("dd/MM/yyyy");
-                        }
-                        <td class="col-md-2" id="textoCenter">
-                            @nascimento
-                        </td>
-                        <td class="col-md-1" id="textoCenter">
-                            @Html.DisplayFor(modelItem => item.StatusPacientes)
-                        </td>
-                        @{
-                            string responsavel = item.Responsavel.Nome.Substring(0, 15);
-                        }
-                        <td class="col-md-2" id="textoCenter">
-                            @responsavel.
-                        </td>
-                        <td class="col-md-2" id="textoCenter">
-                            <a asp-action="Edit" asp-route-id="@item.Id" title="Editar" class="btn btn-sm btn-primary">
-                                <i class="fa fa-pen" aria-hidden="true"></i>
-                            </a>
-                            <a asp-action="Details" asp-route-id="@item.Id" title="Detalhar" class="btn btn-sm btn-info">
-                                <i class="fa fa-list" aria-hidden="true"></i>
-                            </a>
-                            <a asp-action="Details" asp-route-id="@item.Id" title="Deletar" class="btn btn-sm btn-danger">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </a>
-                        </td>
-                    </tr>
+                            </td>
+                            @{
+                                string responsavel = item.Responsavel.Nome.Substring(0, 15);
+                            }
+                            <td class="col-md-2" id="textoCenter">
+                                @responsavel.
+                            </td>
+                            <td class="col-md-1" id="textoCenter">
+                                @Html.DisplayFor(modelItem => item.StatusPacientes)
+                            </td>
+                            <td class="col-md-2" id="textoCenter">
+                                <a asp-action="Edit" asp-route-id="@item.Id" title="Editar" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-pen" aria-hidden="true"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" title="Detalhar" class="btn btn-sm btn-info">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                </a>
+                                <a title="Deletar" class="btn btn-sm btn-danger" onclick="deletar('@item.Id', '@item.Nome')">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal" id="modalDel" role="dialog" aria-labelledby="modalDelLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">DELETAR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body"><b>Deseja realmente inativar o(a) paciente <span id="nomePac"></span>? </b></div>
+            <div class="modal-footer">
+                <form asp-action="Delete" style="display:inline">
+                    <input type="button" value="Sim" class="btn btn-danger" style="display: inline;" onclick="deletaId()" />
+                    <span id="idPac" style="display:none"></span>
+                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+            </div>
         </div>
     </div>
 </div>
@@ -95,6 +120,34 @@
     <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
     <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
     <script>
+        function deletar(id, nome) {
+            document.getElementById("idPac").innerHTML = id;
+            document.getElementById("nomePac").innerHTML = nome;
+            abreModal();
+        };
+        function deletaId() {
+            let id = document.getElementById("idPac");
+            $.ajax({
+            method: "POST",
+            url: "/Pacientes/Delete",
+            data: { id: id.innerHTML },
+            success: function () {
+                        var location = "@Url.Action("Index")";
+                        window.location.href = location;
+            },
+            error: function (error) {
+                alert('failed');
+            }
+        })
+        };
+        function abreModal() {
+            console.log('modal');
+            $("#modalDel").modal({
+                show: true
+            });
+        };
+
+        /*setTimeout(abreModal, 1000);*/
         $('#search_input').bind('keyup click change', function () {
             search = $(this).val().toLowerCase();
             var re = new RegExp(search, 'g');
@@ -109,7 +162,6 @@
         });
         $(document).ready(function () {
             $('#tabela-paciente').DataTable({
-                "order": [[1, "asc"]],
                 "language": {
                     "search": "Procurar",
                     "emptyTable": "Sem nenhum dado",

@@ -17,22 +17,18 @@
         float: right;
         padding: .5em 1em;
         margin-top: 2px;
-        /*color: #fff;
-        font-size: .7em;
-        background: #00853f;
+    }
+    #btn-avulso {
+        float: right;
         padding: .5em 1em;
-        border-radius: 10px;
-        border: 2px solid transparent;
-        -webkit-transition: all .2s ease;
-        transition: all .2s ease;
-        cursor: pointer;
-        margin-top: 0px;
-        text-decoration: none;*/
+        margin-top: 2px;
+        margin-right:2px;
     }
 </style>
 <h3 style="margin-top:10px;">
     Pedidos
-    <a asp-action="Create" class="btn btn-sm btn-danger waves-effect px-1" id="btn-novo">Novo Pedido</a>
+    <a asp-action="CreateAvulso" class="btn btn-sm btn-info waves-effect px-1" id="btn-novo">Pedido Avulso</a>
+    <a asp-action="Create" class="btn btn-sm btn-danger waves-effect px-1" id="btn-avulso">Novo Pedido</a>
 </h3>
 
 
@@ -70,8 +66,14 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
+                        string responsavel = string.Empty;
+                        if (item.Paciente != null)
+                        {
+                            responsavel = @item.Paciente.Responsavel.Nome;
+                        }
+
                         <tr>
-                            <td class="col-md-3" id="textoCenter">
+                            <td class="col-md-3" id="textoCenter" title="@responsavel">
                                 @Html.DisplayFor(modelItem => item.Paciente.Nome)
                             </td>
                             <td class="col-md-1" id="textoCenter">

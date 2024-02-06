@@ -59,7 +59,14 @@
             </dd>
         </dl>
     </div>
-
+    <div class="card col-md-10" style="margin-top:20px; margin-left:80px;">
+        <dl class="dl-horizontal" style="margin-left:10px;">
+            <h4 style="text-align:center"><b>Observações</b></h4>
+            <dd style="margin-top:10px">
+                @Html.DisplayFor(model => model.Observacoes)
+            </dd>
+        </dl>
+    </div>
     @{
         if (Model.Pagamento == true)
         {

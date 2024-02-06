@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,6 @@ using QualityOfLife.Models;
 
 namespace QualityOfLife.Controllers
 {
-    [Authorize]
     public class ProfissionaisController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -56,7 +54,7 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nome,Cpf,DataNascimento,Profissao,Email,Telefone1,Telefone2,Telefone3,Cep,Rua,Numero,Complemento,Bairro,Cidade,Estado,Id,Criado,CriadoData,Modificado,ModificadoData")] Profissional profissional)
+        public async Task<IActionResult> Create([Bind("Nome,Cpf,DataNascimento,Profissao,Email,Telefone1,Telefone2,Telefone3,Cep,Rua,Numero,Complemento,Bairro,Cidade,Estado,Ativo,Id,Criado,CriadoData,Modificado,ModificadoData")] Profissional profissional)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +86,7 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Nome,Cpf,DataNascimento,Profissao,Email,Telefone1,Telefone2,Telefone3,Cep,Rua,Numero,Complemento,Bairro,Cidade,Estado,Id,Criado,CriadoData,Modificado,ModificadoData")] Profissional profissional)
+        public async Task<IActionResult> Edit(long id, [Bind("Nome,Cpf,DataNascimento,Profissao,Email,Telefone1,Telefone2,Telefone3,Cep,Rua,Numero,Complemento,Bairro,Cidade,Estado,Ativo,Id,Criado,CriadoData,Modificado,ModificadoData")] Profissional profissional)
         {
             if (id != profissional.Id)
             {

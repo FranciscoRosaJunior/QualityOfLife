@@ -1,5 +1,5 @@
 ﻿@model QualityOfLife.Models.Paciente
-
+@using QualityOfLife.Models.Enums;
 @{
     ViewData["Title"] = "Agenda/Editar";
 }
@@ -17,19 +17,20 @@
 </datalist>
 
 <datalist id="diaAtendimento">
-    @foreach (var item in ViewBag.DiaAtendimentos)
+    @foreach (var item in Html.GetEnumSelectList<DiasDaSemana>())
     {
-        <option value="@item"></option>
+        <option value="@item.Text"></option>
     }
 </datalist>
 
 @using (Html.BeginForm("Edit", "Pacientes", FormMethod.Post, new { @class = "container", autocomplete = "off" }))
 {
+    string textoDataHora = "Adicionar Horários de Atendimento";
     <div class="container">
         <div class="Detalhes">
             <div class="row">
                 <div class="col-lg-6">
-                    <h2>Cadastrar</h2>
+                    <h2>Editar</h2>
                 </div>
                 <div class="col-lg-6" style="text-align:right; margin-top:10px;">
                     <a asp-action="Index" title="Voltar" class="btn btn-sm btn-info">
@@ -42,13 +43,10 @@
         <div class="row col-md-12">
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Criado" class="form-control" value="@ViewBag.CurrentUser" />
-                <input type="hidden" asp-for="CriadoData" class="form-control" value="@ViewBag.Data" />
-                <input type="hidden" asp-for="Modificado" class="form-control" />
-                <input type="hidden" asp-for="ModificadoData" class="form-control" value="0001-01-01 00:00:00" />
+                <input type="hidden" id="ref" class="form-control" value="@ViewBag.Atendimento" />
                 <div class="form-group col-md-5">
                     <label asp-for="Nome" class="control-label"></label>
-                    <input asp-for="Nome" class="form-control" style='text-transform:uppercase' />
+                    <input asp-for="Nome" id="Nome" class="form-control" style='text-transform:uppercase' />
                     <span asp-validation-for="Nome" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-5">
@@ -58,104 +56,163 @@
                 </div>
                 <div class="form-group col-md-5">
                     <label asp-for="Responsavel" class="control-label"></label>
-                    <input asp-for="Responsavel.Cpf" class="form-control" list="responsaveis" />
+                    <input asp-for="Responsavel.Cpf" id="Responsavel" class="form-control" list="responsaveis" />
                     <input type="hidden" asp-for="Responsavel.Nome" class="form-control" value="null" />
                     <span asp-validation-for="Responsavel.Cpf" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-3">
                     <label asp-for="DataNascimento" class="control-label"></label>
-                    <input type="date" asp-for="DataNascimento" class="form-control" style='text-transform:uppercase' />
+                    <input type="date" asp-for="DataNascimento" id="DataNascimento" class="form-control" style='text-transform:uppercase' />
                     <span asp-validation-for="DataNascimento" class="text-danger"></span>
                 </div>
 
                 <div class="form-group col-md-2">
                     <label asp-for="StatusPacientes" class="control-label"></label>
-                    <input asp-for="StatusPacientes" class="form-control" list="status" />
+                    <input asp-for="StatusPacientes" id="StatusPacientes" class="form-control" list="status" />
                     <span asp-validation-for="StatusPacientes" class="text-danger"></span>
                 </div>
-                @*<div class="form-group col-md-6">
-                        <label asp-for="DiaAtendimento" class="control-label"></label>
-                        <input asp-for="DiaAtendimento" class="form-control" list="diaAtendimento" />
-                        <span asp-validation-for="DiaAtendimento" class="text-danger"></span>
-                    </div>*@
-                <div class="form-group col-md-12">
-                    <label asp-for="DiaAtendimento" class="control-label"></label>
-                    <br />
-                    @{
-                        string CheckedSeg = "", CheckedTer = "", CheckedQua = "", CheckedQui = "", CheckedSex = "", CheckedSab = "";
-                        if (Model.DiaAtendimento.Contains("segunda"))
-                        {
-                            CheckedSeg = "checked";
-                        }
-                        if (Model.DiaAtendimento.Contains("terça"))
-                        {
-                            CheckedTer = "checked";
-                        }
-                        if (Model.DiaAtendimento.Contains("quarta"))
-                        {
-                            CheckedQua = "checked";
-                        }
-                        if (Model.DiaAtendimento.Contains("quinta"))
-                        {
-                            CheckedQui = "checked";
-                        }
-                        if (Model.DiaAtendimento.Contains("sexta"))
-                        {
-                            CheckedSex = "checked";
-                        }
-                        if (Model.DiaAtendimento.Contains("sábado"))
-                        {
-                            CheckedSab = "checked";
-                        }
-                    }
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="segunda" id="segunda" @CheckedSeg>
-                        <label class="form-check-label" for="segunda">
-                            Segunda
-                        </label>
+                @if (Model.PacienteDiaAtendimento.Count > 0)
+                {
+                    textoDataHora = "Editar Horários de Atendimento";
+
+                    <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label" name="dia-0">Dia Da Semana</label>
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="terça" id="terça" @CheckedTer>
-                        <label class="form-check-label" for="terça">
-                            Terça
-                        </label>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label" name="hora-0">Horário</label>
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="quarta" id="quarta" @CheckedQua>
-                        <label class="form-check-label" for="quarta">
-                            Quarta
-                        </label>
+            </div>
+        }
+                @foreach (var i in Model.PacienteDiaAtendimento)
+                {
+                    string dia = i.DiaDaSemana.ToString();
+                    string hora = i.Horario.ToString("HH:mm");
+                    string diaHora = dia + " - " + hora;
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input type="text" name="dia-0" id="dia-0" class="form-control" value="@dia" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input type="text" name="hora-0" class="form-control" id="hora-0" value="@hora" disabled>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="quinta" id="quinta" @CheckedQui>
-                        <label class="form-check-label" for="quinta">
-                            Quinta
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="sexta" id="sexta" @CheckedSex>
-                        <label class="form-check-label" for="sexta">
-                            Sexta
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input name="diaAtendimento" class="form-check-input" type="checkbox" value="sábado" id="sábado" @CheckedSab>
-                        <label class="form-check-label" for="sábado">
-                            Sábado
-                        </label>
-                    </div>
-                </div>
+                }
+
                 <div class="form-group">
-                    <input type="submit" value="Salvar" class="btn btn-primary" />
+                    <input type="button" value="@textoDataHora" class="btn btn-sm btn-success" onclick="editarAtendimentos()" />
+                    <br /><span class="text-danger">Todos os atendimentos anteriores serão excluidos!</span>
+                </div>
+
+
+                <div class="form-group col-md-3" id="opcao" style="display: none;">
+                    <label name="quantAtendimento" class="control-label">Atendimentos Semanais</label>
+                    <select name="numeroAtendimento" id="numeroAtendimento" class="form-select" oninput="camposAtendimento()">
+                        <option value="0" style="color:black">0</option>
+                        <option value="1" style="color:black">1</option>
+                        <option value="2" style="color:black">2</option>
+                        <option value="3" style="color:black">3</option>
+                        <option value="4" style="color:black">4</option>
+                        <option value="5" style="color:black">5</option>
+                        <option value="6" style="color:black">6</option>
+                        <option value="7" style="color:black">7</option>
+                    </select>
+                </div>
+
+
+
+                <div class="row" id="listaAtendimento"></div>
+
+                <span id="span-modelo" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" name="dia-0">Dia Da Semana</label>
+                                <input type="text" name="dia-0" id="dia-0" class="form-control" list="diaAtendimento">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" name="hora-0">Horário</label>
+                                <input type="time" name="hora-0" class="form-control" id="hora-0">
+                            </div>
+                        </div>
+                    </div>
+                </span>
+
+                <span id="span-real"></span>
+
+                <div class="form-group">
+                    <input type="button" value="Salvar" class="btn btn-primary" onclick="salvar(@Model.Id)" />
                 </div>
                 <button type="button" id="abrir" data-toggle="modal" data-target="#RespExistente" style="display: none;">
                     Deletar
                 </button>
-            </form>
-        </div>
-    </div>
-}
+                </form>
+            </div>
+            </div>
+        }
 <script>
+    function salvar(id) {
+        var nome = $('#Nome').val();
+        var cpf = $('#RegraValida').val();
+        var responsavel = $('#Responsavel').val();
+        var dataNascimento = $('#DataNascimento').val();
+        var status = $('#StatusPacientes').val();
+        var quant = $('#numeroAtendimento').val();
+        var i = 1;
+        var listDataHora = [];
+        while (i <= quant) {
+            var dia = $('#dia-' + i.toString()).val();
+            var hora = $('#hora-' + i.toString()).val();
+            listDataHora.push(dia + '-' + hora);
+            i = i + 1;
+        }
+        $.ajax({
+            method: "POST",
+            url: "/Pacientes/Edit",
+            data: {
+                id: id, nome: nome, cpf: cpf, responsavel: responsavel, dataNascimento: dataNascimento,
+                status: status, listDataHora: listDataHora},
+            success: function () {
+                        var location = "@Url.Action("Index")";
+                        window.location.href = location;
+            },
+            error: function (error) {
+                alert('failed');
+            }
+        })
+    };
+    function editarAtendimentos() {
+        var opcao = $("#opcao");
+        console.log(opcao);
+        opcao[0].style = 'normal';
+    };
+    function camposAtendimento() {
+        var spanModelo = $('#span-modelo').html();
+        var spanModeloString = spanModelo.toString();
+        var campos = $('#numeroAtendimento').val();
+
+        var i = 1;
+        var texto = '';
+
+        while (i <= campos) {
+            texto = texto + spanModeloString.replace(/-0/g, '-' + i.toString())
+            i = i + 1;
+        }
+
+        $('#span-real').html(texto);
+    };
+
     //cpf
     function valida_cpf() {
         var cpf = document.getElementById("RegraValida").value;

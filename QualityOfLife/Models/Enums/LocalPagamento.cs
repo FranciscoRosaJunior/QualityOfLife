@@ -9,6 +9,6 @@ namespace QualityOfLife.Models.Enums
     {
         Banco_Inter = 1,
         Banco_Brasil = 2,
-        Outros = 3
+        Consultório = 3
     }
 }

@@ -63,26 +63,49 @@ namespace QualityOfLife.Services
                 string valor = "R$ " + pedido.Total + ",00";
                 int xValor = 60;
                 int yValor = yTitulo + 56;
-                string valorPorExtenso = toExtenso(Convert.ToDecimal(pedido.Valor));
+                string valorPorExtenso = toExtenso(Convert.ToDecimal(pedido.Total));
                 
                 //Agenda datahora
                 string contAgendaPorExtenso = toExtenso(agendas.Count());
+                if (agendas.Count() == 1) contAgendaPorExtenso = contAgendaPorExtenso.Replace("real", "");
+                else contAgendaPorExtenso = contAgendaPorExtenso.Replace("reais", "");
+
                 string mes = "";
                 string ano = "";
-                string linha1 = "Recebi de " + responsavel.Nome + ", portador(a) do CPF " + responsavel.Cpf + ",";
-                string linha2 = "a importância de " + valorPorExtenso + ", referente a " + contAgendaPorExtenso.Replace("reais","") + "atendimento(s) de";
-                string linha3 = "terapia ocupacional realizado a " + pedido.Paciente.Nome + " no(s) dia(s) ";
-                string linha4 =  "";
+                //responsavel.nome pode possuir somente 32 letras
+                if (responsavel.Nome.Length <= 32)
+                {
+                    responsavel.Nome += ",";
+                    responsavel.Nome = responsavel.Nome.PadRight(32, ' ');
+                }
+                else 
+                {
+                    responsavel.Nome = responsavel.Nome.Substring(0, 32) + ",";
+                } 
+                string linha1 = "Recebi de " + responsavel.Nome + " portador(a) do CPF " + responsavel.Cpf + ",";
+                string linha2 = "a importância de " + valorPorExtenso.ToUpper() + ", referente a " + contAgendaPorExtenso + "atendimento(s) de";
+                string linha3 = "";
+                string linha4 = "";
+                if (pedido.Paciente.Nome.Length >= 30)
+                {
+                    linha3 = "terapia ocupacional realizado(s) à " + pedido.Paciente.Nome;
+                    linha4 = " referente ao(s) dia(s) ";
+                }
+                else
+                {
+                    linha3 = "terapia ocupacional realizado(s) à " + pedido.Paciente.Nome + " referente ao(s) dia(s) ";
+                }
+                
                 int TotalAgendas = 1;
-                string diaAnterior = "1";
+                string diaAnterior = "";
 
                 foreach (var agenda in agendas)
                 {
-                    if (diaAnterior != agenda.Agenda.DataHora.Day.ToString())
-                    {
+                    //if (diaAnterior != agenda.Agenda.DataHora.Day.ToString())
+                    //{
                         diaAnterior = agenda.Agenda.DataHora.Day.ToString();
 
-                        if (TotalAgendas != agendas.Count())
+                        if (TotalAgendas < agendas.Count())
                         {
 
                             linha4 = linha4 + diaAnterior + ", ";
@@ -93,12 +116,18 @@ namespace QualityOfLife.Services
                         {
                             mes = agenda.Agenda.DataHora.ToString("MMMM");
                             ano = agenda.Agenda.DataHora.Year.ToString();
-                            linha4 = linha4 + diaAnterior + " de " + mes + " " + ano + ".";
+                            linha4 = linha4 + diaAnterior + " de " + mes + " de " + ano + ".";
                         }
-                    }
+                    //}
                      
                     
                 }
+                //string textoGeral = linha1 + linha2 + linha3 + linha4;
+                //int quantLinha = textoGeral.Length / 80;
+                //linha1 = textoGeral.Substring(0, 80);
+                //linha2 = textoGeral.Substring(80, 80);
+                //linha3 = textoGeral.Substring(160, 80);
+                //linha4 = textoGeral.Substring(240, textoGeral.Length - 240);
 
                 int xtexto = 60;
                 int ytexto = yValor + 14;
@@ -123,16 +152,20 @@ namespace QualityOfLife.Services
                 tf.DrawString(linha3.TrimStart(), fontParagraph, XBrushes.Black, new XRect(xtexto, ytexto, larguraPage - 40, tamanhoCaracter), format);
                 ytexto = ytexto + 14;                                                                                    
                 tf.DrawString(linha4.TrimStart(), fontParagraph, XBrushes.Black, new XRect(xtexto, ytexto, larguraPage - 40, tamanhoCaracter), format);
+                ytexto += 14;
+                ytexto += 14;
+                ytexto += 14;
+                //local e data
+                //string localData = "Belo Horizonte, " + DateTime.Now.ToString("dd") + " de " + DateTime.Now.ToString("MMMM") + " de " + DateTime.Now.ToString("yyyy") + ".";
+                string localData = "Belo Horizonte, " + pedido.DataPagamento.ToString("dd") + " de " + pedido.DataPagamento.ToString("MMMM") + " de " + pedido.DataPagamento.ToString("yyyy") + ".";
+                tf.DrawString(localData, fontParagraph, XBrushes.Black, new XRect(xtexto, ytexto, larguraPage - 40, tamanhoCaracter), format);
                 ytexto = ytexto + 14;
 
-                //local e data
-                string localData = "Belo Horizonte, " + DateTime.Now.ToString("dd") + " de " + DateTime.Now.ToString("MMMM") + " de " + DateTime.Now.ToString("yyyy") + ".";
-
                 //assinatura
-                int xassinatura = 185;
-                int yassinatura = 360;
-                int alturaassinatura = 115;
-                int larguraassinatura = 240;
+                int xassinatura = 220;
+                int yassinatura = 380;
+                int alturaassinatura = 65;
+                int larguraassinatura = 140;
                 XImage assinaturaImg = XImage.FromFile(assinatura);
                 graph.DrawImage(assinaturaImg, xassinatura, yassinatura, larguraassinatura, alturaassinatura);
 

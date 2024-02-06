@@ -8,6 +8,7 @@ namespace QualityOfLife.Models.ViewModels
     public class PedidoAgenda
     {
         public bool Escolher { get; set; }
+        public bool FaltaJustificada { get; set; }
         public Agenda Agenda { get; set; }
     }
 }

@@ -7,8 +7,10 @@ namespace QualityOfLife.Models.ViewModels
 {
     public class FaturamentoViewModels
     {
-        public ICollection<Paciente> Pacientes { get; set; } = new List<Paciente>();
+        public Paciente Paciente { get; set; } = new Paciente();
         public ICollection<Agenda> Agendas { get; set; } = new List<Agenda>();
-        public ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
+        public Pedido Pedido { get; set; } = new Pedido();
+
+        public EmailViewModel EmailViewModel { get; set; } = new EmailViewModel();
     }
 }

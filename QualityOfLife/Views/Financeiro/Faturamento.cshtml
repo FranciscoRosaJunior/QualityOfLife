@@ -3,9 +3,19 @@
 @{
     ViewData["Title"] = "VisualizaAtendimentos";
 }
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+@section styles {
+    <link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
 
-
-
+}
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+<style>
+    .btn {
+        height: 30px;
+        width: 80px;
+        text-align: center;
+    }
+</style>
 
 
 
@@ -13,14 +23,241 @@
 {
     <form class="row col-12">
         @*<input type="hidden" name="pacientePost" class="form-control" value="@ViewBag.Cpf" />
-        <input type="hidden" name="mesPost" class="form-control" value="@ViewBag.Mes" />*@
+            <input type="hidden" name="mesPost" class="form-control" value="@ViewBag.Mes" />*@
         <div class="form-group col-sm-4">
             <label> Mês Referência</label>
-            <input type="month" class="form-control" name="mes" />
+            <input type="month" class="form-control" name="mes" id="mes" onchange="desabilitaBotao()" />
+
         </div>
         <div class="form-group col-12" style="margin-top:10px;">
-            @*<input type="submit" asp-action="Create" id="consulta" class="btn btn-primary btn-sm" value="Consultar">*@
-            <input type="submit" id="novoFaturamento" class="btn btn-primary btn-sm" value="Gerar">
+            <button type="button" id="visualizaFaturamento" class="btn btn-info btn-sm" onclick="visualizarFaturamento()" target="_blank"  disabled>
+                Visualizar
+            </button>
+            @*<input type="submit" id="visualizaFaturamento" class="btn btn-info btn-sm" value="Visualizar" onclick="visualizarFaturamento()" disabled />*@
+            <input type="submit" id="novoFaturamento" class="btn btn-primary btn-sm" value="Baixar" disabled />
+
+            <!-- Button trigger modal -->
+            <button type="button" id="abreEnviar" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalEnvioEmail" disabled>
+                Enviar
+            </button>
         </div>
+
     </form>
+}
+
+@if (Model.Count() >= 0)
+{
+    //@await Html.PartialAsync("_FaturamentoPartial.cshtml", Model)
+
+    <div class="Detalhes">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped" id="tabela-pedido">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th id="textoCenter">
+                                @Html.DisplayNameFor(model => model.Paciente.Responsavel.Nome)
+                            </th>
+                            <th id="textoCenter">
+                                @Html.DisplayNameFor(model => model.Paciente.Responsavel.Cpf)
+                            </th>
+                            <th id="textoCenter">
+                                @Html.DisplayNameFor(model => model.Pedido.Valor)
+                            </th>
+                            <th id="textoCenter">
+                                @Html.DisplayNameFor(model => model.Pedido.DataPagamento)
+                            </th>
+                            <th id="textoCenter">
+                                @Html.DisplayNameFor(model => model.Pedido.FormaPagamento)
+                            </th>
+                            <th id="textoCenter">
+                                @Html.DisplayNameFor(model => model.Pedido.LocalPagamento)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="col-md-3" id="textoCenter">
+                                    @Html.DisplayFor(modelItem => item.Paciente.Responsavel.Nome)
+                                </td>
+                                <td class="col-md-1" id="textoCenter">
+                                    @Html.DisplayFor(modelItem => item.Paciente.Responsavel.Cpf)
+                                </td>
+                                <td class="col-md-1" id="textoCenter">
+                                    R$ @Html.DisplayFor(modelItem => item.Pedido.Valor),00
+                                </td>
+                                <td class="col-md-1" id="textoCenter">
+                                    @Html.DisplayFor(modelItem => item.Pedido.DataPagamento)
+                                </td>
+                                <td class="col-md-1" id="textoCenter">
+                                    @Html.DisplayFor(modelItem => item.Pedido.FormaPagamento)
+                                </td>
+                                <td class="col-md-2" id="textoCenter">
+                                    @Html.DisplayFor(modelItem => item.Pedido.LocalPagamento)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalEnvioEmail" tabindex="-1" role="dialog" aria-labelledby="modalEnvioEmailLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEnvioEmailLabel">Enviar Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="EnviaEmail">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label for="Destino" class="control-label">Destino</label>
+                        <input id="destino" value="marcellaterapeutaocupacional@gmail.com" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Assunto" class="control-label">Assunto</label>
+                        <input id="assunto" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Mensagem" class="control-label">Mensagem</label>
+                        <textarea id="mensagem" class="form-control" rows="3" cols="60"></textarea>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer form-group">
+                <button type="button" id="fechaEnvioEmail" class="btn btn-danger btn-sm" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success btn-sm" id="enviaFaturamento" onclick="enviarFaturamento()">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+    <script>
+
+        function visualizarFaturamento() {
+            var mesRef = $('#mes').val();
+            $.ajax({
+                type: "GET",
+                url: "/financeiro/Faturamento",
+                data: { mes: mesRef },
+                success: function (result) {
+
+
+                },
+                error: function (error) {
+                    alert('ERROooooo');
+                }
+            });
+        };
+
+        function enviarFaturamento() {
+            var mesRef = $('#mes').val();
+            var destino = $('#destino').val();
+            var assunto = $('#assunto').val();
+            var mensagem = $('#mensagem').val();
+
+            console.log(destino);
+            console.log(assunto);
+            console.log(mensagem);
+
+            if (destino.length < 1 || assunto.length < 1 || mensagem.length < 1) {
+                alert('Preencha todos os campos do fomulario.');
+            }
+            else {
+                fechaModal();
+                $.ajax({
+                    type: "GET",
+                    url: "/financeiro/EnviaFaturamento",
+                    data: { mes: mesRef, destino: destino, assunto: assunto, mensagem: mensagem },
+                    success: function (result) {
+                        window.location.reload();
+                        alert(result);
+                    },
+                    error: function (error) {
+                        window.location.reload();
+                        alert(error);
+                    }
+                });
+            }
+
+        };
+
+        function desabilitaBotao() {
+            var mesreferencia = $("#mes").val();
+            if (mesreferencia != '') {
+                $("#visualizaFaturamento").removeAttr("disabled");
+                $("#novoFaturamento").removeAttr("disabled");
+                $("#abreEnviar").removeAttr("disabled");
+            }
+
+        }
+        function resetForm(id) {
+            with (document) {
+                getElementById(id).value = "";
+            }
+        }
+
+        function fechaModal() {
+            document.getElementById("fechaEnvioEmail").click();
+        }
+
+        $('#search_input').bind('keyup click change', function () {
+            search = $(this).val().toLowerCase();
+            var re = new RegExp(search, 'g');
+
+            $('#tabela-pedido tbody tr').each(function () {
+                $(this).hide();
+                target = $(this).find('td').text().toLowerCase();
+                if (target.match(re) || target.match('^' + search)) {
+                    $(this).show();
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#tabela-pedido').DataTable({
+                "order": [[7, "desc"]],
+                "language": {
+                    "search": "Procurar",
+                    "emptyTable": "Sem nenhum dado",
+                    "zeroRecords": "Sem nenhum dado",
+                    "info": "Exibindo _START_ a _END_ de _TOTAL_ dados",
+                    "infoEmpty": "Exibindo 0 a 0 de 0 dados",
+                    "thousands": ",",
+                    "lengthMenu": "Exibindo _MENU_ dado por páginas",
+                    "paginate": {
+                        "first": "Primeira Pagina",
+                        "last": "Ultimo",
+                        "next": "Próximo",
+                        "previous": "Anterior"
+                    }
+
+                },
+                exportOptions: {
+                    columns: ':not(.remove)'
+                },
+                "iDisplayLength": 10,
+                "searching": true,
+                "bPaginate": true,
+                "bFilter": true,
+                "bAutoWidth": true
+            });
+        });
+
+    </script>
 }

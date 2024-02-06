@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace QualityOfLife.Models.Enums
 {
-    public enum TipoContaPagar : int
+    public enum TipoContaPagar
     {
-        Fixa = 1,
-        Variavel = 2
+        [Description("Consultório Fixa")]
+        Consultorio_Fixa,
+        [Description("Consultório Variável")]
+        Consultório_Variavel,
+        [Description("Casa Fixa")]
+        Casa_Fixa,
+        [Description("Casa Variável")]
+        Casa_Variavel
+            
     }
 }

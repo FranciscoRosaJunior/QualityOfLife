@@ -35,6 +35,8 @@ namespace QualityOfLife.Models
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
+        public bool Ativo { get; set; } = true;
+
 
         //Um profissional pode ter varios 
         public ICollection<ProfissionalPaciente> ProfissionalPacientes { get; set; } = new List<ProfissionalPaciente>();
@@ -48,7 +50,7 @@ namespace QualityOfLife.Models
         {
         }
 
-        public Profissional(string nome, string cpf, DateTime dataNascimento, string profissao, string email, string telefone1, string telefone2, string telefone3, string cep, string rua, string numero, string complemento, string bairro, string cidade, string estado)
+        public Profissional(string nome, string cpf, DateTime dataNascimento, string profissao, string email, string telefone1, string telefone2, string telefone3, string cep, string rua, string numero, string complemento, string bairro, string cidade, string estado, bool ativo)
         {
             Nome = nome;
             Cpf = cpf;
@@ -65,6 +67,7 @@ namespace QualityOfLife.Models
             Bairro = bairro;
             Cidade = cidade;
             Estado = estado;
+            Ativo = ativo;
         }
     }
 }

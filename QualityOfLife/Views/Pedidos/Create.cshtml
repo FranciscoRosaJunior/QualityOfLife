@@ -35,7 +35,7 @@
         </div>
         <div class="form-group col-sm-4">
             <label> Mês Referência</label>
-            <input type="month" class="form-control" name="mes" />
+            <input type="month" class="form-control" name="mes" id="mes" />
         </div>
         <div class="form-group col-12" style="margin-top:10px;">
             <input type="submit" asp-action="Create" id="consulta" class="btn btn-primary btn-sm" value="Consultar">
@@ -146,6 +146,8 @@
 
 <script>
     function verificarCheckBox() {
+        var mesref = $('#mes').val();
+        console.log('mesf:' + mesref);
         var check = document.getElementsByName("itemCheck");
         var idsChecks = [];
         for (var i = 0; i < check.length; i++) {
@@ -162,7 +164,7 @@
         $.ajax({
             method: "POST",
             url: "/Pedidos/CreatePost",
-            data: { pacientePost: "@ViewBag.Cpf", mesPost: "@ViewBag.Mes", idsAgenda: idsChecks },
+            data: { pacientePost: "@ViewBag.Cpf", mes: mesref, mesPost: "@ViewBag.Mes", idsAgenda: idsChecks },
             success: function () {
                         var location = "@Url.Action("Index")";
                         window.location.href = location;

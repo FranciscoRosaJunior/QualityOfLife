@@ -26,8 +26,6 @@ namespace QualityOfLife.Models
         [DisplayName("Status")]
         public StatusPaciente StatusPacientes { get; set; }
 
-        [DisplayName("Dia do Atendimento")]
-        public string DiaAtendimento { get; set; }
         //Fim apenas um
 
         //Um paciente pode ter varios 
@@ -36,12 +34,15 @@ namespace QualityOfLife.Models
         public ICollection<Relatorio> Relatorios { get; set; } = new List<Relatorio>();
         public ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
         public ICollection<Agenda> Agendas { get; set; } = new List<Agenda>();
+        [DisplayName("Data Atendimento")]
+        public ICollection<PacienteDiaAtendimento> PacienteDiaAtendimento { get; set; } = new List<PacienteDiaAtendimento>();
 
         public Paciente()
         {
         }
 
-        public Paciente(string nome, string cpf, DateTime dataNascimento, StatusPaciente statusPaciente, Responsavel responsavel)
+        public Paciente(string nome, string cpf, DateTime dataNascimento, StatusPaciente statusPaciente, 
+            Responsavel responsavel)
         {
             Nome = nome;
             Cpf = cpf;

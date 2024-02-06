@@ -11,6 +11,7 @@ using QualityOfLife.Data;
 using QualityOfLife.Models;
 using QualityOfLife.Models.ViewModels;
 using QualityOfLife.Services;
+using QualityOfLife.Interfaces.IRepositories.IAgenda;
 
 namespace QualityOfLife.Controllers
 {
@@ -18,12 +19,106 @@ namespace QualityOfLife.Controllers
     public class AgendasController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly AgendaService _agendaServ;
+        private readonly IAgendaService _agendaServ;
 
-        public AgendasController(ApplicationDbContext context, AgendaService agendaServ)
+        public AgendasController(ApplicationDbContext context, IAgendaService agendaServ)
         {
             _context = context;
             _agendaServ = agendaServ;
+        }
+
+        public async Task<IActionResult> ControlePresenca(string paciente, string dataInicio, string dataFim)
+        {
+            ViewBag.cpf = paciente;
+            ViewBag.Paciente = await _context.Paciente.ToListAsync();
+
+            var model = new List<Agenda>();
+            model = await _agendaServ.BuscaPresencaAsync(paciente, dataInicio, dataFim);
+            
+            if (dataInicio != null)
+            {
+                DateTime DataInicio = DateTime.Parse(dataInicio);
+                DateTime DataFim = DateTime.Parse(dataFim);
+                ViewBag.DataInicio = DataInicio.ToString("dd/MM/yyyy");
+                ViewBag.DataFim = DataFim.ToString("dd/MM/yyyy");
+            }
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ControlePresenca(List<int> idsPresenca, List<int> idsFalta, List<int> idsJustificada)
+        {
+            foreach (var id in idsPresenca)
+            {
+                try
+                {
+                    var agenda = await _context.Agenda.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    agenda.Presenca = true;
+                    agenda.Falta = false;
+                    agenda.FaltaJustificada = false;
+                    _context.Update(agenda);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AgendaExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            foreach (var id in idsFalta)
+            {
+                try
+                {
+                    var agenda = await _context.Agenda.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    agenda.Falta = true;
+                    agenda.Presenca = false;
+                    agenda.FaltaJustificada = false;
+                    _context.Update(agenda);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AgendaExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            foreach (var id in idsJustificada)
+            {
+                try
+                {
+                    var agenda = await _context.Agenda.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    agenda.Falta = false;
+                    agenda.Presenca = false;
+                    agenda.FaltaJustificada = true;
+                    _context.Update(agenda);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AgendaExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<JsonResult> GetEvents()
@@ -46,7 +141,7 @@ namespace QualityOfLife.Controllers
                     NomeProfissional = await _context.Profissional.Where(x => x.Id == agenda.Profissional.Id).Select(x => x.Nome).FirstOrDefaultAsync()
                 });
             }
-            
+
             return Json(calendario.OrderBy(x => x.DataHora));
         }
 
@@ -93,7 +188,7 @@ namespace QualityOfLife.Controllers
             List<string> ListaFeriados = new List<string>();
             List<string> ListaPacientes = new List<string>();
 
-            if(txtFer != null)
+            if (txtFer != null)
             {
                 string[] feriados = txtFer.Split(',');
 
@@ -102,8 +197,8 @@ namespace QualityOfLife.Controllers
                     ListaFeriados.Add(feriado.Trim());
                 }
             }
-            
-            if(txtPacientes != null)
+
+            if (txtPacientes != null)
             {
                 string[] pacientes = txtPacientes.Split(',');
 
@@ -118,7 +213,7 @@ namespace QualityOfLife.Controllers
                     var DadosPaciente = await _context.Paciente.Where(x => x.Cpf == cpf).FirstOrDefaultAsync();
                     agendaEmLote.MesReferencia = mes;
                     //chama a criação da agenda
-                    var datas = _agendaServ.BuscaDatasPorDia(agendaEmLote, DadosPaciente, ListaFeriados);
+                    var datas = await _agendaServ.BuscaDatasPorDia(agendaEmLote, DadosPaciente, ListaFeriados);
 
                     foreach (var item in datas)
                     {
@@ -128,6 +223,7 @@ namespace QualityOfLife.Controllers
                             CriadoData = DateTime.Now,
                             Profissional = DadosProfissional,
                             DataHora = item,
+                            
                             Local = agendaEmLote.Local,
                             Paciente = DadosPaciente,
                             TipoAtendimento = agendaEmLote.TipoAtendimento,
@@ -167,7 +263,7 @@ namespace QualityOfLife.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 agenda.Valor = agenda.Valor + ",00";
                 agenda.Paciente = await _context.Paciente.Where(x => x.Cpf == agenda.Paciente.Cpf).FirstOrDefaultAsync();
                 agenda.Profissional = await _context.Profissional.Where(x => x.Cpf == agenda.Profissional.Cpf).FirstOrDefaultAsync();

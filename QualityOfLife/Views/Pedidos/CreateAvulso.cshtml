@@ -1,0 +1,106 @@
+﻿@model QualityOfLife.Models.Pedido
+
+@{
+    ViewData["Title"] = "Novo Pedido Avulso";
+}
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+<datalist id="pacientes">
+    @foreach (var item in ViewBag.Paciente)
+    {
+        <option value="@item.Cpf"> @item.Nome</option>
+    }
+</datalist>
+<datalist id="profissionais">
+    @foreach (var item in ViewBag.Profissional)
+    {
+        <option value="@item.Cpf"> @item.Nome</option>
+    }
+</datalist>
+@using (Html.BeginForm("CreateAvulsoPost", "Pedidos", FormMethod.Post, new { @class = "container", autocomplete = "off" }))
+{
+    <h2>Novo Pedido Avulso</h2>
+    <hr />
+    <div class="row">
+        <form asp-action="CreateAvulso">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Criado" class="form-control" value="@ViewBag.CurrentUser" />
+            <input type="hidden" asp-for="CriadoData" class="form-control" value="@ViewBag.Data" />
+            <input type="hidden" asp-for="Modificado" class="form-control" />
+            <input type="hidden" asp-for="ModificadoData" class="form-control" />
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group col-md-4">
+                <label>Paciente</label>
+                <input type="text" placeholder="Digite o nome do Paciente" class="form-control" name="paciente" id="paciente" list="pacientes" />
+            </div>
+            <div class="form-group col-md-4">
+                <label>Profissional</label>
+                <input type="text" placeholder="Digite o nome do profissional" class="form-control" name="profissional" id="profissional" list="profissionais" />
+            </div>
+            <div class="form-group col-md-4">
+                <label asp-for="mesreferencia" class="control-label"></label>
+                <input asp-for="mesreferencia" class="form-control" type="month" />
+                <span asp-validation-for="mesreferencia" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Valor" class="control-label"></label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">R$</span>
+                    <input asp-for="Valor" type="text" class="form-control" placeholder="Ex: 160 ou 1200" onkeyup="somenteNumeros(this);" style="text-align:right;">
+                    <span class="input-group-text">,00</span>
+                </div>
+                <span asp-validation-for="Valor" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Desconto" class="control-label"></label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">R$</span>
+                    <input asp-for="Desconto" type="text" class="form-control" placeholder="Ex: 160 ou 1200" onkeyup="somenteNumeros(this);" style="text-align:right;">
+                    <span class="input-group-text">,00</span>
+                </div>
+                <span asp-validation-for="Desconto" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Credito" class="control-label"></label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">R$</span>
+                    <input asp-for="Credito" type="text" class="form-control" placeholder="Ex: 160 ou 1200" onkeyup="somenteNumeros(this);" style="text-align:right;">
+                    <span class="input-group-text">,00</span>
+                </div>
+                <span asp-validation-for="Credito" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Total" class="control-label"></label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">R$</span>
+                    <input asp-for="Total" type="text" class="form-control" placeholder="Ex: 160 ou 1200" onkeyup="somenteNumeros(this);" style="text-align:right;">
+                    <span class="input-group-text">,00</span>
+                </div>
+                <span asp-validation-for="Total" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-12">
+                @Html.LabelFor(m => m.Observacoes)
+                @Html.TextAreaFor(m => m.Observacoes)
+                @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <br />
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+}
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=v5z53k0b99mq6jdq7rmord5xg2u6jwborbuov669whaeecsp"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: 'textarea',
+        height: 300,
+        menubar: false,
+        statusbar: false,
+        theme: 'modern'
+    });
+</script>

@@ -48,6 +48,8 @@ namespace QualityOfLife.Controllers
         // GET: ContasApagars/Create
         public IActionResult Create()
         {
+            ViewBag.CurrentUser = User.Identity.Name;
+            ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             return View();
         }
 
@@ -56,8 +58,10 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Descricao,TipoContaPagar,Valor,DataVencimento,Pagamento,DataPagamento,Observacoes,Id,Criado,CriadoData,Modificado,ModificadoData")] ContasApagar contasApagar)
+        public async Task<IActionResult> Create(ContasApagar contasApagar)
         {
+            ViewBag.CurrentUser = User.Identity.Name;
+            ViewBag.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             if (ModelState.IsValid)
             {
                 _context.Add(contasApagar);
@@ -88,7 +92,7 @@ namespace QualityOfLife.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Descricao,TipoContaPagar,Valor,DataVencimento,Pagamento,DataPagamento,Observacoes,Id,Criado,CriadoData,Modificado,ModificadoData")] ContasApagar contasApagar)
+        public async Task<IActionResult> Edit(long id, ContasApagar contasApagar)
         {
             if (id != contasApagar.Id)
             {

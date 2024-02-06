@@ -43,6 +43,7 @@ namespace QualityOfLife.Models
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
+        public bool Ativo { get; set; } = true;
 
         public ICollection<Paciente> Pacientes { get; set; } = new List<Paciente>();
         public ICollection<Boleto> Boletos { get; set; } = new List<Boleto>();
@@ -51,7 +52,7 @@ namespace QualityOfLife.Models
         {
         }
 
-        public Responsavel(string nome, string cpf, DateTime dataNascimento, string profissao, string email, string telefone1, string telefone2, string telefone3, string cep, string rua, string numero, string complemento, string bairro, string cidade, string estado)
+        public Responsavel(string nome, string cpf, DateTime dataNascimento, string profissao, string email, string telefone1, string telefone2, string telefone3, string cep, string rua, string numero, string complemento, string bairro, string cidade, string estado, bool ativo)
         {
             Nome = nome;
             Cpf = cpf;
@@ -68,6 +69,7 @@ namespace QualityOfLife.Models
             Bairro = bairro;
             Cidade = cidade;
             Estado = estado;
+            Ativo = ativo;
         }
     }
 }

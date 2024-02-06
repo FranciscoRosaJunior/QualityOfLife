@@ -1,0 +1,244 @@
+﻿@model IEnumerable<QualityOfLife.Models.Agenda>
+
+@{
+    ViewData["Title"] = "Controle de Frequência";
+    string textoData = "Belo Horizonte, " + DateTime.Now.ToString("dd") + " de " + DateTime.Now.ToString("MMMM") + " de " + DateTime.Now.ToString("yyyy") + ".";
+    if (@ViewBag.DataInicio != null)
+    {
+        textoData = "Período: " + @ViewBag.DataInicio + " à " + ViewBag.DataFim + ".";
+    }
+
+}
+
+<datalist id="pacientes">
+    @foreach (var item in ViewBag.Paciente)
+    {
+        <option value="@item.Cpf"> @item.Nome</option>
+    }
+</datalist>
+
+<link href="/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+<div class="row col-md-12">
+    <h2>@ViewBag.Title</h2>
+    <hr />
+</div>
+<div class="container">
+    <p>
+        <button class="btn btn-outline-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Pesquisar &nbsp;
+            <i class="fa fa-caret-down"></i>
+        </button>
+    </p>
+    <div class="row collapse" id="collapseExample">
+        <form class="row col-12">
+            <input type="hidden" name="pacientePost" class="form-control" value="@ViewBag.Cpf" />
+            <input type="hidden" name="dataPost" class="form-control" value="@ViewBag.Data" />
+
+            <div class="form-group col-sm-4">
+                <label> Data Início</label>
+                <input type="date" class="form-control" name="dataInicio" id="dataInicio" onchange="onchangePesquisa()" />
+            </div>
+            <div class="form-group col-sm-4">
+                <label> Data Fim</label>
+                <input type="date" class="form-control" name="dataFim" id="dataFim" onchange="onchangePesquisa2()" />
+            </div>
+            <div class="form-group col-sm-4">
+                <label>Paciente</label>
+                <input type="text" placeholder="Digite o nome do Paciente" class="form-control" name="paciente" id="paciente" list="pacientes" />
+            </div>
+            <div class="form-group col-12" style="margin-top:10px;">
+                <input type="submit" asp-action="ControlePresenca" id="consulta" class="btn btn-primary btn-sm" value="Consultar">
+
+            </div>
+        </form>
+    </div>
+    <hr />
+
+    @if (Model.Count() == 0)
+    {
+        <h4>@textoData</h4>
+        <h5>Não existe agenda para o período selecionado.</h5>
+    }
+    @if (Model.Count() > 0)
+    {
+        <h4>@textoData</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped" id="tabela-agenda">
+                    <thead class="bg-danger text-white">
+                        <tr>
+                            <th style="text-align:center">P</th>
+                            <th style="text-align:center">F</th>
+                            <th style="text-align:center">FJ</th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Paciente.Nome)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Profissional)
+                            </th>
+                            <th>
+                                Data
+                            </th>
+                            <th>
+                                Horário
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td class="col-md-0" style="text-align:center" scope="col"><input asp-for="@item.Presenca" type="checkbox" name="itemPresenca" id='@item.Id+A' onclick="checkPresenca(@item.Id, '1')" /></td>
+                            <td class="col-md-0" style="text-align:center" scope="col"><input asp-for="@item.Falta" type="checkbox" name="itemFalta" id='@item.Id+B' onclick="checkPresenca(@item.Id, '2')" /></td>
+                            <td class="col-md-0" style="text-align:center" scope="col"><input asp-for="@item.FaltaJustificada" type="checkbox" name="itemJustificada" id='@item.Id+C' onclick="checkPresenca(@item.Id, '3')" /></td>
+                            <td class="col-md-4">
+                                @Html.DisplayFor(modelItem => item.Paciente.Nome)
+                            </td>
+                            <td class="col-md-3">
+                                @Html.DisplayFor(modelItem => item.Profissional.Nome)
+                            </td>
+                            @{
+                                string dia = item.DataHora.ToString("dd/MM/yyyy");
+                                string hora = item.DataHora.ToString("HH:mm");
+                            }
+                            <td class="col-md-1">
+                                @dia
+                            </td>
+                            <td class="col-md-1">
+                                @hora
+                            </td>
+                            <td style="text-align:center" class="col-md-1">
+                                <a asp-action="Details" asp-route-id="@item.Id" title="Detalhar" class="btn btn-sm btn-info">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <input type="button" id="novoPedido" onclick="verificarCheckBox()" class="btn btn-success btn-sm" value="Salvar">
+            </div>
+        </div>
+    }
+
+</div>
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=v5z53k0b99mq6jdq7rmord5xg2u6jwborbuov669whaeecsp"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: 'textarea',
+        height: 300,
+        menubar: false,
+        statusbar: false,
+        theme: 'modern'
+    });
+
+    window.onload = function () {
+        var datainicio = $("#dataInicio").val();
+        if (datainicio.length > 0) {
+            $("#dataFim").removeAttr("disabled");
+            $("#paciente").removeAttr("disabled");
+        } else {
+            $("#dataFim").attr("disabled", "disabled");
+            $("#paciente").attr("disabled", "disabled");
+            $("#consulta").attr("disabled", "disabled");
+        }
+    }
+    function checkPresenca(Identificador, item) {
+        var checkPresenca = document.getElementsByName("itemPresenca");
+        var checkFalta = document.getElementsByName("itemFalta");
+        var checkJustificada = document.getElementsByName("itemJustificada");
+        if (item == "1") {
+            var id = Identificador + "+A";
+            for (var i = 0; i < checkPresenca.length; i++) {
+                if (id == checkPresenca[i].id) {
+                    checkPresenca[i].checked = true;
+                    checkFalta[i].checked = false;
+                    checkJustificada[i].checked = false;
+                }
+            }
+        } if (item == "2") {
+            var id = Identificador + "+B";
+            for (var i = 0; i < checkFalta.length; i++) {
+                if (id == checkFalta[i].id) {
+                    checkFalta[i].checked = true;
+                    checkPresenca[i].checked = false;
+                    checkJustificada[i].checked = false;
+                }
+            }
+        } if (item == '3') {
+            var id = Identificador + "+C";
+            for (var i = 0; i < checkJustificada.length; i++) {
+                if (id == checkJustificada[i].id) {
+                    checkJustificada[i].checked = true;
+                    checkFalta[i].checked = false;
+                    checkPresenca[i].checked = false;
+                }
+            }
+        }
+        
+    }
+    function onchangePesquisa() {
+        var datainicio = $("#dataInicio").val();
+        if (datainicio.length > 0) {
+            $("#dataFim").removeAttr("disabled");
+            $("#paciente").removeAttr("disabled");
+        } else {
+            $("#dataFim").attr("disabled", "disabled");
+            $("#paciente").attr("disabled", "disabled");
+        }
+    }
+    function onchangePesquisa2() {
+        var datafim= $("#dataFim").val();
+        if (datafim.length > 0) {
+            $("#consulta").removeAttr("disabled");
+        }
+    }
+
+    function resetForm(id) {
+        with (document) {
+            getElementById(id).value = "";
+        }
+    }
+    function verificarCheckBox() {
+        var checkPresenca = document.getElementsByName("itemPresenca");
+        var checkFalta = document.getElementsByName("itemFalta");
+        var checkJustificada = document.getElementsByName("itemJustificada");
+        var idsChecksPresenca = [];
+        var idsChecksFalta = [];
+        var idsChecksJustificada = [];
+        for (var i = 0; i < checkPresenca.length; i++) {
+            if (checkPresenca[i].checked == true) {
+                idsChecksPresenca.push(checkPresenca[i].id.replace('+A', '').replace('+B', '').replace('+C', ''));
+
+            } 
+        }
+        for (var i = 0; i < checkFalta.length; i++) {
+            if (checkFalta[i].checked == true) {
+                idsChecksFalta.push(checkFalta[i].id.replace('+A', '').replace('+B', '').replace('+C', ''));
+
+            }
+        }
+        for (var i = 0; i < checkJustificada.length; i++) {
+            if (checkJustificada[i].checked == true) {
+                idsChecksJustificada.push(checkJustificada[i].id.replace('+A', '').replace('+B', '').replace('+C', ''));
+
+            }
+        }
+        $.ajax({
+            method: "POST",
+            url: "/Agendas/ControlePresenca",
+            data: { idsPresenca: idsChecksPresenca, idsFalta: idsChecksFalta, idsJustificada: idsChecksJustificada },
+            success: function () {
+                        var location = "@Url.Action("Index")";
+                        window.location.href = location;
+            },
+            error: function (error) {
+                alert('failed');
+            }
+        })
+
+    }
+</script>

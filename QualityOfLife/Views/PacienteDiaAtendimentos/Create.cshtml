@@ -1,0 +1,54 @@
+﻿@model QualityOfLife.Models.PacienteDiaAtendimento
+@using QualityOfLife.Models.Enums;
+@{
+    ViewData["Title"] = "Create";
+}
+<datalist id="pacientes">
+    @foreach (var item in ViewBag.Paciente)
+    {
+        <option value="@item.Cpf"> @item.Nome</option>
+    }
+</datalist>
+<datalist id="diaDaSemana">
+    @foreach (var item in Html.GetEnumSelectList<DiasDaSemana>())
+    {
+        <option value="@item.Text"> </option>
+    }
+</datalist>
+<h2>Create</h2>
+
+<h4>PacienteDiaAtendimento</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+                <label asp-for="Paciente" class="control-label"></label>
+                <input asp-for="Paciente.Cpf" name="cpf" id="cpf" class="form-control" list="pacientes" />
+                <span asp-validation-for="Paciente.Cpf" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="DiaDaSemana" class="control-label"></label>
+                <input asp-for="DiaDaSemana" id="local" class="form-control" type="text" list="diaDaSemana" />
+                <span asp-validation-for="DiaDaSemana" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Horario" class="control-label"></label>
+                <input type="time" asp-for="Horario" class="form-control" />
+                <span asp-validation-for="Horario" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

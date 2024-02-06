@@ -20,11 +20,17 @@ namespace QualityOfLife.Models
         [DisplayName("Vencimento")]
         public DateTime DataVencimento { get; set; }
 
-        [DisplayName("Pago?")]
+        [DisplayName("Pagamento Realizado?")]
         public bool Pagamento { get; set; }
 
         [DisplayName("Data Pag.")]
-        public DateTime DataPagamento { get; set; }
+        public DateTime? DataPagamento { get; set; }
+
+        [DisplayName("Forma Pagamento")]
+        public int FormaPagamento { get; set; }
+
+        [DisplayName("Quantidade de Parcelas")]
+        public int QuantParc { get; set; }
 
         [DisplayName("Observações:")]
         public string Observacoes { get; set; }
@@ -33,7 +39,7 @@ namespace QualityOfLife.Models
         {
         }
 
-        public ContasApagar(string descricao, double valor, DateTime dataVencimento, bool pagamento, DateTime dataPagamento, string observacoes)
+        public ContasApagar(string descricao, double valor, DateTime dataVencimento, bool pagamento, DateTime? dataPagamento, string observacoes)
         {
             Descricao = descricao;
             Valor = valor;

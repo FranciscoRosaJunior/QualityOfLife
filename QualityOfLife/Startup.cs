@@ -14,6 +14,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QualityOfLife.Services;
 using Microsoft.AspNetCore.Authorization;
+using QualityOfLife.Interfaces.IRepositories.IAgenda;
+using QualityOfLife.Interfaces.IRepositories.IFinanceiro;
+using QualityOfLife.Interfaces;
+using QualityOfLife.Models;
 
 namespace QualityOfLife
 {
@@ -29,6 +33,9 @@ namespace QualityOfLife
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.AddScoped<IEnvioEmailService, EnvioEmailService>();
+            services.AddMvc();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -49,8 +56,10 @@ namespace QualityOfLife
             services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseMySql(Configuration.GetConnectionString("ApplicationDbContext"), builder =>
                     builder.MigrationsAssembly("QualityOfLife")));
-
-            services.AddScoped<AgendaService>();
+            services.AddScoped<IAgendaService, AgendaService>();
+            services.AddScoped<IFinanceiroService, FinanceiroService>();
+            services.AddScoped<IRelatorioServices, RelatorioServices>();
+            //services.AddScoped<IEnvioEmailService, EnvioEmailService>();
             services.AddScoped<PedidoService>();
             services.AddScoped<ReciboService>();
         }
